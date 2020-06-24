@@ -1,0 +1,57 @@
+
+h2 {
+    margin-top: 3em;
+}
+
+.map {
+    display: flex;
+    flex-direction: column;
+}
+
+.languages {
+    width: 30%;
+    /*border: black solid 2px;*/
+    padding: 2%;
+    font-weight: bold;"
+}
+
+.languages a {
+    cursor:pointer;
+    padding-left:2em;
+}
+
+/*default language*/
+
+.la {
+    display: none;
+}
+
+
+/*tooltips*/
+
+
+.sense{
+    cursor: pointer;
+    position: relative;
+}
+
+.sense title {
+    visibility: hidden;
+    width: 100px;
+    background-color: #8512d5;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    position: absolute;
+    z-index: 1;
+}
+
+.sense:hover title {
+    visibility: visible;
+}
+
+
+
+
+

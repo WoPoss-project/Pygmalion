@@ -1,0 +1,236 @@
+
+html,
+body {
+    height: 100%;
+    height: 100vh;
+    font-size:13pt;
+    margin: 0;
+    padding:0;
+    min-height: 100%;
+    width: 99vw;
+}
+
+main {
+    padding: 2%;
+    margin-bottom: 2%;
+}
+
+
+.head {
+    text-align: center;
+    font-size: larger;
+    margin-top: 2%;
+    margin-bottom: 8%;
+}
+
+h1 {
+    text-align: center;
+    color: #1A76BD;
+}
+
+h1 span {
+ color:  #1B2E3D;
+}
+
+
+h2{
+    color: #13568A;
+}
+
+h3 {
+    color: #1B2E3D;
+}
+
+a {
+    color: #5897C8;
+}
+
+p, ul, ol, li {
+    text-align: justify;
+    line-height: 125%;
+}
+
+.video{
+    margin: auto;
+    width: 100%;
+    text-align: center;
+}
+
+
+.keywords {
+    text-align:center;
+    color: #1B2E3D;
+    font-weight:bold;
+}
+
+.bib {
+    list-style: none
+}
+
+.bib li {
+  padding-left: 4em ;
+  text-indent: -4em ;
+   margin-top: 1em;
+}
+
+main li {
+      margin-top: 0.6em;
+}
+
+/*Warning*/
+
+.warning {
+    font-weight:bold;
+    font-size: 1.2em;
+    margin-bottom:6em;
+    text-align:center;
+}
+
+/*News*/
+
+.news {
+    display:flex;
+}
+
+article {
+    margin: 1%;
+    margin-bottom: 2%;
+}
+
+article img {
+    width: 30em;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2em;
+}
+
+.cloud {
+    width: 40em;
+}
+
+.news h2 {
+    text-align: center;
+}
+
+.news aside {
+    margin-top: 10%;
+    width: 40em;
+    margin-left: 3%;
+}
+
+/*Team members*/
+
+#team {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.team-pic {
+    width: 30em;
+}
+
+.ip {
+    width: 45%
+    
+}
+
+
+.ip img, .members img, .members_et img {
+    width: 70%
+}
+
+.members, .members_et {
+    display:flex;
+    justify-content: space-between;
+}
+
+.members > div {
+    width: 45%
+}
+
+.members_et > div {
+    width: 32%;
+}
+
+
+figure {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+figcaption {
+    margin-top: 1em;
+    font-weight: bold;
+}
+
+.review p {
+    font-style: italic;
+}
+
+/*Footer*/
+
+hr { display: block; height: 1px;
+    border: 0; border-top: 1px solid #13568A;
+    margin: 0; padding: 0; }
+
+
+.logos a {
+    color:#13568A;
+}
+
+.address {
+    background-color: #1B2E3D;
+    color: #9cc4f4;
+    padding-left:2em;
+}
+
+address a {
+    color: #9cc4f4
+}
+
+.logos p {
+
+    text-align: center;
+    font-size: 13pt;
+    font-weight: bold;
+}
+
+.snf {
+    width: 20em;
+}
+
+
+.address,
+.logos div {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+}
+
+address {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    font-style: normal;
+}
+
+.address,
+.logos {
+    padding-top: 2%;
+    padding-bottom: 2%;
+}
+
+address img {
+    height: 50px;
+}
+
+address {
+    padding-right:1em;
+}
+
