@@ -1,4 +1,7 @@
 
+//Cookie management functions from http://www.quirksmode.org/js/cookies.html
+
+
 function createCookie(name, value, days) {
     if (days) {
         var date = new Date();
@@ -20,13 +23,22 @@ function readCookie(name) {
 }
 
 
+/*Project-specific code begins here
 
-function language () {
-    var siglas = document.getElementsByClassName('language');
-    for (i = 0; i < siglas.length; i++) {
-        siglas[i].addEventListener('click', changeLang, false);
+
+ * Listen for clicks on the language codes to change language
+ * When the page loads, create a new cookie with the old value, so that it lasts 30 days
+ */
+
+function language_init () {
+    var i, length;
+    var codes = document.getElementsByClassName('language');
+    for (i = 0; i < codes.length; i++) {
+        codes[i].addEventListener('click', changeLang, false);
     }
     var lang = readCookie('lg');
+
+    /*Unless user has the browser in Latin, the default language is English*/
     if (lang) {
         createCookie('lg', lang, 30);
         changeLang();
@@ -42,7 +54,13 @@ function language () {
     }
 }
 
-
+/*
+* Called from init and when a language code is clicked;
+* if this.dataset.idno is undefined, it's been called from init, so the current cookie value should be used (if any)
+* otherwise get the language from the language code that's been clicked.
+* The language codes have a @data-idno attribute instead of @id because there is more than one
+* language menu by page.
+*/
 
 function changeLang() {
     if (typeof this.dataset.idno === 'undefined') {
@@ -52,35 +70,38 @@ function changeLang() {
     }
     createCookie('lg', id, 30);
     var ens = document.getElementsByClassName('en');
-    var ensLength = ens.length;
     var las = document.getElementsByClassName('la');
-    var lasLength = las.length;
     var languageCodes = document.querySelectorAll('.languages > a');
-    var languageCodesLength = languageCodes.length;
-    for (i = 0; i < languageCodesLength; i++) {
+
+    /*Add some styling so it is visible which language has been selected*/
+
+    for (i = 0; i < languageCodes.length; i++) {
         if (languageCodes[i].dataset.idno == id) {
             languageCodes[i].style.textShadow = '1px 2px 1px';
         } else {
             languageCodes[i].style.textShadow = 'none';
         }
     }
+
+    /*Change the CSS property display depending on the selected language*/
+
     switch (id) {
         case 'la':
-            for (var i = 0; i < ensLength; i++) {
+            for (var i = 0; i < ens.length; i++) {
                 ens[i].style.display = 'none';
             }
-            for (var i = 0; i < lasLength; i++) {
+            for (var i = 0; i < las.length; i++) {
                 las[i].style.display = 'inline';
             }
             break;
         case 'en':
-            for (var i = 0; i < lasLength; i++) {
+            for (var i = 0; i < las.length; i++) {
                 las[i].style.display = 'none';
             }
-            for (var i = 0; i < ensLength; i++) {
+            for (var i = 0; i < ens.length; i++) {
                 ens[i].style.display = 'inline';
             }
     }
 }
 
-window.addEventListener('load', language, false);
+window.addEventListener('load', language_init, false);
