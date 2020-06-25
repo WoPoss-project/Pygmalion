@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -302,7 +300,7 @@
          x="120.26663"
          id="tspan1023-2-3-6-9-7">IV CE</tspan></text>
     <g
-       class="sense show power"
+       class="sense power"
        id="power"
        inkscape:label="power">
       <title
@@ -381,7 +379,7 @@
          x="-124.01795"
          id="tspan1023-9">V BCE</tspan></text>
     <g
-       class="sense show chance"
+       class="sense chance"
        id="chance"
        inkscape:label="chance">
       <title
@@ -413,7 +411,7 @@
            sodipodi:role="line">chance, opportunity</tspan></text>
     </g>
     <g
-       class="sense show potestas-est"
+       class="sense potestas-est"
        id="potestas-est"
        inkscape:label="potestas-est">
       <title
@@ -458,7 +456,7 @@
          id="defined_path-0-2-6-6" />
     </g>
     <g
-       class="potestatem-dare sense show"
+       class="potestatem-dare sense"
        id="potestatem-dare"
        inkscape:label="potestatem-dare">
       <title
@@ -502,7 +500,7 @@
            sodipodi:role="line">POTESTATEM FACERE, DARE</tspan></text>
     </g>
     <g
-       class="sense show senses"
+       class="sense senses"
        id="senses"
        inkscape:label="senses">
       <title
@@ -535,7 +533,7 @@
     </g>
     <g
        id="means"
-       class="sense show means"
+       class="sense means"
        inkscape:label="means"
        transform="translate(1e-5,-8.4642169)">
       <title
@@ -567,7 +565,7 @@
            sodipodi:role="line">referred to what indicates, means something</tspan></text>
     </g>
     <g
-       class="sense show capacity"
+       class="sense capacity"
        id="capacity"
        inkscape:label="capacity"
        transform="translate(1e-5,-8.4642169)">
@@ -600,7 +598,7 @@
            sodipodi:role="line">capacity, abilities</tspan></text>
     </g>
     <g
-       class="sense show metonymic"
+       class="sense metonymic"
        id="metonymic"
        inkscape:label="metonymic"
        transform="translate(1e-5,-8.4642169)">
@@ -633,7 +631,7 @@
            sodipodi:role="line">metonymic: that has some power</tspan></text>
     </g>
     <g
-       class="in-potestatem sense show"
+       class="in-potestatem sense"
        id="in-potestatem"
        inkscape:label="in-potestatem"
        transform="translate(1e-5,-8.4642169)">
@@ -679,7 +677,7 @@
     </g>
     <g
        id="permission"
-       class="permission sense show"
+       class="permission sense"
        inkscape:label="permission">
       <title
          id="title3650">PLAUT. Capt. 374 cum copiam istam mihi et potestatem facis ut ...remittam nuntium</title>
@@ -711,7 +709,7 @@
     </g>
     <g
        id="possibility"
-       class="sense show possibility"
+       class="sense possibility"
        inkscape:label="possibility"
        transform="translate(1e-5,-8.4642169)">
       <title
@@ -751,7 +749,7 @@
     </g>
     <g
        id="proof"
-       class="sense show proof"
+       class="sense proof"
        inkscape:label="proof">
       <title
          id="title3725">ITALA psalm. 113, 2 in exitu Israhel ex Aegypto ... facta est Iudaea sanctitas eius dei, Israhel potetas eius; mare vidit et fugit eqs.</title>
@@ -790,7 +788,7 @@
     </g>
     <g
        id="value"
-       class="sense show value"
+       class="sense value"
        inkscape:label="value"
        transform="translate(1e-5,-8.4642169)">
       <title
@@ -824,7 +822,7 @@
     </g>
     <g
        id="domains"
-       class="sense show domains"
+       class="sense domains"
        inkscape:label="domains"
        transform="translate(1e-5,-8.4642169)">
       <title
