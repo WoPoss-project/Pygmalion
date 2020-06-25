@@ -49,7 +49,9 @@ Currently, a user can toggle the visualization of the senses between English and
 The definition of each sense (a `<text>` element) contains `<tspan>` elements with a `@class` attribute indicating the language. A simple JavaScript code (see [language.js](https://github.com/WoPoss/semantic_maps/blob/master/drawn-maps/js/language.js)) hides/shows the correct spans according to the user’s selection in a small menu that precedes each map.
 
 #### Show/hide effect
-When clicking on a sense, senses not related to it are hidden and lines depicting the relations become visible. The effect is done with a JavaScript program that toggles the value ’@class="show"’ depending on whether the `@id` of the selected sense is present as a value of a `@class` attribute in the other senses and links (see [paths-hide.js](https://github.com/WoPoss/semantic_maps/blob/master/drawn-maps/js/paths-hide.js))
+When clicking on a sense, senses not related to it are hidden and lines depicting the relations become visible. The effect is done by changing the values of the CSS property `display` depending on whether the `@id` of the selected sense is present as a value of a `@class` attribute in the other senses and links (see [paths-hide.js](https://github.com/WoPoss/semantic_maps/blob/master/drawn-maps/js/paths-hide.js)). A click on the senses fires the hidding of unrelated senses and the display of the connections, and a double-click on the senses displays all the senses again (and hides the connections).
+
+At first, the effect was done with a JavaScript program that toggled the value ’@class="show"’. That way, the same event (clicking on a sense) would show/hide the senses accordingly without needing a second function to reset the visualization. However, the show/hide effect was not very smooth, thus the change.
 
 ## Future work
 ### Form
