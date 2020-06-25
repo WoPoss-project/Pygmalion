@@ -14,6 +14,8 @@ Each map must include the following contents:
   <li>relations between senses with different degrees of certainty</li>
 </ol>
 
+A more detailed list is presented in the subsection [Form](#form).
+
 ## Current design
 The existent mock-up (see _CERTUS_ in the [HTML version](https://github.com/WoPoss/semantic_maps/blob/master/drawn-maps/semantic-modal-maps.html) of this repo or the published version available on [our website](http://woposs.unil.ch/semantic-modal-maps.php)) has the following functionalities:
 - A timeline provides the chronological information: the time (expressed in centuries) works as the x axis (requirement _e_ above). In the y axis the different senses are displayed ordered by two parameters: chronology, and the organization of the entry of the headword in the dictionary of reference (requirement _a_). Expressions that contain the headword are also registered (a label left to the sense indicates the expression under analysis).
@@ -63,7 +65,7 @@ In order to create an automatic visualization of a semantic map from user input,
     - definition (in at least two languages)
     - when the sense is first attested
     - when the sense is last used
-    - the reference to its first attestation(s)    
+    - the reference to its first attestation(s)
     - the modal classification of the sense:
         - premodal/not modal
         - modal (with subcategories that can be defined by the user. A maximum number of possible categories could be established to be four)
@@ -80,6 +82,8 @@ In order to create an automatic visualization of a semantic map from user input,
 As detailed above, the semantic maps contain a lot of information. Thus, the visual cues that depict each piece of information must be clear and part of the contents of the map must be displayed on user demand.
 
 The current design is relatively efficient to hold all the information, but enhancements are needed (see [Issues](#issues)). Also, the attractiveness of the design could be increased by adding other animation effects like motion (to be completed).
+
+The possibility to create a “rich” version and a even more synoptic one could be consider.
 
 
 
