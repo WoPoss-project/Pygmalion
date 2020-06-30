@@ -22,12 +22,12 @@
      fit-margin-top="2"
      inkscape:guide-bbox="true"
      showguides="true"
-     inkscape:current-layer="svg8"
+     inkscape:current-layer="certain"
      inkscape:window-maximized="1"
      inkscape:window-y="27"
      inkscape:window-x="1992"
-     inkscape:cy="335.01442"
-     inkscape:cx="1122.0922"
+     inkscape:cy="999.78315"
+     inkscape:cx="586.12242"
      inkscape:zoom="2.1661669"
      showgrid="false"
      id="namedview1029"
@@ -222,7 +222,7 @@
      class="show sense proven known true sure authentic"
      id="proven"
      inkscape:label="proven"
-     transform="translate(159.13548,43.642751)">
+     transform="translate(159.13548,43.378099)">
     <title
        id="title4703">TER. Andr. 368 ‘opinor’ narras? ... certa res est.</title>
     <path
@@ -231,11 +231,11 @@
        inkscape:connector-curvature="0"
        id="proven_rect"
        d="M 231.50443,31.808732 H -27.159535 V 25.013964 H 231.50443"
-       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#a9a9a9;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
        inkscape:label="#path2917-3-93"
        inkscape:connector-curvature="0"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#a9a9a9;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 231.50443,25.013964 8.13993,3.38056 -8.13991,3.342801"
        id="proven_path" />
     <text
@@ -546,7 +546,7 @@
        id="title4707">PLAUT. Persa 582 tu mi es inimicus certus.</title>
     <path
        inkscape:label="#evident"
-       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.91423202;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.91423202;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 231.50443,40.08552 H -27.143138 V 33.388484 H 231.50443"
        id="evident_rect"
        inkscape:connector-curvature="0"
@@ -554,7 +554,7 @@
     <path
        id="evident_path"
        d="m 231.50443,33.388484 8.13622,3.361443 -8.1362,3.323898"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:connector-curvature="0"
        inkscape:label="#path2917-3-93" />
     <text
@@ -588,11 +588,11 @@
        inkscape:connector-curvature="0"
        id="proven_rect-2"
        d="M 369.4898,39.608058 H 110.7756 v -6.791417 h 258.7142"
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.87637401;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       style="fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.87637401;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
        inkscape:label="#path2917-3-93"
        inkscape:connector-curvature="0"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 369.50772,32.816641 8.07819,3.398943 -8.07818,3.360978"
        id="proven_path-6" />
     <text
@@ -610,7 +610,7 @@
          sodipodi:role="line"
          id="tspan106"
          x="120.39043"
-         y="37.655907"
+         y="42.506607"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88055992px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458299"
          class="la">[nihil comperti]</tspan></text>
     <text
@@ -664,7 +664,7 @@
     <title
        id="title4731">ENN. scaen. 210 amicus certus in re incerta cernitur.</title>
     <path
-       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#a9a9a9;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 231.50443,56.584487 H -27.138928 V 49.830933 H 231.50443"
        id="trustworthy_rect"
        inkscape:connector-curvature="0"
@@ -672,7 +672,7 @@
     <path
        id="trustworthy_path"
        d="m 231.50442,49.899793 8.13615,3.361118 -8.13614,3.323576"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#a9a9a9;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:connector-curvature="0"
        inkscape:label="#path2917-3-93" />
     <text
@@ -702,7 +702,7 @@
     <title
        id="title4687">PLAUT . Epid. 163 senem oppugnare -umst consilium. </title>
     <path
-       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.763735;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.763735;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 148.03972,64.770979 H -27.231031 V 57.833221 H 148.03972"
        id="established_rect"
        inkscape:connector-curvature="0"
@@ -711,7 +711,7 @@
     <path
        id="established_path"
        d="m 148.03602,57.830876 5.47286,3.47429 -5.47285,3.435484"
-       style="fill:none;stroke:#333333;stroke-width:0.763735;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.763735;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:connector-curvature="0"
        inkscape:label="#path2917-3-93" />
     <text
@@ -735,14 +735,14 @@
   </g>
   <g
      style="stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none"
-     transform="translate(159.12674,50.40934)"
+     transform="translate(159.12674,50.673835)"
      inkscape:label="trusty-words"
      id="trusty-words"
      class="show sense trusty-words trustworthy reliable sure happen safe">
     <title
        id="title4717">PLAUT. Poen. 708 ut ipsus testis sit tibi certissimus.</title>
     <path
-       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#a9a9a9;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 231.50449,72.84787 H -27.149161 V 66.073851 H 231.50449"
        id="trusty-words_rect"
        inkscape:connector-curvature="0"
@@ -751,7 +751,7 @@
     <path
        id="trusty-words_path"
        d="m 231.50449,66.073851 8.13993,3.38056 -8.13991,3.342801"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:none;stroke:#a9a9a9;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        inkscape:connector-curvature="0"
        inkscape:label="#path2917-3-93" />
     <text
@@ -781,7 +781,7 @@
     <title
        id="title380">PLAUT. Curc. 320 iam edes aliquid. ∷ nolo hercle aliquid, certum quam ‘aliquid’ mavolo.</title>
     <path
-       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:1.00012004;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:1.00012004;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 231.58882,81.168696 H -27.169322 V 74.327013 H 231.58882"
        id="defined_rect"
        inkscape:connector-curvature="0"
@@ -790,7 +790,7 @@
     <path
        id="defined_path"
        d="m 231.58154,74.336879 8.08606,3.448044 -8.08604,3.409531"
-       style="fill:none;stroke:#333333;stroke-width:1.00012004;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:1.00012004;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:connector-curvature="0"
        inkscape:label="defined-arrow" />
     <text
@@ -829,7 +829,7 @@
        id="title1299">ENN. ann. 200 eorundem libertati me parcere certumst.</title>
     <path
        sodipodi:insensitive="true"
-       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.93626201;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.93626201;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 345.24067,149.9526 H 88.153569 v -6.59934 H 345.24067"
        id="certain_rect-9"
        inkscape:connector-curvature="0"
@@ -838,7 +838,7 @@
     <path
        id="certain_path-0_"
        d="m 345.24067,143.34314 8.33853,3.36419 -8.33852,3.32661"
-       style="fill:none;stroke:#333333;stroke-width:0.916013;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.916013;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:connector-curvature="0"
        inkscape:label="#path2917-3-93" />
     <text
@@ -855,7 +855,7 @@
          sodipodi:role="line"
          class="en">it was decided</tspan><tspan
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.87059999px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.916013;stroke-miterlimit:4;stroke-dasharray:none"
-         y="147.50795"
+         y="153.66573"
          x="97.639763"
          id="tspan149"
          sodipodi:role="line"
@@ -1067,7 +1067,7 @@
     <title
        id="title4721">PLAUT. Amph. 347 numquid nunc es certior?</title>
     <path
-       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.94361299;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.94361299;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 369.39908,153.93594 H 110.98842 v -6.66766 h 258.41066"
        id="certain_rect-9-4-9"
        inkscape:connector-curvature="0"
@@ -1087,7 +1087,7 @@
     <path
        id="certain_path-0_-1-4"
        d="m 369.39908,147.26828 8.3817,3.36398 -8.38169,3.3264"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:connector-curvature="0"
        inkscape:label="#path2917-3-93" />
     <text
@@ -1103,7 +1103,7 @@
          sodipodi:role="line"
          class="en">to be informed</tspan><tspan
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88055992px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458299"
-         y="151.79933"
+         y="157.97295"
          x="120.27009"
          id="tspan195"
          sodipodi:role="line"
@@ -1130,7 +1130,7 @@
        inkscape:connector-curvature="0"
        id="certus-sum_premodal"
        d="m 184.26442,162.13591 h -73.2742 v -6.67001 h 73.09122"
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.95457935;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       style="fill:#ffffff;fill-opacity:1;stroke:#a9a9a9;stroke-width:0.95457935;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <text
        id="text8362-1-4-7-36"
        y="160.59659"
@@ -1162,12 +1162,11 @@
    sodipodi:role="line"
    class="en">I am certain</tspan><tspan
    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88055992px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none"
-   y="159.99716"
+   y="166.17078"
    x="120.271"
    id="tspan206"
    sodipodi:role="line"
-   class="la">[compertum habeo]</tspan>
-    </text>
+   class="la">[compertum habeo]</tspan>    </text>
   </g>
   <g
      transform="translate(20.879441,-22.071565)"
@@ -1261,11 +1260,11 @@
        inkscape:connector-curvature="0"
        id="relevant_rect-8"
        d="m 369.50839,315.72758 h -185.2439 v -6.70594 h 185.2439"
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       style="fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
        inkscape:label="#path2917-3-93"
        inkscape:connector-curvature="0"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 369.50839,309.02816 8.20528,3.35242 -8.20526,3.31497"
        id="relevant_path-0" />
     <text
@@ -1300,11 +1299,11 @@
        inkscape:connector-curvature="0"
        id="relevant_rect-56"
        d="m 369.50839,331.7488 h -185.2439 v -6.70594 h 185.2439"
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       style="fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
        inkscape:label="#path2917-3-93"
        inkscape:connector-curvature="0"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 369.50839,325.04938 8.20528,3.35242 -8.20526,3.31497"
        id="relevant_path-5" />
     <text
@@ -1339,11 +1338,11 @@
        inkscape:connector-curvature="0"
        id="relevant_rect-76"
        d="M 369.50838,339.59109 H 184.26449 v -6.70594 h 185.24389"
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       style="fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
        inkscape:label="right-arrow"
        inkscape:connector-curvature="0"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 369.50838,332.89167 8.20528,3.35242 -8.20526,3.31497"
        id="relevant_path-37" />
     <text
@@ -1378,11 +1377,11 @@
        inkscape:connector-curvature="0"
        id="relevant_rect-50"
        d="M 369.50838,347.51484 H 184.26449 v -6.70594 h 185.24389"
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       style="fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
        inkscape:label="happen-arrow"
        inkscape:connector-curvature="0"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 369.50838,340.81542 8.20528,3.35242 -8.20526,3.31497"
        id="relevant_path-81" />
     <text
@@ -1412,7 +1411,7 @@
     <title
        id="title4723">SEN. epist. 91, 16 nemo altero fragilior est, nemo in crastinum sui certior.</title>
     <path
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.81914902;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.81914902;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 369.70295,355.47766 h -147.3362 v -6.70594 h 147.3362"
        id="relevant_rect-50-9"
        inkscape:connector-curvature="0"
@@ -1421,7 +1420,7 @@
     <path
        id="relevant_path-81-1"
        d="m 369.70295,348.77824 8.20527,3.35242 -8.20525,3.31497"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:connector-curvature="0"
        inkscape:label="sui-arrow" />
     <text
@@ -1471,11 +1470,11 @@ veritatem est qui nequiter humiliat se et interiora eius plena sunt dolo.</title
        inkscape:connector-curvature="0"
        id="relevant_rect-50-9-2"
        d="M 369.43724,374.84488 H 334.48726 V 356.5431 h 34.94998"
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.76170802;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       style="fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.76170802;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
        inkscape:label="performed-arrow"
        inkscape:connector-curvature="0"
-       style="fill:none;stroke:#333333;stroke-width:0.77145499;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.77145499;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 369.52285,356.55196 7.89684,9.13834 -7.89684,9.03625"
        id="relevant_path-81-1-7" />
     <text
@@ -1535,7 +1534,7 @@ veritatem est qui nequiter humiliat se et interiora eius plena sunt dolo.</title
        inkscape:connector-curvature="0"
        id="defined_rect-4"
        d="M 369.53435,170.22337 H 110.77621 v -6.84169 h 258.75814"
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.90737802;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       style="fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.90737802;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:4.58611012px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
@@ -1550,7 +1549,7 @@ veritatem est qui nequiter humiliat se et interiora eius plena sunt dolo.</title
     <path
        inkscape:label="inform-arrow"
        inkscape:connector-curvature="0"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 369.52707,163.39155 8.08606,3.44804 -8.08604,3.40954"
        id="defined_path-0" />
     <text
@@ -1592,11 +1591,11 @@ veritatem est qui nequiter humiliat se et interiora eius plena sunt dolo.</title
        inkscape:connector-curvature="0"
        id="defined_rect-4-4"
        d="M 369.50869,178.54663 H 110.75054 v -6.84168 h 258.75815"
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.90737802;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       style="fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.90737802;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
        inkscape:label="reassure-arrow"
        inkscape:connector-curvature="0"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 369.50869,171.70495 8.08604,3.44804 -8.08602,3.40953"
        id="defined_path-0-2" />
     <text
@@ -1691,7 +1690,7 @@ veritatem est qui nequiter humiliat se et interiora eius plena sunt dolo.</title
          sodipodi:role="line"
          id="tspan297"
          x="119.99403"
-         y="184.77588"
+         y="189.62657"
          style="font-size:3.88055992px;stroke-width:0.26458299">[sine dubio]</tspan></text>
   </g>
   <g
@@ -1702,7 +1701,7 @@ veritatem est qui nequiter humiliat se et interiora eius plena sunt dolo.</title
     <title
        id="title4701">ENN. scaen. 143 quos ego (Apollo) ... ex incertis certos compotesque consili dimitto. </title>
     <path
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.91002297;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#ffffff;fill-opacity:1;stroke:#a9a9a9;stroke-width:0.91002297;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 369.47323,89.021244 H 110.79249 v -6.696747 h 258.68074"
        id="resolute_rect"
        inkscape:connector-curvature="0"
@@ -1728,7 +1727,7 @@ veritatem est qui nequiter humiliat se et interiora eius plena sunt dolo.</title
     <path
        id="certain_path-0_-2-9"
        d="m 369.47323,82.322229 8.3817,3.363984 -8.38169,3.326404"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#a9a9a9;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:connector-curvature="0"
        inkscape:label="resolute-arrow" />
   </g>
@@ -1745,11 +1744,11 @@ veritatem est qui nequiter humiliat se et interiora eius plena sunt dolo.</title
        inkscape:connector-curvature="0"
        id="relevant_rect"
        d="M 369.50186,203.27835 H 184.25797 v -6.70594 h 185.24389"
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       style="fill:#ffffff;fill-opacity:1;stroke:#a9a9a9;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
        inkscape:label="#path2917-3-93"
        inkscape:connector-curvature="0"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#a9a9a9;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 369.50186,196.57893 8.20528,3.35242 -8.20526,3.31497"
        id="relevant_path" />
     <text
@@ -1779,7 +1778,7 @@ veritatem est qui nequiter humiliat se et interiora eius plena sunt dolo.</title
     <title
        id="title4693">CIC. de orat. 1, 138 de re certis in personis ac temporibus locata.</title>
     <path
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 369.50838,211.38249 H 184.26449 v -6.70594 h 185.24389"
        id="relevant_rect-7"
        inkscape:connector-curvature="0"
@@ -1788,7 +1787,7 @@ veritatem est qui nequiter humiliat se et interiora eius plena sunt dolo.</title
     <path
        id="relevant_path-4"
        d="m 369.50838,204.68307 8.20528,3.35242 -8.20526,3.31497"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:connector-curvature="0"
        inkscape:label="single-arrow" />
     <text
@@ -1818,7 +1817,7 @@ veritatem est qui nequiter humiliat se et interiora eius plena sunt dolo.</title
     <title
        id="title4695">CIC. orat. 55 utcunque orator ... animum audientis moveri volet, ita certum vocis admovebit sonum.</title>
     <path
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 369.50838,219.44982 H 184.26449 v -6.70594 h 185.24389"
        id="relevant_rect-70"
        inkscape:connector-curvature="0"
@@ -1827,7 +1826,7 @@ veritatem est qui nequiter humiliat se et interiora eius plena sunt dolo.</title
     <path
        id="relevant_path-6"
        d="m 369.50838,212.7504 8.20528,3.35242 -8.20526,3.31497"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:connector-curvature="0"
        inkscape:label="suitable-arrow" />
     <text
@@ -1857,7 +1856,7 @@ veritatem est qui nequiter humiliat se et interiora eius plena sunt dolo.</title
     <title
        id="title4697">CIC. div. in Caec. 24 certos esse in consilio, quibus ostendi tabellas velit.</title>
     <path
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 369.50837,227.49173 H 184.26449 v -6.70594 h 185.24388"
        id="relevant_rect-5"
        inkscape:connector-curvature="0"
@@ -1866,7 +1865,7 @@ veritatem est qui nequiter humiliat se et interiora eius plena sunt dolo.</title
     <path
        id="relevant_path-3"
        d="m 369.50837,220.79231 8.20528,3.35242 -8.20526,3.31497"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:connector-curvature="0"
        inkscape:label="number-path" />
     <text
@@ -1896,7 +1895,7 @@ veritatem est qui nequiter humiliat se et interiora eius plena sunt dolo.</title
     <title
        id="title4699">Rhet. Her. 3, 3, 5 certo naturae termino definiemus.</title>
     <path
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 369.50838,235.44553 H 184.26449 v -6.70594 h 185.24389"
        id="relevant_rect-4"
        inkscape:connector-curvature="0"
@@ -1905,7 +1904,7 @@ veritatem est qui nequiter humiliat se et interiora eius plena sunt dolo.</title
     <path
        id="relevant_path-1"
        d="m 369.50838,228.74611 8.20528,3.35242 -8.20526,3.31497"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:connector-curvature="0"
        inkscape:label="nature-arrow" />
     <text
@@ -1935,7 +1934,7 @@ veritatem est qui nequiter humiliat se et interiora eius plena sunt dolo.</title
     <title
        id="title4705">CIC. Verr. 4, 109 ratio certa est Aetnensium et publicis et privatis litteris consignata</title>
     <path
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 369.50837,243.32955 H 184.26449 v -6.70594 h 185.24388"
        id="relevant_rect-49"
        inkscape:connector-curvature="0"
@@ -1944,7 +1943,7 @@ veritatem est qui nequiter humiliat se et interiora eius plena sunt dolo.</title
     <path
        id="relevant_path-8"
        d="m 369.50837,236.63013 8.20528,3.35242 -8.20526,3.31497"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:connector-curvature="0"
        inkscape:label="known-arrow" />
     <text
@@ -1985,7 +1984,7 @@ veritatem est qui nequiter humiliat se et interiora eius plena sunt dolo.</title
          id="tspan8360-5-6"
          sodipodi:role="line">CERTUM HABEO</tspan></text>
     <path
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 369.50837,251.18463 H 184.26449 v -6.70594 h 185.24388"
        id="know-rect"
        inkscape:connector-curvature="0"
@@ -1994,7 +1993,7 @@ veritatem est qui nequiter humiliat se et interiora eius plena sunt dolo.</title
     <path
        id="know-arrow"
        d="m 369.50837,244.48521 8.20528,3.35242 -8.20526,3.31497"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:connector-curvature="0"
        inkscape:label="know-arrow" />
     <text
@@ -2014,7 +2013,7 @@ veritatem est qui nequiter humiliat se et interiora eius plena sunt dolo.</title
          sodipodi:role="line"
          id="tspan356"
          x="193.57748"
-         y="249.00615"
+         y="253.85684"
          style="font-size:3.88055992px;stroke-width:0.26458299">novi</tspan></text>
   </g>
   <g
@@ -2078,7 +2077,7 @@ CIC. ac. 2, 92 interrogati ... certum respondeamus, [non] habemus (sc. quid resp
     <title
        id="title4709">LUCR. 5, 582 quandoquidem luna claram speciem certamque figuram praebet.</title>
     <path
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 369.50837,267.43994 H 184.26449 V 260.734 h 185.24388"
        id="relevant_rect-6"
        inkscape:connector-curvature="0"
@@ -2087,7 +2086,7 @@ CIC. ac. 2, 92 interrogati ... certum respondeamus, [non] habemus (sc. quid resp
     <path
        id="relevant_path-33"
        d="m 369.50837,260.74052 8.20528,3.35242 -8.20526,3.31497"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:connector-curvature="0"
        inkscape:label="true-arrow" />
     <text
@@ -2117,7 +2116,7 @@ CIC. ac. 2, 92 interrogati ... certum respondeamus, [non] habemus (sc. quid resp
     <title
        id="title4711">CAES. Gall. 5, 13, 4 certis mensuris ... videbamus.</title>
     <path
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 369.50837,275.33855 H 184.26449 v -6.70594 h 185.24388"
        id="relevant_rect-3"
        inkscape:connector-curvature="0"
@@ -2126,7 +2125,7 @@ CIC. ac. 2, 92 interrogati ... certum respondeamus, [non] habemus (sc. quid resp
     <path
        id="relevant_path-9"
        d="m 369.50837,268.63913 8.20528,3.35242 -8.20526,3.31497"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:connector-curvature="0"
        inkscape:label="precise-arrow" />
     <text
@@ -2150,7 +2149,7 @@ CIC. ac. 2, 92 interrogati ... certum respondeamus, [non] habemus (sc. quid resp
     <title
        id="title4713">VITR. 1, 1, 8 nisi sonitus ad artificis aures certos et aequales fecerint.</title>
     <path
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 369.50838,283.30825 H 184.26449 v -6.70594 h 185.24389"
        id="relevant_rect-58"
        inkscape:connector-curvature="0"
@@ -2159,7 +2158,7 @@ CIC. ac. 2, 92 interrogati ... certum respondeamus, [non] habemus (sc. quid resp
     <path
        id="relevant_path-90"
        d="m 369.50838,276.60883 8.20528,3.35242 -8.20526,3.31497"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:connector-curvature="0"
        inkscape:label="clear-arrow" />
     <text
@@ -2190,7 +2189,7 @@ CIC. ac. 2, 92 interrogati ... certum respondeamus, [non] habemus (sc. quid resp
     <title
        id="title4715">CIC. Verr. 4, 175 quae dicimus rationibus populorum non interpositis ... sed certis ... relata atque confecta sunt.</title>
     <path
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 369.50837,291.36084 H 184.26449 v -6.70594 h 185.24388"
        id="relevant_rect-57"
        inkscape:connector-curvature="0"
@@ -2199,7 +2198,7 @@ CIC. ac. 2, 92 interrogati ... certum respondeamus, [non] habemus (sc. quid resp
     <path
        id="relevant_path-13"
        d="m 369.50837,284.66142 8.20528,3.35242 -8.20526,3.31497"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:connector-curvature="0"
        inkscape:label="authentic-arrow" />
     <text
@@ -2229,7 +2228,7 @@ CIC. ac. 2, 92 interrogati ... certum respondeamus, [non] habemus (sc. quid resp
     <title
        id="title4719">CIC. div. 1, 78 fiunt certae divinationum coniecturae.</title>
     <path
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 369.50839,299.65429 h -185.2439 v -6.70594 h 185.2439"
        id="relevant_rect-08-3"
        inkscape:connector-curvature="0"
@@ -2238,7 +2237,7 @@ CIC. ac. 2, 92 interrogati ... certum respondeamus, [non] habemus (sc. quid resp
     <path
        id="relevant_path-7-2"
        d="m 369.50839,292.95487 8.20528,3.35242 -8.20526,3.31497"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:connector-curvature="0"
        inkscape:label="reliable-arrow" />
     <text
@@ -2258,8 +2257,8 @@ CIC. ac. 2, 92 interrogati ... certum respondeamus, [non] habemus (sc. quid resp
          x="193.57748"
          y="297.47598"
          style="font-style:italic;font-size:3.88055992px;stroke-width:0.26458299"
-         class="la">speciatim fere idem quam <tspan
-   style="-inkscape-font-specification:sans-serif;font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+         class="la">speciatim fere idem quod <tspan
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif"
    id="tspan463">vera explorans</tspan></tspan></text>
   </g>
   <g
@@ -2344,7 +2343,7 @@ CIC. ac. 2, 92 interrogati ... certum respondeamus, [non] habemus (sc. quid resp
     <path
        inkscape:label="quantity-arrow"
        inkscape:connector-curvature="0"
-       style="fill:none;stroke:#333333;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#A9A9A9 ;stroke-width:0.918369;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 369.72138,41.138099 8.07819,3.398942 -8.07818,3.360978"
        id="proven_path-6-5" />
     <path
@@ -2353,7 +2352,7 @@ CIC. ac. 2, 92 interrogati ... certum respondeamus, [non] habemus (sc. quid resp
        inkscape:connector-curvature="0"
        id="certain_rect"
        d="M 369.72138,47.859003 H 111.09265 v -6.720904 h 258.62873"
-       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.94698602;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#A9A9A9 ;stroke-width:0.94698602;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <text
        id="text3016"
        y="45.768749"
@@ -2597,8 +2596,8 @@ CIC. ac. 2, 92 interrogati ... certum respondeamus, [non] habemus (sc. quid resp
        inkscape:label="sure_trustworthy"
        sodipodi:nodetypes="cccc"
        class="links sure trustworthy trusty-words"
-       d="m 398.36967,191.75117 h 3.64289 v 112.27547 h -3.64289"
-       style="display:none;opacity:0.97000002;fill:none;fill-opacity:1;stroke:#333333;stroke-width:1.05586708;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       d="m 398.36967,164.16978 h 3.64289 v 139.85686 h -3.64289"
+       style="display:none;opacity:0.97000002;fill:none;fill-opacity:1;stroke:#333333;stroke-width:1.17844331;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
        id="sure_trustworthy" />
   </g>
   <path
@@ -2646,7 +2645,7 @@ CIC. ac. 2, 92 interrogati ... certum respondeamus, [non] habemus (sc. quid resp
        inkscape:connector-curvature="0"
        id="certus-sum_premodal-5"
        d="m 184.26442,162.13591 h -73.2742 v -6.67001 h 73.09122"
-       style="fill:#ffffff;fill-opacity:1;stroke:#333333;stroke-width:0.95457935;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       style="fill:#ffffff;fill-opacity:1;stroke:#a9a9a9;stroke-width:0.95457935;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <text
        id="text8362-1-4-7-36-3"
        y="160.59659"
