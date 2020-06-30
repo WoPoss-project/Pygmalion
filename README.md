@@ -33,7 +33,7 @@ The SVG files are available in [this folder](https://github.com/WoPoss/semantic_
 
 ### Known Issues
 List of shortcomings of the current design, including features that have not been implemented yet:
-- Lack of a collapse effect. When a sense is selected, in order to highlight its semantic path, "unrelated" meanings disappear and lines depicting the relations become visible. However, senses keep their original position instead of coming close together. In a long map like that of _CERTUS_, this deficiency becomes clear. The visualisation of the relations through lines on the right is not very efficient: the relations would be clearer of the line could appear "inside" the map and not on the side. 
+- Lack of a collapse effect. When a sense is selected, in order to highlight its semantic path, “unrelated” meanings disappear and lines depicting the relations become visible. However, senses keep their original position instead of coming close together. In a long map like that of _CERTUS_, this deficiency becomes clear. The visualisation of the relations through lines on the right is not very efficient: the relations would be clearer of the line could appear "inside" the map and not on the side. 
 - The double click to reset the visualization is less intuitive than a normal click event.
 - Lack of direction in the relations between the senses. The current design does not create a hierarchy among the relations: all of them are at the same level. Based on the chronology, the user infers the direction (that is, if a sense is related to a more recent one, the first one is understood to be the source –or one of the sources– of the second one).
 - Lack of accessibility: currently, color is the only visual means of conveying the type of modality, which breaks a few [accessibility principles](https://www.w3.org/WAI/fundamentals/accessibility-principles/).
@@ -49,7 +49,10 @@ Currently, a user can toggle the visualization of the meanings between English a
 The definition of each meaning (a `<text>` element) contains `<tspan>` elements with a `@class` attribute indicating the language. A simple JavaScript code (see [language.js](https://github.com/WoPoss/semantic_maps/blob/master/drawn-maps/js/language.js)) hides/shows the correct spans according to the user’s selection in a small menu that precedes each map.
 
 #### Show/hide effect
+When clicking on a sense, senses not related to it are hidden and lines depicting the relations become visible. The effect is done by changing the values of the CSS property `display` depending on whether the `@id` of the selected sense is present as a value of a `@class` attribute in the other senses and links (see [paths-hide.js](https://github.com/WoPoss/semantic_maps/blob/master/drawn-maps/js/paths-hide.js)). A click on the senses fires the hidding of unrelated senses and the display of the connections, and a double-click on the senses displays all the senses again (and hides the connections).
 When clicking on a meaning, meanings not (specifically) related to it are hidden and lines depicting the relations become visible on the right side. The effect is done with a JavaScript program that toggles the value ’@class="show"’ depending on whether the `@id` of the selected meaning is present as a value of a `@class` attribute in the other meanings and links (see [paths-hide.js](https://github.com/WoPoss/semantic_maps/blob/master/drawn-maps/js/paths-hide.js))
+
+At first, the effect was done with a JavaScript program that toggled the value ’@class="show"’. That way, the same event (clicking on a sense) would show/hide the senses accordingly without needing a second function to reset the visualization. However, the show/hide effect was not very smooth, thus the change.
 
 ## Future work
 ### Form
