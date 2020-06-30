@@ -64,7 +64,7 @@ In order to follow the chronology in a long map, the timeline with the centuries
 In order to create an automatic visualization of a semantic map from user input, a form must be designed. Following the specifications detailed [above](#information-requirements), the form must ask for:
 - The headword
 - The etymology of the word with as many phases as needed. Each phase has to account for:
-    - reconstructed/previously attested form (in the case of Latin there are usually the Proto-Indo-European phase and the Proto-Italic phase. For none of them do we have a direct attestations and we use an asterisk before the form / For other languages, e.g. French, the situation is different.)
+    - reconstructed/previously attested form (in the case of Latin there are usually the Proto-Indo-European phase and the Proto-Italic phase. For none of them do we have any direct attestations and we use an asterisk before the form / For other languages, e.g. French, the situation is different.)
     - language(s) to which the reconstructed or previously attested forms belong 
     - chronology (not currently illustrated in the available maps)
     - meaning and/or translation
