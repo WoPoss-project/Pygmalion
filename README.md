@@ -87,6 +87,7 @@ In order to create an automatic visualization of a semantic map from user input,
         - the direction (or not) of the relation (there must be the possibility to express both source --> target associations and undirected relations)
         - the degree of certainty of the association (a scale of two is sufficient: certain vs uncertain)
 - Expressions that contain the headword. A expression may have one of more meanings. For the information required for each meaning, see the previous item.
+- Different alphabets. We did not work (yet) at possibility to use different alphabets (e.g. the Greek alphabet). 
 
 ### Visualization
 As detailed above, the semantic maps contain a lot of information. Thus, the visual cues that depict each piece of information must be clear and part of the contents of the map must be displayed on user demand.
