@@ -83,6 +83,7 @@ In order to create an automatic visualization of a semantic map from user input,
     - in terms of the modal classification, it should be possible to encode 
         - the degree of certainty in the assignation of a modal meaning (a scale of two is sufficient: certain vs uncertain)
         - the possibility for a meaning to acquire the modal reading after its first attestation (that it, a meaning “begins” as premodal and acquires a modal meaning later in time)
+        - the possibility of co-existence of different modal types 
     - its relation(s) with other senses, including 
         - the direction (or not) of the relation (there must be the possibility to express both source --> target associations and undirected relations)
         - the degree of certainty of the association (a scale of two is sufficient: certain vs uncertain)
