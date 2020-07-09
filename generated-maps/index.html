@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./form.css" />
+    <title>Form</title>
+  </head>
+  <body>
+    <form id="cardForm">
+      <div class="row">
+        <div class="col-25">
+          <label for="headwordInput">Headword</label>
+        </div>
+        <div class="col-75">
+          <input type="text" name="headwordInput" id="headwordInput" placeholder="Please enter the word you want to draw a map of..."/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label for="dateSpec">Date format</label>
+        </div>
+        <div class="col-75">
+          <select name="dateSpec" id="dateSpec">
+            <option value="cent">Centuries</option>
+            <option value="dec">Decades</option>
+            <option value="dates">Specific dates</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label>Senses</h3>
+        </div>
+        <div class="col-75">
+          <div id="newSenses"></div>
+        </div>
+      </div>
+      <br />
+      <button id="submitForm" class="submit">Submit</button>
+      <button id="addSense">Add a sense</button>
+    </form>
+    <script src="./form.js"></script>
+  </body>
+</html>
