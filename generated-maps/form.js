@@ -27,14 +27,13 @@ function modalDatePicker(spec) {
     dateElement.type = 'text';
     dateElement.placeholder = 'Decade or Year';
   } else {
-    dateElement.type = 'date';
+    dateElement.type = 'text';
+    dateElement.placeholder = 'Please enter a specific year';
   }
   return dateElement;
 }
 
 function createModality(event) {
-  const br = document.createElement('br');
-
   let div = document.createElement('div');
   div.className = 'modal';
 
@@ -66,7 +65,6 @@ function createModality(event) {
 
     const newModalArea = event.target.parentNode.querySelector('.modals');
 
-    div.appendChild(br);
     div = mainModal(
       div,
       modalityLabel,
