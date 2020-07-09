@@ -43,6 +43,12 @@ small {
   cursor: pointer;
 }
 
+.definition {
+  border: 1px solid rgb(189, 189, 189);
+  padding: 12px;
+  border-radius: 5px;
+}
+
 .submit {
   background-color: rgb(50, 63, 241);
 }
