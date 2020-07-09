@@ -1,10 +1,13 @@
+/* DOM constants definition */
 const headwordInput = document.getElementById('headwordInput');
 const dateSpec = document.getElementById('dateSpec');
 const addSense = document.getElementById('addSense');
 const newSenses = document.getElementById('newSenses');
 
+// Event on the "Add a sense" button
 addSense.addEventListener('click', createSense);
 
+// Event on the select-type input for the date format
 dateSpec.addEventListener('change', function () {
   const dates = document.querySelectorAll('.date');
   const change = event.target.value;
@@ -17,6 +20,8 @@ dateSpec.addEventListener('change', function () {
   });
 });
 
+// Takes in the value of the select-type input for the date format
+// Creates and returns an input element with the correct values
 function modalDatePicker(spec) {
   const dateElement = document.createElement('input');
   dateElement.className = 'date';
@@ -33,7 +38,10 @@ function modalDatePicker(spec) {
   return dateElement;
 }
 
+// Largest function of the form :
+// Allows us to create the modality part of the form
 function createModality(event) {
+  // Definition of the global elements
   let div = document.createElement('div');
   div.className = 'modal';
 
@@ -60,7 +68,9 @@ function createModality(event) {
   const confidenceLabel = document.createElement('label');
   confidenceLabel.innerHTML = 'Confidence in the modality';
 
+  // If the function was called by an event...
   if (event) {
+    // ... this means that we need to add a modality to the modality list
     event.preventDefault();
 
     const newModalArea = event.target.parentNode.querySelector('.modals');
@@ -77,6 +87,7 @@ function createModality(event) {
 
     newModalArea.appendChild(div);
   } else {
+    // ... or else we need to create a new modality list as well as a modality
     const row = document.createElement('div');
     row.className = 'row';
 
@@ -117,6 +128,7 @@ function createModality(event) {
   }
 }
 
+// General function for main modality elements
 function mainModal(div, lab, del, smalls, test, check, conf) {
   div.appendChild(lab);
   div.appendChild(del);
@@ -131,6 +143,7 @@ function mainModal(div, lab, del, smalls, test, check, conf) {
   return div;
 }
 
+// General function to generate a select-type input with the modal types
 function createModalSelect() {
   const modalSelect = document.createElement('select');
   const options = [
@@ -151,6 +164,7 @@ function createModalSelect() {
   return modalSelect;
 }
 
+// Add a sense/definition to the form
 function createSense(event) {
   event.preventDefault();
 
@@ -182,6 +196,7 @@ function createSense(event) {
   newSenses.appendChild(definition);
 }
 
+// General function to create a list of smalls: DOM elements for UI
 function createSmalls() {
   const smalls = [
     'Modality type',
@@ -198,9 +213,11 @@ function createSmalls() {
   return smallElements;
 }
 
+// Function to delete a modality
 function deleteModal(event) {
   const modal = event.target.parentNode;
   const parent = modal.parentNode;
+  // Will not work if the user is about to delete the only modality for a definition
   if (parent.childNodes.length > 1) {
     while (modal.firstChild) {
       modal.removeChild(modal.firstChild);
