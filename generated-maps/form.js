@@ -62,6 +62,7 @@ function createModality(event) {
   const confidenceCheckbox = document.createElement('input');
   confidenceCheckbox.type = 'checkbox';
   confidenceCheckbox.name = 'certitude';
+  confidenceCheckbox.value = 'certitude';
   confidenceCheckbox.className = 'certitude';
   confidenceCheckbox.checked = true;
 
