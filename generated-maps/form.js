@@ -251,7 +251,6 @@ function addEtymologicalStep(event) {
 
   const periodDiv = document.createElement('div');
   periodDiv.className = 'col-33';
-  periodDiv.style.display = 'inline-block';
 
   const period = document.createElement('input');
   period.type = 'text';
@@ -260,7 +259,6 @@ function addEtymologicalStep(event) {
 
   const etymologicalDiv = document.createElement('div');
   etymologicalDiv.className = 'col-33';
-  etymologicalDiv.style.display = 'inline-block';
 
   const etymologicalForm = document.createElement('input');
   etymologicalForm.type = 'text';
@@ -269,7 +267,6 @@ function addEtymologicalStep(event) {
 
   const definitionlDiv = document.createElement('div');
   definitionlDiv.className = 'col-33';
-  definitionlDiv.style.display = 'inline-block';
 
   const shortDefinition = document.createElement('input');
   shortDefinition.type = 'text';

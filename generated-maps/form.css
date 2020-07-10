@@ -44,7 +44,8 @@ small {
   cursor: pointer;
 }
 
-.definition {
+.definition,
+.etymologyStep {
   border: 1px solid rgb(189, 189, 189);
   padding: 12px;
   border-radius: 5px;
@@ -74,9 +75,9 @@ small {
 
 /* Floating column for inputs: 33% width */
 .col-33 {
-  float: left;
   width: 33.3333333%;
   margin-top: 6px;
+  display: inline-block;
 }
 
 /* Floating column for inputs: 75% width */
