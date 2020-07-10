@@ -33,12 +33,12 @@ small {
   float: right;
 }
 
-.deleteModal {
+.delete {
   color: rgb(50, 171, 241);
   float: right;
 }
 
-.deleteModal:hover {
+.delete:hover {
   color: rgb(38, 125, 196);
   text-decoration: underline;
   cursor: pointer;

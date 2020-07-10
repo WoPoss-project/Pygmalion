@@ -54,7 +54,7 @@ function createModality(event) {
 
   const deleteModalLabel = document.createElement('label');
   deleteModalLabel.innerHTML = 'Delete modality';
-  deleteModalLabel.className = 'deleteModal';
+  deleteModalLabel.className = 'delete';
   deleteModalLabel.addEventListener('click', deleteModal);
 
   const modalTestimony = document.createElement('input');
@@ -213,14 +213,17 @@ function createSense(event) {
 
 // Function to delete a modality
 function deleteModal(event) {
-  const modal = event.target.parentNode;
-  const parent = modal.parentNode;
+  const parent = event.target.parentNode;
+  const grandParent = parent.parentNode;
   // Will not work if the user is about to delete the only modality for a definition
-  if (parent.childNodes.length > 1) {
-    while (modal.firstChild) {
-      modal.removeChild(modal.firstChild);
+  if (
+    (grandParent.childNodes.length > 1 && parent.className === 'modal') ||
+    parent.className === 'etymologyStep'
+  ) {
+    while (parent.firstChild) {
+      parent.removeChild(parent.firstChild);
     }
-    parent.removeChild(modal);
+    grandParent.removeChild(parent);
   } else {
     alert('At least one modality is required per definition');
   }
@@ -246,6 +249,11 @@ function addEtymologicalStep(event) {
       label.innerHTML = `Evolution ${Number(labelValue.split(' ')[1]) + 1}`;
     }
   }
+
+  const etymologyDelete = document.createElement('label');
+  etymologyDelete.innerHTML = 'Delete entry';
+  etymologyDelete.className = 'delete';
+  etymologyDelete.addEventListener('click', deleteModal);
 
   const br = document.createElement('br');
 
@@ -281,6 +289,7 @@ function addEtymologicalStep(event) {
   });
 
   div.appendChild(label);
+  div.appendChild(etymologyDelete);
   div.appendChild(br);
 
   periodDiv.appendChild(period);
