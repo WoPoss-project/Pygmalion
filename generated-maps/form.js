@@ -224,6 +224,12 @@ function deleteModal(event) {
       parent.removeChild(parent.firstChild);
     }
     grandParent.removeChild(parent);
+    if (
+      parent.className === 'etymologyStep' &&
+      grandParent.childNodes.length <= 0
+    ) {
+      etymologicalStep.style.float = 'left';
+    }
   } else {
     alert('At least one modality is required per definition');
   }
@@ -232,6 +238,8 @@ function deleteModal(event) {
 // Function to add an etymological step
 function addEtymologicalStep(event) {
   event.preventDefault();
+
+  etymologicalStep.style.float = 'right';
 
   const div = document.createElement('div');
   div.className = 'etymologyStep';
