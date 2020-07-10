@@ -231,21 +231,45 @@ function addEtymologicalStep(event) {
   event.preventDefault();
 
   const div = document.createElement('div');
-  div.className = 'col-25';
-  div.className += ' etymologyStep';
+  div.className = 'etymologyStep';
 
-  // const label = document.createElement('label');
-  // label.innerHTML = 'Evolution';
+  const etymologyLabel = document.querySelectorAll('.ety');
+  const label = document.createElement('label');
+  label.className = 'ety';
+  if (etymologyLabel.length === 0) {
+    label.innerHTML = 'Origin';
+  } else {
+    const labelValue = etymologyLabel[etymologyLabel.length - 1].innerHTML;
+    if (labelValue === 'Origin') {
+      label.innerHTML = 'Evolution 1';
+    } else {
+      label.innerHTML = `Evolution ${Number(labelValue.split(' ')[1]) + 1}`;
+    }
+  }
+
+  const br = document.createElement('br');
+
+  const periodDiv = document.createElement('div');
+  periodDiv.className = 'col-33';
+  periodDiv.style.display = 'inline-block';
 
   const period = document.createElement('input');
   period.type = 'text';
   period.className = 'period';
   period.placeholder = 'e.g. PIE, PI, LAT, ...';
 
+  const etymologicalDiv = document.createElement('div');
+  etymologicalDiv.className = 'col-33';
+  etymologicalDiv.style.display = 'inline-block';
+
   const etymologicalForm = document.createElement('input');
   etymologicalForm.type = 'text';
   etymologicalForm.className = 'etymologicalForm';
   etymologicalForm.placeholder = 'Etymological form...';
+
+  const definitionlDiv = document.createElement('div');
+  definitionlDiv.className = 'col-33';
+  definitionlDiv.style.display = 'inline-block';
 
   const shortDefinition = document.createElement('input');
   shortDefinition.type = 'text';
@@ -259,13 +283,20 @@ function addEtymologicalStep(event) {
     smalls[smalls.indexOf(el)] = small;
   });
 
-  // div.appendChild(label);
-  div.appendChild(period);
-  div.appendChild(smalls[0]);
-  div.appendChild(etymologicalForm);
-  div.appendChild(smalls[1]);
-  div.appendChild(shortDefinition);
-  div.appendChild(smalls[2]);
+  div.appendChild(label);
+  div.appendChild(br);
+
+  periodDiv.appendChild(period);
+  periodDiv.appendChild(smalls[0]);
+  div.appendChild(periodDiv);
+
+  etymologicalDiv.appendChild(etymologicalForm);
+  etymologicalDiv.appendChild(smalls[1]);
+  div.appendChild(etymologicalDiv);
+
+  definitionlDiv.appendChild(shortDefinition);
+  definitionlDiv.appendChild(smalls[2]);
+  div.appendChild(definitionlDiv);
 
   etmyologyArea.appendChild(div);
 }

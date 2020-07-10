@@ -72,10 +72,10 @@ small {
   margin-top: 6px;
 }
 
-/* Floating column for inputs: 35% width */
-.col-35 {
+/* Floating column for inputs: 33% width */
+.col-33 {
   float: left;
-  width: 35%;
+  width: 33.3333333%;
   margin-top: 6px;
 }
 
