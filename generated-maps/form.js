@@ -226,6 +226,7 @@ function deleteModal(event) {
   }
 }
 
+// Function to add an etymological step
 function addEtymologicalStep(event) {
   event.preventDefault();
 
@@ -233,8 +234,8 @@ function addEtymologicalStep(event) {
   div.className = 'col-25';
   div.className += ' etymologyStep';
 
-  const label = document.createElement('label');
-  label.innerHTML = 'Evolution';
+  // const label = document.createElement('label');
+  // label.innerHTML = 'Evolution';
 
   const period = document.createElement('input');
   period.type = 'text';
@@ -258,7 +259,7 @@ function addEtymologicalStep(event) {
     smalls[smalls.indexOf(el)] = small;
   });
 
-  div.appendChild(label);
+  // div.appendChild(label);
   div.appendChild(period);
   div.appendChild(smalls[0]);
   div.appendChild(etymologicalForm);
