@@ -3,6 +3,8 @@ const headwordInput = document.getElementById('headwordInput');
 const dateSpec = document.getElementById('dateSpec');
 const addSense = document.getElementById('addSense');
 const newSenses = document.getElementById('newSenses');
+const etmyologyArea = document.getElementById('etymology');
+const etymologicalStep = document.getElementById('etymologicalStep');
 
 // Event on the "Add a sense" button
 addSense.addEventListener('click', createSense);
@@ -19,6 +21,8 @@ dateSpec.addEventListener('change', function () {
     parent.replaceChild(newChild, el);
   });
 });
+
+etymologicalStep.addEventListener('click', addEtymologicalStep);
 
 // Takes in the value of the select-type input for the date format
 // Creates and returns an input element with the correct values
@@ -57,7 +61,17 @@ function createModality(event) {
   modalTestimony.type = 'text';
   modalTestimony.placeholder = "Modality's first testimony";
 
-  smalls = createSmalls();
+  const smalls = [
+    'Modality type',
+    'Modality/Sense emergence date',
+    'Modality testimony',
+  ];
+
+  smalls.forEach((el) => {
+    const small = document.createElement('small');
+    small.innerHTML = el;
+    smalls[smalls.indexOf(el)] = small;
+  });
 
   const confidenceCheckbox = document.createElement('input');
   confidenceCheckbox.type = 'checkbox';
@@ -197,23 +211,6 @@ function createSense(event) {
   newSenses.appendChild(definition);
 }
 
-// General function to create a list of smalls: DOM elements for UI
-function createSmalls() {
-  const smalls = [
-    'Modality type',
-    'Modality/Sense emergence date',
-    'Modality testimony',
-  ];
-
-  const smallElements = [];
-  for (smallIndex in smalls) {
-    const small = document.createElement('small');
-    small.innerHTML = smalls[smallIndex];
-    smallElements.push(small);
-  }
-  return smallElements;
-}
-
 // Function to delete a modality
 function deleteModal(event) {
   const modal = event.target.parentNode;
@@ -227,4 +224,47 @@ function deleteModal(event) {
   } else {
     alert('At least one modality is required per definition');
   }
+}
+
+function addEtymologicalStep(event) {
+  event.preventDefault();
+
+  const div = document.createElement('div');
+  div.className = 'col-25';
+  div.className += ' etymologyStep';
+
+  const label = document.createElement('label');
+  label.innerHTML = 'Evolution';
+
+  const period = document.createElement('input');
+  period.type = 'text';
+  period.className = 'period';
+  period.placeholder = 'e.g. PIE, PI, LAT, ...';
+
+  const etymologicalForm = document.createElement('input');
+  etymologicalForm.type = 'text';
+  etymologicalForm.className = 'etymologicalForm';
+  etymologicalForm.placeholder = 'Etymological form...';
+
+  const shortDefinition = document.createElement('input');
+  shortDefinition.type = 'text';
+  shortDefinition.className = 'shortDefinition';
+  shortDefinition.placeholder = 'Short, one-word, definition';
+
+  const smalls = ['Language/period', 'Etymological form', 'Short definition'];
+  smalls.forEach((el) => {
+    const small = document.createElement('small');
+    small.innerHTML = el;
+    smalls[smalls.indexOf(el)] = small;
+  });
+
+  div.appendChild(label);
+  div.appendChild(period);
+  div.appendChild(smalls[0]);
+  div.appendChild(etymologicalForm);
+  div.appendChild(smalls[1]);
+  div.appendChild(shortDefinition);
+  div.appendChild(smalls[2]);
+
+  etmyologyArea.appendChild(div);
 }

@@ -22,6 +22,7 @@ button {
   border-radius: 4px;
   cursor: pointer;
   float: right;
+  width: 200px;
 }
 
 button:hover {
@@ -55,13 +56,6 @@ small {
 
 .submit:hover {
   background-color: rgb(39, 48, 180);
-}
-
-/* Floating column for inputs: 15% width */
-.col-15 {
-  float: left;
-  width: 15%;
-  margin-top: 6px;
 }
 
 /* Floating column for inputs: 15% width */
@@ -105,7 +99,7 @@ small {
   .col-15,
   .col-35,
   .col-75,
-  input[type='submit'] {
+  button {
     width: 100%;
     margin-top: 0;
   }
