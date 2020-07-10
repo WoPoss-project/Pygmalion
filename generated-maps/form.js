@@ -270,7 +270,11 @@ function deleteModal(event) {
       etymologicalStep.style.float = 'left';
     }
   } else {
-    alert('At least one modality is required per definition');
+    Swal.fire({
+      icon: 'warning',
+      title: 'Caution!',
+      text: 'Each sense/definition should have at least one modality',
+    });
   }
 }
 
