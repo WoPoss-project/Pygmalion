@@ -186,13 +186,14 @@ function createSense(event) {
   const definition = document.createElement('div');
   definition.className = 'definition';
 
-  const row = document.createElement('div');
-  row.className = 'row';
+  const definitionRow = document.createElement('div');
+  definitionRow.className = 'row';
 
   const senseLabelDiv = document.createElement('div');
   senseLabelDiv.className = 'col-25';
   const senseLabel = document.createElement('label');
   senseLabel.innerHTML = 'Definition';
+
   senseLabelDiv.appendChild(senseLabel);
 
   const senseInputDiv = document.createElement('div');
@@ -200,12 +201,50 @@ function createSense(event) {
   const senseInput = document.createElement('input');
   senseInput.type = 'text';
   senseInput.placeholder = 'Please enter a definition for the headword...';
+
   senseInputDiv.appendChild(senseInput);
 
-  row.appendChild(senseLabelDiv);
-  row.appendChild(senseInputDiv);
+  definitionRow.appendChild(senseLabelDiv);
+  definitionRow.appendChild(senseInputDiv);
 
-  definition.appendChild(row);
+  const groupRow = document.createElement('div');
+  groupRow.className = 'row';
+
+  const groupLabelDiv = document.createElement('div');
+  groupLabelDiv.className = 'col-25';
+  const groupLabel = document.createElement('label');
+  groupLabel.innerHTML = 'Group';
+
+  groupLabelDiv.appendChild(groupLabel);
+
+  const groupSelectDiv = document.createElement('div');
+  groupSelectDiv.className = 'col-75';
+  const groupSelect = document.createElement('select');
+  groupSelect.className = 'group';
+  const existingSelect = document.querySelector('.group');
+  let groups;
+  if (!existingSelect) {
+    groups = ['None', 'Add a group...'];
+  } else {
+    groups = [];
+    existingSelect.childNodes.forEach((el) => groups.push(el.innerHTML));
+  }
+  groups.forEach((t) => {
+    const option = document.createElement('option');
+    option.value = t;
+    option.innerHTML = t;
+    groupSelect.appendChild(option);
+  });
+
+  groupSelect.addEventListener('change', changeGroup);
+
+  groupSelectDiv.appendChild(groupSelect);
+
+  groupRow.appendChild(groupLabelDiv);
+  groupRow.appendChild(groupSelectDiv);
+
+  definition.appendChild(definitionRow);
+  definition.appendChild(groupRow);
   definition.appendChild(createModality());
 
   newSenses.appendChild(definition);
@@ -313,4 +352,53 @@ function addEtymologicalStep(event) {
   div.appendChild(definitionlDiv);
 
   etmyologyArea.appendChild(div);
+}
+
+function changeGroup(event) {
+  let selectedValue;
+  if (event) {
+    event.preventDefault();
+    selectedValue = event.target.value;
+  } else {
+    selectedValue = 'Add a group...';
+  }
+
+  if (selectedValue === 'Add a group...') {
+    Swal.fire({
+      title: 'Please type a name for the new group',
+      input: 'text',
+      inputAttributes: {
+        autocapitalize: 'off',
+      },
+      confirmButtonText: 'Confirm',
+      showCancelButton: true,
+      preConfirm: (value) => {
+        if (value != '') {
+          addGroup(value, event.target);
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Failed',
+            text: 'Please make sure the field is not empty',
+            preConfirm: () => {
+              changeGroup((event = event));
+            },
+          });
+        }
+      },
+    });
+  }
+}
+
+function addGroup(group, select) {
+  const selects = document.getElementsByClassName('group');
+
+  for (let i = 0; i < selects.length; i++) {
+    const option = document.createElement('option');
+    option.value = group;
+    option.innerHTML = group;
+    selects[i].options.add(option, selects[i].length - 1);
+  }
+
+  select.value = group;
 }
