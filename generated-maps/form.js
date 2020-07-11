@@ -42,7 +42,6 @@ function modalDatePicker(spec) {
   return dateElement;
 }
 
-// Largest function of the form :
 // Allows us to create the modality part of the form
 function createModality(event) {
   // Definition of the global elements
@@ -358,6 +357,7 @@ function addEtymologicalStep(event) {
   etmyologyArea.appendChild(div);
 }
 
+// Function to handle the changes of the selects elements for group selection
 function changeGroup(event) {
   let selectedValue;
   if (event) {
@@ -394,6 +394,7 @@ function changeGroup(event) {
   }
 }
 
+// Adds the new group to every select element for group selection
 function addGroup(group, select) {
   const selects = document.getElementsByClassName('group');
 
