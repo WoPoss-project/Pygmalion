@@ -242,6 +242,19 @@ function createSense(event) {
   groupRow.appendChild(groupLabelDiv);
   groupRow.appendChild(groupSelectDiv);
 
+  const xRow = document.createElement('div');
+  xRow.className = 'row';
+  const xDiv = document.createElement('div');
+  xDiv.className = 'col-100';
+  const x = document.createElement('span');
+  x.innerHTML = 'x';
+  x.className = 'deleteDefinition';
+  x.addEventListener('click', deleteDefinition);
+
+  xDiv.appendChild(x);
+  xRow.appendChild(xDiv);
+
+  definition.appendChild(xRow);
   definition.appendChild(definitionRow);
   definition.appendChild(groupRow);
   definition.appendChild(createModality());
@@ -275,6 +288,27 @@ function deleteModal(event) {
       text: 'Each sense/definition should have at least one modality',
     });
   }
+}
+
+function deleteDefinition(event) {
+  event.preventDefault();
+
+  const col100 = event.target.parentNode;
+  const row = col100.parentNode;
+  const definition = row.parentNode;
+  while (definition.firstChild) {
+    const rows = definition.firstChild;
+    while (rows.firstChild) {
+      const cols = rows.firstChild;
+      while (cols.firstChild) {
+        const element = cols.firstChild;
+        cols.removeChild(element);
+      }
+      rows.removeChild(cols);
+    }
+    definition.removeChild(rows);
+  }
+  definition.parentNode.removeChild(definition);
 }
 
 // Function to add an etymological step

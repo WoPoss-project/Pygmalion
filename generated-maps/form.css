@@ -33,6 +33,21 @@ small {
   float: right;
 }
 
+.deleteDefinition {
+  cursor: pointer;
+  color: rgb(50, 171, 241);
+  float: right;
+  font-size: larger;
+  width: 3%;
+  text-align: center;
+  border-radius: 4px;
+}
+
+.deleteDefinition:hover {
+  color: rgb(38, 125, 196);
+  background-color: rgb(50, 171, 241);
+}
+
 .delete {
   color: rgb(50, 171, 241);
   float: right;
@@ -88,6 +103,13 @@ small {
   margin-top: 6px;
 }
 
+/* Floating column for inputs: 75% width */
+.col-100 {
+  float: left;
+  width: 100%;
+  margin-top: 6px;
+}
+
 /* Clear floats after the columns */
 .row:after {
   content: '';
@@ -101,6 +123,7 @@ small {
   .col-15,
   .col-35,
   .col-75,
+  .col-100,
   button {
     width: 100%;
     margin-top: 0;
