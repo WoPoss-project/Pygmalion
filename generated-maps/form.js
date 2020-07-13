@@ -56,14 +56,14 @@ function createModality(event) {
   deleteModalLabel.className = 'delete';
   deleteModalLabel.addEventListener('click', deleteModal);
 
-  const modalTestimony = document.createElement('input');
-  modalTestimony.type = 'text';
-  modalTestimony.placeholder = "Modality's first testimony";
+  const modalAttestation = document.createElement('input');
+  modalAttestation.type = 'text';
+  modalAttestation.placeholder = "Modality's first attestation";
 
   const smalls = [
     'Modality type',
-    'Modality/Sense emergence date',
-    'Modality testimony',
+    'Modality/Meaning emergence date',
+    'First attestation',
   ];
 
   smalls.forEach((el) => {
@@ -80,7 +80,7 @@ function createModality(event) {
   confidenceCheckbox.checked = true;
 
   const confidenceLabel = document.createElement('label');
-  confidenceLabel.innerHTML = 'Confidence in the modality';
+  confidenceLabel.innerHTML = 'Modal meaning is certain';
 
   // If the function was called by an event...
   if (event) {
@@ -94,7 +94,7 @@ function createModality(event) {
       modalityLabel,
       deleteModalLabel,
       smalls,
-      modalTestimony,
+      modalAttestation,
       confidenceCheckbox,
       confidenceLabel
     );
@@ -122,7 +122,7 @@ function createModality(event) {
       modalityLabel,
       deleteModalLabel,
       smalls,
-      modalTestimony,
+      modalAttestation,
       confidenceCheckbox,
       confidenceLabel
     );
@@ -131,7 +131,7 @@ function createModality(event) {
     modalitiesRowDiv.appendChild(modalitiesDiv);
 
     const newModalButton = document.createElement('button');
-    newModalButton.innerHTML = 'Add a modality';
+    newModalButton.innerHTML = 'Add modal meaning';
     newModalButton.style.width = '100%';
     newModalButton.addEventListener('click', createModality);
     modalitiesRowDiv.appendChild(newModalButton);
@@ -206,41 +206,12 @@ function createSense(event) {
   definitionRow.appendChild(senseLabelDiv);
   definitionRow.appendChild(senseInputDiv);
 
-  const groupRow = document.createElement('div');
-  groupRow.className = 'row';
-
-  const groupLabelDiv = document.createElement('div');
-  groupLabelDiv.className = 'col-25';
-  const groupLabel = document.createElement('label');
-  groupLabel.innerHTML = 'Group';
-
-  groupLabelDiv.appendChild(groupLabel);
-
-  const groupSelectDiv = document.createElement('div');
-  groupSelectDiv.className = 'col-75';
-  const groupSelect = document.createElement('select');
-  groupSelect.className = 'group';
-  const existingSelect = document.querySelector('.group');
-  let groups;
-  if (!existingSelect) {
-    groups = ['None', 'Add a group...'];
-  } else {
-    groups = [];
-    existingSelect.childNodes.forEach((el) => groups.push(el.innerHTML));
-  }
-  groups.forEach((t) => {
-    const option = document.createElement('option');
-    option.value = t;
-    option.innerHTML = t;
-    groupSelect.appendChild(option);
-  });
-
-  groupSelect.addEventListener('change', changeGroup);
-
-  groupSelectDiv.appendChild(groupSelect);
-
-  groupRow.appendChild(groupLabelDiv);
-  groupRow.appendChild(groupSelectDiv);
+  groupRow = selectRow('Semantic group', 'group', 'Add a group...');
+  constructRow = selectRow(
+    'Construction',
+    'construction',
+    'Add a construction...'
+  );
 
   const xRow = document.createElement('div');
   xRow.className = 'row';
@@ -256,6 +227,7 @@ function createSense(event) {
 
   definition.appendChild(xRow);
   definition.appendChild(definitionRow);
+  definition.appendChild(constructRow);
   definition.appendChild(groupRow);
   definition.appendChild(createModality());
 
@@ -296,6 +268,7 @@ function deleteDefinition(event) {
   const col100 = event.target.parentNode;
   const row = col100.parentNode;
   const definition = row.parentNode;
+
   while (definition.firstChild) {
     const rows = definition.firstChild;
     while (rows.firstChild) {
@@ -308,6 +281,7 @@ function deleteDefinition(event) {
     }
     definition.removeChild(rows);
   }
+
   definition.parentNode.removeChild(definition);
 }
 
@@ -392,18 +366,19 @@ function addEtymologicalStep(event) {
 }
 
 // Function to handle the changes of the selects elements for group selection
-function changeGroup(event) {
+function change(event) {
   let selectedValue;
-  if (event) {
-    event.preventDefault();
-    selectedValue = event.target.value;
-  } else {
-    selectedValue = 'Add a group...';
-  }
+  event.preventDefault();
+  selectedValue = event.target.value;
 
-  if (selectedValue === 'Add a group...') {
+  if (
+    selectedValue === 'Add a group...' ||
+    selectedValue === 'Add a construction...'
+  ) {
+    selectedValue = selectedValue.split(' ');
+    const newElement = selectedValue[selectedValue.length - 1].split('.')[0];
     Swal.fire({
-      title: 'Please type a name for the new group',
+      title: `Please type a name for the new ${newElement}`,
       input: 'text',
       inputAttributes: {
         autocapitalize: 'off',
@@ -412,14 +387,14 @@ function changeGroup(event) {
       showCancelButton: true,
       preConfirm: (value) => {
         if (value != '') {
-          addGroup(value, event.target);
+          addGroup(value, newElement, event.target);
         } else {
           Swal.fire({
             icon: 'error',
             title: 'Failed',
             text: 'Please make sure the field is not empty',
             preConfirm: () => {
-              changeGroup((event = event));
+              change((event = event));
             },
           });
         }
@@ -429,15 +404,58 @@ function changeGroup(event) {
 }
 
 // Adds the new group to every select element for group selection
-function addGroup(group, select) {
-  const selects = document.getElementsByClassName('group');
+function addGroup(opt, elem, select) {
+  const selects = document.getElementsByClassName(elem);
 
   for (let i = 0; i < selects.length; i++) {
     const option = document.createElement('option');
-    option.value = group;
-    option.innerHTML = group;
+    option.value = opt;
+    option.innerHTML = opt;
     selects[i].options.add(option, selects[i].length - 1);
   }
 
-  select.value = group;
+  select.value = opt;
+}
+
+function selectRow(lab, cla, opt) {
+  const row = document.createElement('div');
+  row.className = 'row';
+
+  const labelDiv = document.createElement('div');
+  labelDiv.className = 'col-25';
+  const label = document.createElement('label');
+  label.innerHTML = lab;
+
+  labelDiv.appendChild(label);
+
+  const selectDiv = document.createElement('div');
+  selectDiv.className = 'col-75';
+  const select = document.createElement('select');
+  select.className = cla;
+  const existingSelects = document.querySelector(`.${cla}`);
+  const groups = [];
+  if (!existingSelects) {
+    groups.push('None', opt);
+  } else {
+    existingSelects.childNodes.forEach((el) => groups.push(el.innerHTML));
+  }
+  groups.forEach((t) => {
+    const option = document.createElement('option');
+    option.value = t;
+    option.innerHTML = t;
+    select.appendChild(option);
+  });
+
+  if (cla === 'group') {
+    select.addEventListener('change', change);
+  } else {
+    select.addEventListener('change', change);
+  }
+
+  selectDiv.appendChild(select);
+
+  row.appendChild(labelDiv);
+  row.appendChild(selectDiv);
+
+  return row;
 }
