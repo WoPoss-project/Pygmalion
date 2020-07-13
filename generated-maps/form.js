@@ -3,8 +3,9 @@ const headwordInput = document.getElementById('headwordInput');
 const dateSpec = document.getElementById('dateSpec');
 const addSense = document.getElementById('addSense');
 const newSenses = document.getElementById('newSenses');
-const etmyologyArea = document.getElementById('etymology');
+const etymologyArea = document.getElementById('etymology');
 const etymologicalStep = document.getElementById('etymologicalStep');
+const submitForm = document.getElementById('submitForm');
 
 // Event on the "Add a sense" button
 addSense.addEventListener('click', createSense);
@@ -23,6 +24,144 @@ dateSpec.addEventListener('change', function () {
 });
 
 etymologicalStep.addEventListener('click', addEtymologicalStep);
+
+submitForm.addEventListener('click', confirmForm);
+
+// Function to add an etymological step
+function addEtymologicalStep(event) {
+  event.preventDefault();
+
+  etymologicalStep.style.float = 'right';
+
+  const div = document.createElement('div');
+  div.className = 'etymologyStep';
+
+  const etymologyLabel = document.querySelectorAll('.ety');
+  const label = document.createElement('label');
+  label.className = 'ety';
+  if (etymologyLabel.length === 0) {
+    label.innerHTML = 'Origin';
+  } else {
+    const labelValue = etymologyLabel[etymologyLabel.length - 1].innerHTML;
+    if (labelValue === 'Origin') {
+      label.innerHTML = 'Evolution 1';
+    } else {
+      label.innerHTML = `Evolution ${Number(labelValue.split(' ')[1]) + 1}`;
+    }
+  }
+
+  const etymologyDelete = document.createElement('label');
+  etymologyDelete.innerHTML = 'Delete entry';
+  etymologyDelete.className = 'delete';
+  etymologyDelete.addEventListener('click', deleteEntry);
+
+  const br = document.createElement('br');
+
+  const periodDiv = document.createElement('div');
+  periodDiv.className = 'col-33';
+
+  const period = document.createElement('input');
+  period.type = 'text';
+  period.className = 'period';
+  period.placeholder = 'e.g. PIE, PI, LAT, ...';
+
+  const etymologicalDiv = document.createElement('div');
+  etymologicalDiv.className = 'col-33';
+
+  const etymologicalForm = document.createElement('input');
+  etymologicalForm.type = 'text';
+  etymologicalForm.className = 'etymologicalForm';
+  etymologicalForm.placeholder = 'Etymological form...';
+
+  const definitionlDiv = document.createElement('div');
+  definitionlDiv.className = 'col-33';
+
+  const shortDefinition = document.createElement('input');
+  shortDefinition.type = 'text';
+  shortDefinition.className = 'shortDefinition';
+  shortDefinition.placeholder = 'Short, one-word, definition';
+
+  const smalls = ['Language/period', 'Etymological form', 'Short definition'];
+  smalls.forEach((el) => {
+    const small = document.createElement('small');
+    small.innerHTML = el;
+    smalls[smalls.indexOf(el)] = small;
+  });
+
+  div.appendChild(label);
+  div.appendChild(etymologyDelete);
+  div.appendChild(br);
+
+  periodDiv.appendChild(period);
+  periodDiv.appendChild(smalls[0]);
+  div.appendChild(periodDiv);
+
+  etymologicalDiv.appendChild(etymologicalForm);
+  etymologicalDiv.appendChild(smalls[1]);
+  div.appendChild(etymologicalDiv);
+
+  definitionlDiv.appendChild(shortDefinition);
+  definitionlDiv.appendChild(smalls[2]);
+  div.appendChild(definitionlDiv);
+
+  etymologyArea.appendChild(div);
+}
+
+// Add a sense/definition to the form
+function createSense(event) {
+  event.preventDefault();
+
+  const definition = document.createElement('div');
+  definition.className = 'definition';
+
+  const definitionRow = document.createElement('div');
+  definitionRow.className = 'row';
+
+  const senseLabelDiv = document.createElement('div');
+  senseLabelDiv.className = 'col-25';
+  const senseLabel = document.createElement('label');
+  senseLabel.innerHTML = 'Definition';
+
+  senseLabelDiv.appendChild(senseLabel);
+
+  const senseInputDiv = document.createElement('div');
+  senseInputDiv.className = 'col-75';
+  const senseInput = document.createElement('input');
+  senseInput.type = 'text';
+  senseInput.placeholder = 'Please enter a definition for the headword...';
+
+  senseInputDiv.appendChild(senseInput);
+
+  definitionRow.appendChild(senseLabelDiv);
+  definitionRow.appendChild(senseInputDiv);
+
+  groupRow = selectRow('Semantic group', 'group', 'Add a group...');
+  constructRow = selectRow(
+    'Construction',
+    'construction',
+    'Add a construction...'
+  );
+
+  const xRow = document.createElement('div');
+  xRow.className = 'row';
+  const xDiv = document.createElement('div');
+  xDiv.className = 'col-100';
+  const x = document.createElement('span');
+  x.innerHTML = 'x';
+  x.className = 'deleteDefinition';
+  x.addEventListener('click', deleteDefinition);
+
+  xDiv.appendChild(x);
+  xRow.appendChild(xDiv);
+
+  definition.appendChild(xRow);
+  definition.appendChild(definitionRow);
+  definition.appendChild(constructRow);
+  definition.appendChild(groupRow);
+  definition.appendChild(createModality());
+
+  newSenses.appendChild(definition);
+}
 
 // Takes in the value of the select-type input for the date format
 // Creates and returns an input element with the correct values
@@ -54,7 +193,7 @@ function createModality(event) {
   const deleteModalLabel = document.createElement('label');
   deleteModalLabel.innerHTML = 'Delete modality';
   deleteModalLabel.className = 'delete';
-  deleteModalLabel.addEventListener('click', deleteModal);
+  deleteModalLabel.addEventListener('click', deleteEntry);
 
   const modalAttestation = document.createElement('input');
   modalAttestation.type = 'text';
@@ -157,6 +296,49 @@ function mainModal(div, lab, del, smalls, test, check, conf) {
   return div;
 }
 
+function selectRow(lab, cla, opt) {
+  const row = document.createElement('div');
+  row.className = 'row';
+
+  const labelDiv = document.createElement('div');
+  labelDiv.className = 'col-25';
+  const label = document.createElement('label');
+  label.innerHTML = lab;
+
+  labelDiv.appendChild(label);
+
+  const selectDiv = document.createElement('div');
+  selectDiv.className = 'col-75';
+  const select = document.createElement('select');
+  select.className = cla;
+  const existingSelects = document.querySelector(`.${cla}`);
+  const groups = [];
+  if (!existingSelects) {
+    groups.push('None', opt);
+  } else {
+    existingSelects.childNodes.forEach((el) => groups.push(el.innerHTML));
+  }
+  groups.forEach((t) => {
+    const option = document.createElement('option');
+    option.value = t;
+    option.innerHTML = t;
+    select.appendChild(option);
+  });
+
+  if (cla === 'group') {
+    select.addEventListener('change', change);
+  } else {
+    select.addEventListener('change', change);
+  }
+
+  selectDiv.appendChild(select);
+
+  row.appendChild(labelDiv);
+  row.appendChild(selectDiv);
+
+  return row;
+}
+
 // General function to generate a select-type input with the modal types
 function createModalSelect() {
   const modalSelect = document.createElement('select');
@@ -178,64 +360,8 @@ function createModalSelect() {
   return modalSelect;
 }
 
-// Add a sense/definition to the form
-function createSense(event) {
-  event.preventDefault();
-
-  const definition = document.createElement('div');
-  definition.className = 'definition';
-
-  const definitionRow = document.createElement('div');
-  definitionRow.className = 'row';
-
-  const senseLabelDiv = document.createElement('div');
-  senseLabelDiv.className = 'col-25';
-  const senseLabel = document.createElement('label');
-  senseLabel.innerHTML = 'Definition';
-
-  senseLabelDiv.appendChild(senseLabel);
-
-  const senseInputDiv = document.createElement('div');
-  senseInputDiv.className = 'col-75';
-  const senseInput = document.createElement('input');
-  senseInput.type = 'text';
-  senseInput.placeholder = 'Please enter a definition for the headword...';
-
-  senseInputDiv.appendChild(senseInput);
-
-  definitionRow.appendChild(senseLabelDiv);
-  definitionRow.appendChild(senseInputDiv);
-
-  groupRow = selectRow('Semantic group', 'group', 'Add a group...');
-  constructRow = selectRow(
-    'Construction',
-    'construction',
-    'Add a construction...'
-  );
-
-  const xRow = document.createElement('div');
-  xRow.className = 'row';
-  const xDiv = document.createElement('div');
-  xDiv.className = 'col-100';
-  const x = document.createElement('span');
-  x.innerHTML = 'x';
-  x.className = 'deleteDefinition';
-  x.addEventListener('click', deleteDefinition);
-
-  xDiv.appendChild(x);
-  xRow.appendChild(xDiv);
-
-  definition.appendChild(xRow);
-  definition.appendChild(definitionRow);
-  definition.appendChild(constructRow);
-  definition.appendChild(groupRow);
-  definition.appendChild(createModality());
-
-  newSenses.appendChild(definition);
-}
-
 // Function to delete a modality
-function deleteModal(event) {
+function deleteEntry(event) {
   const parent = event.target.parentNode;
   const grandParent = parent.parentNode;
   // Will not work if the user is about to delete the only modality for a definition
@@ -283,86 +409,6 @@ function deleteDefinition(event) {
   }
 
   definition.parentNode.removeChild(definition);
-}
-
-// Function to add an etymological step
-function addEtymologicalStep(event) {
-  event.preventDefault();
-
-  etymologicalStep.style.float = 'right';
-
-  const div = document.createElement('div');
-  div.className = 'etymologyStep';
-
-  const etymologyLabel = document.querySelectorAll('.ety');
-  const label = document.createElement('label');
-  label.className = 'ety';
-  if (etymologyLabel.length === 0) {
-    label.innerHTML = 'Origin';
-  } else {
-    const labelValue = etymologyLabel[etymologyLabel.length - 1].innerHTML;
-    if (labelValue === 'Origin') {
-      label.innerHTML = 'Evolution 1';
-    } else {
-      label.innerHTML = `Evolution ${Number(labelValue.split(' ')[1]) + 1}`;
-    }
-  }
-
-  const etymologyDelete = document.createElement('label');
-  etymologyDelete.innerHTML = 'Delete entry';
-  etymologyDelete.className = 'delete';
-  etymologyDelete.addEventListener('click', deleteModal);
-
-  const br = document.createElement('br');
-
-  const periodDiv = document.createElement('div');
-  periodDiv.className = 'col-33';
-
-  const period = document.createElement('input');
-  period.type = 'text';
-  period.className = 'period';
-  period.placeholder = 'e.g. PIE, PI, LAT, ...';
-
-  const etymologicalDiv = document.createElement('div');
-  etymologicalDiv.className = 'col-33';
-
-  const etymologicalForm = document.createElement('input');
-  etymologicalForm.type = 'text';
-  etymologicalForm.className = 'etymologicalForm';
-  etymologicalForm.placeholder = 'Etymological form...';
-
-  const definitionlDiv = document.createElement('div');
-  definitionlDiv.className = 'col-33';
-
-  const shortDefinition = document.createElement('input');
-  shortDefinition.type = 'text';
-  shortDefinition.className = 'shortDefinition';
-  shortDefinition.placeholder = 'Short, one-word, definition';
-
-  const smalls = ['Language/period', 'Etymological form', 'Short definition'];
-  smalls.forEach((el) => {
-    const small = document.createElement('small');
-    small.innerHTML = el;
-    smalls[smalls.indexOf(el)] = small;
-  });
-
-  div.appendChild(label);
-  div.appendChild(etymologyDelete);
-  div.appendChild(br);
-
-  periodDiv.appendChild(period);
-  periodDiv.appendChild(smalls[0]);
-  div.appendChild(periodDiv);
-
-  etymologicalDiv.appendChild(etymologicalForm);
-  etymologicalDiv.appendChild(smalls[1]);
-  div.appendChild(etymologicalDiv);
-
-  definitionlDiv.appendChild(shortDefinition);
-  definitionlDiv.appendChild(smalls[2]);
-  div.appendChild(definitionlDiv);
-
-  etmyologyArea.appendChild(div);
 }
 
 // Function to handle the changes of the selects elements for group selection
@@ -415,47 +461,4 @@ function addGroup(opt, elem, select) {
   }
 
   select.value = opt;
-}
-
-function selectRow(lab, cla, opt) {
-  const row = document.createElement('div');
-  row.className = 'row';
-
-  const labelDiv = document.createElement('div');
-  labelDiv.className = 'col-25';
-  const label = document.createElement('label');
-  label.innerHTML = lab;
-
-  labelDiv.appendChild(label);
-
-  const selectDiv = document.createElement('div');
-  selectDiv.className = 'col-75';
-  const select = document.createElement('select');
-  select.className = cla;
-  const existingSelects = document.querySelector(`.${cla}`);
-  const groups = [];
-  if (!existingSelects) {
-    groups.push('None', opt);
-  } else {
-    existingSelects.childNodes.forEach((el) => groups.push(el.innerHTML));
-  }
-  groups.forEach((t) => {
-    const option = document.createElement('option');
-    option.value = t;
-    option.innerHTML = t;
-    select.appendChild(option);
-  });
-
-  if (cla === 'group') {
-    select.addEventListener('change', change);
-  } else {
-    select.addEventListener('change', change);
-  }
-
-  selectDiv.appendChild(select);
-
-  row.appendChild(labelDiv);
-  row.appendChild(selectDiv);
-
-  return row;
 }
