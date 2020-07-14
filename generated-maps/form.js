@@ -128,6 +128,7 @@ function createSense(event) {
   senseInputDiv.className = 'col-75';
   const senseInput = document.createElement('input');
   senseInput.type = 'text';
+  senseInput.className = 'definitionText';
   senseInput.placeholder = 'Please enter a definition for the headword...';
 
   senseInputDiv.appendChild(senseInput);
@@ -197,6 +198,7 @@ function createModality(event) {
 
   const modalAttestation = document.createElement('input');
   modalAttestation.type = 'text';
+  modalAttestation.className = 'attest';
   modalAttestation.placeholder = "Modality's first attestation";
 
   const smalls = [
@@ -214,7 +216,6 @@ function createModality(event) {
   const confidenceCheckbox = document.createElement('input');
   confidenceCheckbox.type = 'checkbox';
   confidenceCheckbox.name = 'certitude';
-  confidenceCheckbox.value = 'certitude';
   confidenceCheckbox.className = 'certitude';
   confidenceCheckbox.checked = true;
 
@@ -461,4 +462,152 @@ function addGroup(opt, elem, select) {
   }
 
   select.value = opt;
+}
+
+function confirmForm(event) {
+  // TODO:
+  // verifier que les années sont encodées comme il le faut
+
+  event.preventDefault();
+
+  const headwordInput = document.getElementById('headwordInput');
+  const dateSpec = document.getElementById('dateSpec');
+  const definitionTexts = document.querySelectorAll('.definition');
+
+  if (headwordInput.value != '') {
+    if (definitionTexts.length > 0) {
+      let etymology = [[], [], []];
+      const etymologyPeriods = document.querySelectorAll('.period');
+      const etymologyForms = document.querySelectorAll('.etymologicalForm');
+      const etymologyDefinitions = document.querySelectorAll(
+        '.shortDefinition'
+      );
+      etymologyPeriods.forEach((el) => etymology[0].push(el.value));
+      etymologyForms.forEach((el) => etymology[1].push(el.value));
+      etymologyDefinitions.forEach((el) => etymology[2].push(el.value));
+      const etymologicalData = [];
+      for (let c = 0; c < etymology[0].length; c++) {
+        const data = [];
+        for (let i = 0; i < etymology.length; i++) {
+          for (let j = 0; j < etymology[i].length; j++) {
+            if (j === c) {
+              data.push(etymology[i][j]);
+            }
+          }
+        }
+        etymologicalData.push({
+          period: data[0],
+          form: data[1],
+          def: data[2],
+        });
+      }
+
+      let missingField = false;
+      const definitions = [];
+      definitionTexts.forEach((definition) => {
+        const v = [];
+        const rows = definition.childNodes;
+        rows.forEach((row) => {
+          const cols = row.childNodes;
+          cols.forEach((col) => {
+            if (col.className == 'col-75') {
+              const values = col.childNodes;
+              values.forEach((value) => {
+                if (value.value || value.value === '') {
+                  if (
+                    (value.value === '' && value.nodeName != 'BUTTON') ||
+                    value.value === 'Add a group...' ||
+                    value.value === 'Add a construction...'
+                  ) {
+                    swal.fire({
+                      icon: 'error',
+                      title: 'Error',
+                      text: 'Please fill in all the mendatory fields!',
+                    });
+                    mendatory(value);
+                    missingField = true;
+                  }
+
+                  v.push(value.value);
+                } else {
+                  const modalities = value.childNodes;
+                  let modalityValues = [];
+                  modalities.forEach((modality) => {
+                    const modalityElements = modality.childNodes;
+                    modalityElements.forEach((modEl) => {
+                      if (modEl.value || modEl.value === '') {
+                        if (
+                          modEl.value === '' &&
+                          modEl.nodeName != 'BUTTON' &&
+                          modEl.className != 'attest'
+                        ) {
+                          swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Please fill in all the mendatory fields!',
+                          });
+                          mendatory(modEl);
+                          missingField = true;
+                        }
+                        if (modEl.type === 'checkbox') {
+                          modalityValues.push(modEl.checked);
+                        } else {
+                          modalityValues.push(modEl.value);
+                        }
+                      }
+                    });
+                    const modalityObject = {
+                      modal: modalityValues[0],
+                      emergence: modalityValues[1],
+                      attestation: modalityValues[2],
+                      certainty: modalityValues[3],
+                    };
+                    if (v.length == 4) {
+                      v[3].push(modalityObject);
+                    } else {
+                      v.push([modalityObject]);
+                    }
+                    modalityValues = [];
+                  });
+                }
+              });
+            }
+          });
+        });
+        definitions.push({
+          definition: v[0],
+          construct: v[1],
+          group: v[2],
+          modalitites: v[3],
+        });
+      });
+      const data = {
+        headword: headwordInput.value,
+        etymology: etymologicalData,
+        dataFormat: dateSpec.value,
+        meanings: definitions,
+      };
+      return;
+    } else {
+      swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'At least one definition is required',
+      });
+    }
+  } else {
+    swal.fire({
+      icon: 'error',
+      title: 'Error!',
+      text: 'Please specify a headword',
+    });
+    mendatory(headwordInput);
+  }
+}
+
+function mendatory(element) {
+  element.style.border = '1px solid rgb(226, 70, 70)';
+  element.addEventListener('change', function (event) {
+    event.target.style.border = '1px solid #ccc';
+  });
 }
