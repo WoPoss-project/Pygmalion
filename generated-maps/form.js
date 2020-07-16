@@ -174,7 +174,7 @@ function modalDatePicker(spec) {
     dateElement.placeholder = 'Century (II BC, I BC, I, II) or Year';
   } else if (spec === 'dec') {
     dateElement.type = 'text';
-    dateElement.placeholder = 'Decade or Year';
+    dateElement.placeholder = 'Decade (200s BC, 130s BC, 30s, 1920s) or Year';
   } else {
     dateElement.type = 'text';
     dateElement.placeholder = 'Please enter a specific year';
@@ -465,9 +465,6 @@ function addGroup(opt, elem, select) {
 }
 
 function confirmForm(event) {
-  // TODO:
-  // verifier que les années sont encodées comme il le faut
-
   event.preventDefault();
 
   const headwordInput = document.getElementById('headwordInput');
@@ -522,9 +519,9 @@ function confirmForm(event) {
                     swal.fire({
                       icon: 'error',
                       title: 'Error',
-                      text: 'Please fill in all the mendatory fields!',
+                      text: 'Please fill in all the mandatory fields!',
                     });
-                    mendatory(value);
+                    mandatory(value);
                     missingField = true;
                   }
 
@@ -544,13 +541,17 @@ function confirmForm(event) {
                           swal.fire({
                             icon: 'error',
                             title: 'Error',
-                            text: 'Please fill in all the mendatory fields!',
+                            text: 'Please fill in all the mandatory fields!',
                           });
-                          mendatory(modEl);
+                          mandatory(modEl);
                           missingField = true;
                         }
                         if (modEl.type === 'checkbox') {
                           modalityValues.push(modEl.checked);
+                        } else if (modEl.className === 'date') {
+                          modalityValues.push(
+                            dateConversion(dateSpec.value, modEl)
+                          );
                         } else {
                           modalityValues.push(modEl.value);
                         }
@@ -587,6 +588,7 @@ function confirmForm(event) {
         dataFormat: dateSpec.value,
         meanings: definitions,
       };
+      console.log(data);
       return;
     } else {
       swal.fire({
@@ -601,13 +603,147 @@ function confirmForm(event) {
       title: 'Error!',
       text: 'Please specify a headword',
     });
-    mendatory(headwordInput);
+    mandatory(headwordInput);
   }
 }
 
-function mendatory(element) {
+function mandatory(element) {
   element.style.border = '1px solid rgb(226, 70, 70)';
   element.addEventListener('change', function (event) {
     event.target.style.border = '1px solid #ccc';
   });
+}
+
+function dateConversion(format, element) {
+  let date;
+  if (format === 'cent') {
+    let century;
+    if (Number(element.value)) {
+      century = centuryFromYear(Number(element.value));
+    } else {
+      const conversion = {
+        M: 1000,
+        D: 500,
+        C: 100,
+        L: 50,
+        X: 10,
+        V: 5,
+        I: 1,
+      };
+      const value = element.value.split(' ');
+      const arr = value[0].split('');
+
+      let total = 0;
+      let c, cV, n, nV;
+      for (let i = 0; i < arr.length; i++) {
+        c = arr[i];
+        cV = conversion[c];
+
+        n = arr[i + 1];
+        nV = conversion[n];
+
+        cV >= nV
+          ? (total += cV)
+          : cV < nV
+          ? (total -= cV)
+          : cV && !nV
+          ? (total += cV)
+          : total;
+      }
+      value.length > 1 ? (century = -1 * total) : (century = total);
+    }
+    if (
+      century >= -50 &&
+      century <= 21 &&
+      typeof century == 'number' &&
+      century
+    ) {
+      date = century;
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Date encoding error!',
+        text:
+          'Dates are not encoded correctly. Century format is as follows: "II BC", "IX BC", "VI BC" for the centuries before Christ and "II", "XX", "IV" for the centuries after Christ. Specific years should be typed as follows: "1700", "100", "-50", "-500". Centuries will be inferred from the years.',
+      });
+      mandatory(element);
+    }
+  } else if (format === 'dec') {
+    let decade;
+    if (Number(element.value)) {
+      decade = decadeFromYear(element.value) + 's';
+    } else {
+      const input = element.value.split(' ');
+      if (input.length == 1 || input.length == 2) {
+        const dec = input[0];
+        if (
+          dec[dec.length - 1] == 's' &&
+          dec[dec.length - 2] == '0' &&
+          Number(dec[0])
+        ) {
+          input.length == 2 ? (decade = '-' + input[0]) : (decade = input[0]);
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Date encoding error!',
+            text:
+              'Dates are not encoded correctly. Please make sure you format decades as follows: "200s BC", "50s BC", "10s", "1920s".',
+          });
+        }
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Date encoding error!',
+          text:
+            'Dates are not encoded correctly. Please make sure you format decades as follows: "200s BC", "50s BC", "10s", "1920s".',
+        });
+      }
+    }
+    decade = Number(decade.slice(0, -1));
+    if (
+      decade >= -5000 &&
+      decade <= 2020 &&
+      typeof decade == 'number' &&
+      decade
+    ) {
+      date = decade;
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Date encoding error!',
+        text:
+          'Dates are not encoded correctly. Please make sure you format decades as follows: "200s BC", "50s BC", "10s", "1920s", or that you entered a valid year (-202, -19, 1414, 1932)',
+      });
+    }
+  } else if (
+    Number(element.value) &&
+    Number(element.value) >= -5000 &&
+    Number(element.value) <= 2020
+  ) {
+    date = Number(element.value);
+  } else {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error!',
+      text:
+        'Dates are not encoded correctly. Please make sure the years you entered are correct',
+    });
+  }
+  return date;
+}
+
+function centuryFromYear(year) {
+  const century = Math.floor((Math.abs(year) - 1) / 100) + 1;
+  if (year > 0) {
+    return century;
+  } else {
+    return -1 * century;
+  }
+}
+
+function decadeFromYear(year) {
+  const arr = year.split('');
+  arr[arr.length - 1] = '0';
+  const decade = Number(arr.join(''));
+  return decade;
 }
