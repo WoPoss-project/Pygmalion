@@ -13,6 +13,19 @@ textarea {
   resize: vertical;
 }
 
+input[type='checkbox'] {
+  width: 1.4em;
+  height: 1.4em;
+  content: '';
+  box-sizing: border-box;
+  resize: vertical;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  position: relative;
+  top: 3px;
+  left: 10px;
+}
+
 label {
   padding: 12px 12px 12px 12px;
   display: inline-block;
@@ -64,7 +77,8 @@ small {
 }
 
 .definition,
-.etymologyStep {
+.etymologyStep,
+.relationship {
   border: 1px solid rgb(189, 189, 189);
   padding: 12px;
   border-radius: 5px;
@@ -73,6 +87,7 @@ small {
 
 .submit {
   background-color: rgb(50, 63, 241);
+  float: left;
 }
 
 .submit:hover {

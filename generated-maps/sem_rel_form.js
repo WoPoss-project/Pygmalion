@@ -65,7 +65,7 @@ function addRelationship(event, elements) {
   checkBox.className = 'certitude';
   checkBox.checked = true;
   const checkBoxLabel = document.createElement('label');
-  checkBoxLabel.innerHTML = 'relationship is certain';
+  checkBoxLabel.innerHTML = 'Relationship is certain';
   checkBoxDiv.appendChild(checkBox);
   checkBoxDiv.appendChild(checkBoxLabel);
 
