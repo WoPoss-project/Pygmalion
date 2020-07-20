@@ -573,7 +573,7 @@ function confirmForm(event) {
           definition: v[0],
           construct: v[1],
           group: v[2],
-          modalitites: v[3],
+          modalities: v[3],
         });
       });
       const data = {
