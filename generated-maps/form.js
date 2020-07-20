@@ -516,11 +516,6 @@ function confirmForm(event) {
                     value.value === 'Add a group...' ||
                     value.value === 'Add a construction...'
                   ) {
-                    swal.fire({
-                      icon: 'error',
-                      title: 'Error',
-                      text: 'Please fill in all the mandatory fields!',
-                    });
                     mandatory(value);
                     missingField = true;
                   }
@@ -538,11 +533,6 @@ function confirmForm(event) {
                           modEl.nodeName != 'BUTTON' &&
                           modEl.className != 'attest'
                         ) {
-                          swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Please fill in all the mandatory fields!',
-                          });
                           mandatory(modEl);
                           missingField = true;
                         }
@@ -588,7 +578,16 @@ function confirmForm(event) {
         dataFormat: dateSpec.value,
         meanings: definitions,
       };
-      console.log(data);
+      if (!missingField) {
+        localStorage.setItem('card', JSON.stringify(data));
+      } else {
+        swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text:
+            'Please fill in all the mandatory fields and make sure the emergence dates are encoded correctly!',
+        });
+      }
       return;
     } else {
       swal.fire({
