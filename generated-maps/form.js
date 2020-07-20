@@ -446,6 +446,10 @@ function change(event) {
           });
         }
       },
+    }).then((result) => {
+      if (result.dismiss === Swal.DismissReason.cancel) {
+        event.target.value = 'None';
+      }
     });
   }
 }
@@ -580,6 +584,8 @@ function confirmForm(event) {
       };
       if (!missingField) {
         localStorage.setItem('card', JSON.stringify(data));
+        window.location.href =
+          'http://127.0.0.1:5500/generated-maps/sem_rel_form.html';
       } else {
         swal.fire({
           icon: 'error',
