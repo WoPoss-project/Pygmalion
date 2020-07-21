@@ -552,6 +552,7 @@ function confirmForm(event) {
                       }
                     });
                     const modalityObject = {
+                      id: randomId(),
                       modal: modalityValues[0],
                       emergence: modalityValues[1],
                       attestation: modalityValues[2],
@@ -751,4 +752,11 @@ function decadeFromYear(year) {
   arr[arr.length - 1] = '0';
   const decade = Number(arr.join(''));
   return decade;
+}
+
+function randomId() {
+  return Math.random()
+    .toString(36)
+    .replace(/[^a-z]+/g, '')
+    .substr(2, 10);
 }

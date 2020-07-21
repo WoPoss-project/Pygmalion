@@ -89,13 +89,13 @@ function createSelect(meanings) {
       for (let j = 0; j < meanings[i].modalities.length; j++) {
         const option = document.createElement('option');
         option.innerHTML = `${meanings[i].definition} - ${meanings[i].modalities[j].modal}`;
-        option.value = `${meanings[i].definition} - ${meanings[i].modalities[j].modal}`;
+        option.value = meanings[i].modalities[j].id;
         select.appendChild(option);
       }
     } else {
       const option = document.createElement('option');
       option.innerHTML = meanings[i].definition;
-      option.value = meanings[i].definition;
+      option.value = meanings[i].modalities[0].id;
       select.appendChild(option);
     }
   }
@@ -142,4 +142,67 @@ function createSmalls() {
   return smallsToReturn;
 }
 
-function submit() {}
+function submit(event) {
+  event.preventDefault();
+
+  const final = [];
+
+  const semanticRelationships = document.querySelectorAll('.relationship');
+  for (let i = 0; i < semanticRelationships.length; i++) {
+    const dataCols = semanticRelationships[i].childNodes[1].childNodes;
+    const values = [];
+    for (let j = 0; j < dataCols.length; j++) {
+      const value =
+        dataCols[j].firstChild.type === 'checkbox'
+          ? dataCols[j].firstChild.checked
+          : dataCols[j].firstChild.value;
+      values.push(value);
+    }
+    final.push({
+      origin: values[0],
+      direction: values[1],
+      destination: values[2],
+      certitude: values[3],
+    });
+  }
+
+  for (let i = 0; i < final.length; i++) {
+    data.meanings.forEach((meaning) => {
+      if (meaning.modalities.length > 1) {
+        meaning.modalities.forEach((modality) => {
+          modality = addRelationships(modality);
+          if (modality.id === final[i].origin) {
+            modality = editModality(modality, final[i]);
+          }
+        });
+      } else {
+        let modality = meaning.modalities[0];
+        modality = addRelationships(modality);
+        if (modality.id === final[i].origin) {
+          modality = editModality(modality, final[i]);
+        }
+      }
+    });
+  }
+  console.log(data);
+}
+
+function addRelationships(modality) {
+  if (!modality.relationship) {
+    modality['relationships'] = {
+      origins: [],
+      destinations: [],
+      unspecified: [],
+    };
+  }
+  return modality;
+}
+
+function editModality(modality, final) {
+  final.direction === 'unspecified'
+    ? modality.relationships.unspecified.push(final.destination)
+    : final.direction === 'to'
+    ? modality.relationships.destinations.push(final.destination)
+    : modality.relationships.origins.push(final.destination);
+  return modality;
+}
