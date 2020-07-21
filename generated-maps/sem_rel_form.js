@@ -1,24 +1,22 @@
 const relationships = document.getElementById('relationships');
 const newRelationship = document.getElementById('newRelationship');
-startUp();
+const submitForm = document.getElementById('submitForm');
+let data;
 
-function startUp() {
-  if (localStorage.getItem('card')) {
-    const parsedData = JSON.parse(localStorage.getItem('card'));
-    addRelationship(false, parsedData);
-    newRelationship.addEventListener('click', function (event) {
-      addRelationship(event, parsedData);
-    });
-    return parsedData;
-  } else {
-    window.location.replace('http://127.0.0.1:5500/generated-maps/index.html');
-  }
+if (localStorage.getItem('card')) {
+  data = JSON.parse(localStorage.getItem('card'));
+  addRelationship();
+  newRelationship.addEventListener('click', addRelationship);
+  submitForm.addEventListener('click', submit);
+} else {
+  window.location.replace('http://127.0.0.1:5500/generated-maps/index.html');
 }
 
-function addRelationship(event, elements) {
+function addRelationship(event) {
   if (event) {
     event.preventDefault();
   }
+
   const relationship = document.createElement('div');
   relationship.className = 'relationship';
 
@@ -37,10 +35,13 @@ function addRelationship(event, elements) {
   const inputsRow = document.createElement('div');
   inputsRow.className = 'row';
 
+  const smalls = createSmalls();
+
   const selectOriginDiv = createColDiv();
-  const selectOrigin = createSelect(elements.meanings);
+  const selectOrigin = createSelect(data.meanings);
   selectOrigin.className = 'origin';
   selectOriginDiv.appendChild(selectOrigin);
+  selectOriginDiv.appendChild(smalls[0]);
 
   const selectDirectionDiv = createColDiv();
   const selectDirection = document.createElement('select');
@@ -53,11 +54,13 @@ function addRelationship(event, elements) {
     selectDirection.appendChild(option);
   }
   selectDirectionDiv.appendChild(selectDirection);
+  selectDirectionDiv.appendChild(smalls[1]);
 
   const selectDestDiv = createColDiv();
-  const selectDest = createSelect(elements.meanings);
+  const selectDest = createSelect(data.meanings);
   selectDest.className = 'dest';
   selectDestDiv.appendChild(selectDest);
+  selectDestDiv.appendChild(smalls[2]);
 
   const checkBoxDiv = createColDiv();
   const checkBox = document.createElement('input');
@@ -127,3 +130,16 @@ function deleteRelationship(event) {
 
   relationship.parentNode.removeChild(relationship);
 }
+
+function createSmalls() {
+  const smalls = ['First definition', 'Direction', 'Second definition'];
+  const smallsToReturn = [];
+  for (let i = 0; i < smalls.length; i++) {
+    const small = document.createElement('small');
+    small.innerHTML = smalls[i];
+    smallsToReturn.push(small);
+  }
+  return smallsToReturn;
+}
+
+function submit() {}
