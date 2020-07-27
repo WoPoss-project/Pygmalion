@@ -4,19 +4,10 @@ const width = '100%';
 const height = '100%';
 const margin = {
   top: 100,
-  left: 100,
+  left: 150,
   right: 100,
   bottom: 0,
 };
-
-const options = [
-  ['Modal: deontic', 'deontic'],
-  ['Modal: dynamic', 'dynamic'],
-  ['Modal: epistemic', 'epistemic'],
-  ['Not modal', 'notModal'],
-  ['Premodal', 'premodal'],
-  ['Postmodal: futurity', 'postmodal'],
-];
 
 const svg = d3
   .select('#card')
@@ -33,151 +24,70 @@ const legend = svg
   .attr('class', 'legend')
   .attr('transform', `translate(${margin.left}, ${(h / 100) * 3})`);
 
-for (let i = 0; i < options.length; i++) {
-  const col = i <= 2 ? 1 : 0;
-  const row = i % 3 == 0 ? 1 : i % 3 == 1 ? 2 : 3;
-  const colSpace = 125;
-
-  legend
-    .append('rect')
-    .style('fill', color(options[i][1]))
-    .attr('x', 25 + col * colSpace)
-    .attr('y', row * 25)
-    .attr('width', 12)
-    .attr('height', 12);
-
-  legend
-    .append('text')
-    .text(options[i][0])
-    .attr('x', 40 + col * colSpace)
-    .attr('y', row * 25)
-    .attr('dy', 10);
-}
-
-legend
-  .append('rect')
-  .attr('width', 10)
-  .attr('height', 10)
-  .attr('x', 25 + 2 * 125)
-  .attr('y', 2 * 25)
-  .style('fill', 'none')
-  .style('stroke', 'black')
-  .style('stroke-width', 2)
-  .style('stroke-dasharray', 4);
-
-legend
-  .append('text')
-  .text('Likely modal (see color)')
-  .attr('x', 290)
-  .attr('y', 2 * 25)
-  .attr('dy', 10);
-
-legend.append('rect');
-
-const definitions = preparedData();
-
-const earliest = d3.min(definitions, (d) => d.emergence);
-const latest = d3.max(definitions, (d) => d.emergence);
-
-if (data.dataFormat === 'cent') {
-  definitions.forEach((def) => {
-    if (def.emergence > 0) {
-      def.emergence -= 1;
-    }
-    def.emergence += Math.abs(earliest);
-  });
-}
-
 const meaningsGroup = svg
   .append('g')
   .attr('class', 'meanings')
-  .attr('transform', `translate(${margin.left}, ${(h / 100) * 18.5})`)
-  .style('width', (w / 100) * 80);
-
-let containerWidth = meaningsGroup.style('width');
-containerWidth = Number(containerWidth.substring(0, containerWidth.length - 2));
-let containerPortion = Math.floor(
-  containerWidth / range(earliest, latest).length
-);
-
-meaningsGroup
-  .selectAll('rect')
-  .data(definitions)
-  .enter()
-  .append('rect')
-  .style('fill', 'white')
-  .style('stroke-width', 3)
-  .style('stroke', (d) => color(d.modal))
-  .style('stroke-dasharray', (d) => (!d.certainty ? 4 : 0))
-  .attr('x', (d) => d.emergence * containerPortion)
-  .attr('y', (d, i) => i * 37)
-  .attr('width', (d) => containerWidth - d.emergence * containerPortion)
-  .attr('height', 30);
-
-meaningsGroup
-  .append('g')
-  .style('fill', 'black')
-  .selectAll('text')
-  .data(definitions)
-  .enter()
-  .append('text')
-  .attr('dy', '1.66em')
-  .attr('dx', '1.25em')
-  .attr('text-anchor', 'start')
-  .attr('x', (d) => d.emergence * containerPortion)
-  .attr('y', (d, i) => i * 37)
-  .text((d) => d.meaning);
+  .attr('transform', `translate(${margin.left}, ${(h / 100) * 18.5})`);
 
 const scale = svg
   .append('g')
   .attr('transform', `translate(${margin.left}, ${(h / 100) * 15})`);
 
-if (data.dataFormat == 'cent') {
-  const centuries = range(earliest, latest);
-  const romanDates = [];
-  centuries.forEach((cent) => {
-    let number = '';
-    if (cent < 0) {
-      number = `${romanize(cent)} BC`;
-    } else {
-      number = romanize(cent);
-    }
-    if (!romanDates.includes(number) && number != '') {
-      romanDates.push(number);
-    }
-  });
+function basicDisplay() {
+  const options = [
+    ['Modal: deontic', 'deontic'],
+    ['Modal: dynamic', 'dynamic'],
+    ['Modal: epistemic', 'epistemic'],
+    ['Not modal', 'notModal'],
+    ['Premodal', 'premodal'],
+    ['Postmodal: futurity', 'postmodal'],
+  ];
 
-  romanDates.push('...');
+  for (let i = 0; i < options.length; i++) {
+    const col = i <= 2 ? 1 : 0;
+    const row = i % 3 == 0 ? 1 : i % 3 == 1 ? 2 : 3;
+    const colSpace = 125;
 
-  scale
-    .selectAll('rect')
-    .data(romanDates)
-    .enter()
+    legend
+      .append('rect')
+      .style('fill', color(options[i][1]))
+      .attr('x', col * colSpace)
+      .attr('y', row * 25)
+      .attr('width', 12)
+      .attr('height', 12);
+
+    legend
+      .append('text')
+      .text(options[i][0])
+      .attr('x', col * colSpace)
+      .attr('y', row * 25)
+      .attr('dx', 15)
+      .attr('dy', 10);
+  }
+
+  legend
     .append('rect')
-    .attr('width', containerPortion)
-    .attr('height', 30)
-    .attr('x', (d, i) => i * containerPortion)
-    .attr('y', 0)
-    .style('stroke', (d, i) => `rgb(45, ${120 + 6 * i}, ${180 + 7 * i})`)
-    .style('stroke-width', 3)
-    .style('fill', (d, i) => `rgb(45, ${120 + 6 * i}, ${180 + 7 * i})`);
+    .attr('width', 10)
+    .attr('height', 10)
+    .attr('x', 2 * 125)
+    .attr('y', 2 * 25)
+    .style('fill', 'none')
+    .style('stroke', 'black')
+    .style('stroke-width', 2)
+    .style('stroke-dasharray', 4);
 
-  scale
-    .selectAll('text')
-    .data(romanDates)
-    .enter()
+  legend
     .append('text')
-    .text((d) => d)
-    .attr('x', (d, i) => i * containerPortion)
-    .attr('y', 0)
+    .text('Likely modal (see color)')
+    .attr('x', 250)
+    .attr('y', 2 * 25)
     .attr('dx', 15)
-    .attr('dy', 22)
-    .attr('font-size', 20)
-    .attr('style', 'font-weight: bold')
-    .style('fill', 'white');
+    .attr('dy', 10);
+
+  drawData(w);
 }
 
-function preparedData() {
+function prepareDefinitions() {
   const meanings = data.meanings;
   const definitions = [];
   meanings.forEach((meaning) => {
@@ -204,6 +114,112 @@ function modalityFormatting(meaning, modalitiy) {
     attestation: modalitiy.attestation,
     relationships: modalitiy.relationships,
   };
+}
+
+function drawData(width) {
+  const definitions = prepareDefinitions();
+
+  const earliest = d3.min(definitions, (d) => d.emergence);
+  const latest = d3.max(definitions, (d) => d.emergence);
+
+  meaningsGroup.style('width', (width / 100) * 80);
+
+  let containerWidth = meaningsGroup.style('width');
+  containerWidth = Number(
+    containerWidth.substring(0, containerWidth.length - 2)
+  );
+  let containerPortion = Math.floor(
+    containerWidth / range(earliest, latest).length
+  );
+
+  if (data.dataFormat === 'cent') {
+    definitions.forEach((def) => {
+      if (def.emergence > 0) {
+        def.emergence -= 1;
+      }
+      def.emergence += Math.abs(earliest);
+    });
+  }
+
+  meaningsGroup
+    .selectAll('rect')
+    .data(definitions)
+    .enter()
+    .append('rect')
+    .attr('class', 'data')
+    .style('fill', 'white')
+    .style('stroke-width', 3)
+    .style('stroke', (d) => color(d.modal))
+    .style('stroke-dasharray', (d) => (!d.certainty ? 4 : 0))
+    .attr('x', (d) => margin.left / 2 + d.emergence * containerPortion)
+    .attr('y', (d, i) => i * 37)
+    .attr('width', (d) => containerWidth - d.emergence * containerPortion)
+    .attr('height', 30)
+    .on('click', newDisplay);
+
+  meaningsGroup
+    .append('g')
+    .style('fill', 'black')
+    .selectAll('text')
+    .data(definitions)
+    .enter()
+    .append('text')
+    .attr('class', 'data')
+    .attr('dy', '1.66em')
+    .attr('dx', '1.25em')
+    .attr('text-anchor', 'start')
+    .attr('x', (d) => margin.left / 2 + d.emergence * containerPortion)
+    .attr('y', (d, i) => i * 37)
+    .text((d) => d.meaning);
+
+  drawScale(earliest, latest, containerPortion);
+}
+
+function drawScale(earliest, latest, containerPortion) {
+  if (data.dataFormat == 'cent') {
+    const centuries = range(earliest, latest);
+    const romanDates = [];
+    centuries.forEach((cent) => {
+      let number = '';
+      if (cent < 0) {
+        number = `${romanize(cent)} BC`;
+      } else {
+        number = romanize(cent);
+      }
+      if (!romanDates.includes(number) && number != '') {
+        romanDates.push(number);
+      }
+    });
+
+    romanDates.push('...');
+
+    scale
+      .selectAll('rect')
+      .data(romanDates)
+      .enter()
+      .append('rect')
+      .attr('width', containerPortion)
+      .attr('height', 30)
+      .attr('x', (d, i) => margin.left / 2 + i * containerPortion)
+      .attr('y', 0)
+      .style('stroke', (d, i) => `rgb(45, ${120 + 6 * i}, ${180 + 7 * i})`)
+      .style('stroke-width', 3)
+      .style('fill', (d, i) => `rgb(45, ${120 + 6 * i}, ${180 + 7 * i})`);
+
+    scale
+      .selectAll('text')
+      .data(romanDates)
+      .enter()
+      .append('text')
+      .text((d) => d)
+      .attr('x', (d, i) => margin.left / 2 + i * containerPortion)
+      .attr('y', 0)
+      .attr('dx', 15)
+      .attr('dy', 22)
+      .attr('font-size', 20)
+      .attr('style', 'font-weight: bold')
+      .style('fill', 'white');
+  }
 }
 
 function color(modal) {
@@ -263,4 +279,12 @@ function range(start, end) {
   return Array(end - start + 1)
     .fill()
     .map((_, idx) => start + idx);
+}
+
+function newDisplay(event) {
+  console.log(event);
+}
+
+if (data) {
+  basicDisplay();
 }
