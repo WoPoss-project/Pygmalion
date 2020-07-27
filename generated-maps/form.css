@@ -50,6 +50,12 @@ small {
   float: right;
 }
 
+#card {
+  width: 900px;
+  height: 600px;
+  margin: 0 auto;
+}
+
 .deleteDefinition {
   cursor: pointer;
   color: rgb(50, 171, 241);
