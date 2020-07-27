@@ -1,4 +1,17 @@
 const data = JSON.parse(localStorage.getItem('card'));
+const definitions = prepareDefinitions();
+
+const earliest = d3.min(definitions, (d) => d.emergence);
+const latest = d3.max(definitions, (d) => d.emergence);
+
+if (data.dataFormat === 'cent') {
+  definitions.forEach((def) => {
+    if (def.emergence > 0) {
+      def.emergence -= 1;
+    }
+    def.emergence += Math.abs(earliest);
+  });
+}
 
 const width = '100%';
 const height = '100%';
@@ -84,7 +97,7 @@ function basicDisplay() {
     .attr('dx', 15)
     .attr('dy', 10);
 
-  drawData(w);
+  drawData();
 }
 
 function prepareDefinitions() {
@@ -116,13 +129,10 @@ function modalityFormatting(meaning, modalitiy) {
   };
 }
 
-function drawData(width) {
-  const definitions = prepareDefinitions();
+function drawData(elements = definitions) {
+  const t = svg.transition().duration(750);
 
-  const earliest = d3.min(definitions, (d) => d.emergence);
-  const latest = d3.max(definitions, (d) => d.emergence);
-
-  meaningsGroup.style('width', (width / 100) * 80);
+  meaningsGroup.style('width', (w / 100) * 80);
 
   let containerWidth = meaningsGroup.style('width');
   containerWidth = Number(
@@ -132,36 +142,48 @@ function drawData(width) {
     containerWidth / range(earliest, latest).length
   );
 
-  if (data.dataFormat === 'cent') {
-    definitions.forEach((def) => {
-      if (def.emergence > 0) {
-        def.emergence -= 1;
-      }
-      def.emergence += Math.abs(earliest);
-    });
-  }
-
   meaningsGroup
     .selectAll('rect')
-    .data(definitions)
-    .enter()
-    .append('rect')
-    .attr('class', 'data')
-    .style('fill', 'white')
-    .style('stroke-width', 3)
-    .style('stroke', (d) => color(d.modal))
-    .style('stroke-dasharray', (d) => (!d.certainty ? 4 : 0))
-    .attr('x', (d) => margin.left / 2 + d.emergence * containerPortion)
-    .attr('y', (d, i) => i * 37)
-    .attr('width', (d) => containerWidth - d.emergence * containerPortion)
-    .attr('height', 30)
-    .on('click', newDisplay);
+    .data(elements)
+    .join(
+      (enter) =>
+        enter
+          .append('rect')
+          .attr('class', 'data')
+          .style('fill', 'white')
+          .style('stroke-width', 3)
+          .style('stroke', (d) => color(d.modal))
+          .style('stroke-dasharray', (d) => (!d.certainty ? 4 : 0))
+
+          .attr('x', (d) => margin.left / 2 + d.emergence * containerPortion)
+          .attr('y', (_, i) => i * 37)
+          .attr('width', (d) => containerWidth - d.emergence * containerPortion)
+          .attr('height', 30)
+          .on('click', (d) => {
+            newDisplay(d);
+          })
+          .call((enter) => enter.transition(t).attr('y', (_, i) => i * 37)),
+
+      (update) =>
+        update.call((update) =>
+          update.transition(t).attr('y', (_, i) => i * 37)
+        ),
+
+      (exit) =>
+        exit
+          .attr('fill', 'red')
+          .call((exit) => exit.transition(t).style('opacity', 0).remove())
+    );
+  /*.on('dblclick', () => {
+      d3.event.preventDefault();
+      drawData();
+    });*/
 
   meaningsGroup
     .append('g')
     .style('fill', 'black')
     .selectAll('text')
-    .data(definitions)
+    .data(elements)
     .enter()
     .append('text')
     .attr('class', 'data')
@@ -169,7 +191,7 @@ function drawData(width) {
     .attr('dx', '1.25em')
     .attr('text-anchor', 'start')
     .attr('x', (d) => margin.left / 2 + d.emergence * containerPortion)
-    .attr('y', (d, i) => i * 37)
+    .attr('y', (_, i) => i * 37)
     .text((d) => d.meaning);
 
   drawScale(earliest, latest, containerPortion);
@@ -200,7 +222,7 @@ function drawScale(earliest, latest, containerPortion) {
       .append('rect')
       .attr('width', containerPortion)
       .attr('height', 30)
-      .attr('x', (d, i) => margin.left / 2 + i * containerPortion)
+      .attr('x', (_, i) => margin.left / 2 + i * containerPortion)
       .attr('y', 0)
       .style('stroke', (d, i) => `rgb(45, ${120 + 6 * i}, ${180 + 7 * i})`)
       .style('stroke-width', 3)
@@ -282,7 +304,21 @@ function range(start, end) {
 }
 
 function newDisplay(event) {
-  console.log(event);
+  const keptIds = [event.id];
+  const keptElements = [];
+  for (const [_, value] of Object.entries(event.relationships)) {
+    if (value != '') {
+      value.forEach((val) => keptIds.push(val));
+    }
+  }
+  keptIds.forEach((id) => {
+    definitions.forEach((def) => {
+      if (Object.values(def).includes(id)) {
+        keptElements.push(def);
+      }
+    });
+  });
+  drawData(keptElements);
 }
 
 if (data) {
