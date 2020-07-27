@@ -91,7 +91,7 @@ if (data.dataFormat === 'cent') {
 const meaningsGroup = svg
   .append('g')
   .attr('class', 'meanings')
-  .attr('transform', `translate(${margin.left}, ${(h / 100) * 15})`)
+  .attr('transform', `translate(${margin.left}, ${(h / 100) * 18.5})`)
   .style('width', (w / 100) * 80);
 
 let containerWidth = meaningsGroup.style('width');
@@ -128,10 +128,12 @@ meaningsGroup
   .attr('y', (d, i) => i * 37)
   .text((d) => d.meaning);
 
-const scale = svg.append('g').attr('transform', `translate(-25, 20)`);
+const scale = svg
+  .append('g')
+  .attr('transform', `translate(${margin.left}, ${(h / 100) * 15})`);
 
 if (data.dataFormat == 'cent') {
-  const centuries = range(earliest, latest + 1);
+  const centuries = range(earliest, latest);
   const romanDates = [];
   centuries.forEach((cent) => {
     let number = '';
@@ -145,16 +147,34 @@ if (data.dataFormat == 'cent') {
     }
   });
 
-  /*
+  romanDates.push('...');
+
   scale
     .selectAll('rect')
     .data(romanDates)
     .enter()
     .append('rect')
-    .attr('width', (d, i) => x(earliest))
-    .attr('height', y.bandwidth())
-    .attr('x', x(earliest))
-    .attr('y', (d, i) => i * 50);*/
+    .attr('width', containerPortion)
+    .attr('height', 30)
+    .attr('x', (d, i) => i * containerPortion)
+    .attr('y', 0)
+    .style('stroke', (d, i) => `rgb(45, ${120 + 6 * i}, ${180 + 7 * i})`)
+    .style('stroke-width', 3)
+    .style('fill', (d, i) => `rgb(45, ${120 + 6 * i}, ${180 + 7 * i})`);
+
+  scale
+    .selectAll('text')
+    .data(romanDates)
+    .enter()
+    .append('text')
+    .text((d) => d)
+    .attr('x', (d, i) => i * containerPortion)
+    .attr('y', 0)
+    .attr('dx', 15)
+    .attr('dy', 22)
+    .attr('font-size', 20)
+    .attr('style', 'font-weight: bold')
+    .style('fill', 'white');
 }
 
 function preparedData() {
