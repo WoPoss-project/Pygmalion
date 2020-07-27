@@ -51,8 +51,8 @@ small {
 }
 
 #card {
-  width: 900px;
-  height: 600px;
+  width: 100%;
+  height: 1000px;
   margin: 0 auto;
 }
 

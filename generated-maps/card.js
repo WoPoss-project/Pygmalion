@@ -1,10 +1,11 @@
 const data = JSON.parse(localStorage.getItem('card'));
-const width = 900;
-const height = 600;
-const margins = {
+
+const width = '100%';
+const height = '100%';
+const margin = {
   top: 100,
   left: 100,
-  right: 20,
+  right: 100,
   bottom: 0,
 };
 
@@ -24,12 +25,19 @@ const svg = d3
   .attr('height', height)
   .attr('style', 'font: 12px sans-serif');
 
-const legend = svg.append('g').attr('class', 'legend');
+const w = Number(svg.style('width').split('px')[0]);
+const h = Number(svg.style('height').split('px')[0]);
+
+const legend = svg
+  .append('g')
+  .attr('class', 'legend')
+  .attr('transform', `translate(${margin.left}, ${(h / 100) * 3})`);
 
 for (let i = 0; i < options.length; i++) {
   const col = i <= 2 ? 1 : 0;
   const row = i % 3 == 0 ? 1 : i % 3 == 1 ? 2 : 3;
   const colSpace = 125;
+
   legend
     .append('rect')
     .style('fill', color(options[i][1]))
@@ -66,42 +74,45 @@ legend
 
 legend.append('rect');
 
+const definitions = preparedData();
+
+const earliest = d3.min(definitions, (d) => d.emergence);
+const latest = d3.max(definitions, (d) => d.emergence);
+
+if (data.dataFormat === 'cent') {
+  definitions.forEach((def) => {
+    if (def.emergence > 0) {
+      def.emergence -= 1;
+    }
+    def.emergence += Math.abs(earliest);
+  });
+}
+
 const meaningsGroup = svg
   .append('g')
   .attr('class', 'meanings')
-  .style('fill', 'black');
+  .attr('transform', `translate(${margin.left}, ${(h / 100) * 15})`)
+  .style('width', (w / 100) * 80);
 
-const definitions = preparedData();
-
-const x = d3
-  .scaleLinear()
-  .domain([
-    d3.max(definitions, (d) => d.emergence),
-    d3.min(definitions, (d) => d.emergence),
-  ])
-  .range([margins.left, width - margins.right]);
-
-const y = d3
-  .scaleBand()
-  .domain(definitions.map((d) => d.id))
-  .range([margins.top, height - margins.bottom])
-  .padding(0.2)
-  .round(true);
+let containerWidth = meaningsGroup.style('width');
+containerWidth = Number(containerWidth.substring(0, containerWidth.length - 2));
+let containerPortion = Math.floor(
+  containerWidth / range(earliest, latest).length
+);
 
 meaningsGroup
-  .append('g')
-  .style('fill', 'white')
-  .style('stroke-width', 3)
   .selectAll('rect')
   .data(definitions)
   .enter()
   .append('rect')
+  .style('fill', 'white')
+  .style('stroke-width', 3)
   .style('stroke', (d) => color(d.modal))
   .style('stroke-dasharray', (d) => (!d.certainty ? 4 : 0))
-  .attr('x', (d) => width - x(d.emergence))
-  .attr('y', (d) => y(d.id))
-  .attr('width', (d) => x(d.emergence))
-  .attr('height', y.bandwidth());
+  .attr('x', (d) => d.emergence * containerPortion)
+  .attr('y', (d, i) => i * 37)
+  .attr('width', (d) => containerWidth - d.emergence * containerPortion)
+  .attr('height', 30);
 
 meaningsGroup
   .append('g')
@@ -113,9 +124,38 @@ meaningsGroup
   .attr('dy', '1.66em')
   .attr('dx', '1.25em')
   .attr('text-anchor', 'start')
-  .attr('x', (d) => width - x(d.emergence))
-  .attr('y', (d) => y(d.id))
+  .attr('x', (d) => d.emergence * containerPortion)
+  .attr('y', (d, i) => i * 37)
   .text((d) => d.meaning);
+
+const scale = svg.append('g').attr('transform', `translate(-25, 20)`);
+
+if (data.dataFormat == 'cent') {
+  const centuries = range(earliest, latest + 1);
+  const romanDates = [];
+  centuries.forEach((cent) => {
+    let number = '';
+    if (cent < 0) {
+      number = `${romanize(cent)} BC`;
+    } else {
+      number = romanize(cent);
+    }
+    if (!romanDates.includes(number) && number != '') {
+      romanDates.push(number);
+    }
+  });
+
+  /*
+  scale
+    .selectAll('rect')
+    .data(romanDates)
+    .enter()
+    .append('rect')
+    .attr('width', (d, i) => x(earliest))
+    .attr('height', y.bandwidth())
+    .attr('x', x(earliest))
+    .attr('y', (d, i) => i * 50);*/
+}
 
 function preparedData() {
   const meanings = data.meanings;
@@ -156,4 +196,51 @@ function color(modal) {
     postmodal: 'gold',
   };
   return conversion[modal];
+}
+
+function romanize(num) {
+  if (isNaN(num)) return NaN;
+  let digits = String(+num).split(''),
+    key = [
+      '',
+      'C',
+      'CC',
+      'CCC',
+      'CD',
+      'D',
+      'DC',
+      'DCC',
+      'DCCC',
+      'CM',
+      '',
+      'X',
+      'XX',
+      'XXX',
+      'XL',
+      'L',
+      'LX',
+      'LXX',
+      'LXXX',
+      'XC',
+      '',
+      'I',
+      'II',
+      'III',
+      'IV',
+      'V',
+      'VI',
+      'VII',
+      'VIII',
+      'IX',
+    ],
+    roman = '',
+    i = 3;
+  while (i--) roman = (key[+digits.pop() + i * 10] || '') + roman;
+  return Array(+digits.join('') + 1).join('M') + roman;
+}
+
+function range(start, end) {
+  return Array(end - start + 1)
+    .fill()
+    .map((_, idx) => start + idx);
 }
