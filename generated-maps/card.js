@@ -145,45 +145,30 @@ function drawData(elements = definitions) {
   meaningsGroup
     .selectAll('rect')
     .data(elements)
-    .join(
-      (enter) =>
-        enter
-          .append('rect')
-          .attr('class', 'data')
-          .style('fill', 'white')
-          .style('stroke-width', 3)
-          .style('stroke', (d) => color(d.modal))
-          .style('stroke-dasharray', (d) => (!d.certainty ? 4 : 0))
 
-          .attr('x', (d) => margin.left / 2 + d.emergence * containerPortion)
-          .attr('y', (_, i) => i * 37)
-          .attr('width', (d) => containerWidth - d.emergence * containerPortion)
-          .attr('height', 30)
-          .on('click', (d) => {
-            newDisplay(d);
-          })
-          .call((enter) => enter.transition(t).attr('y', (_, i) => i * 37)),
+    .enter()
+    .append('rect')
+    .attr('class', 'data')
+    .style('fill', 'white')
+    .style('stroke-width', 3)
+    .style('stroke', (d) => color(d.modal))
+    .style('stroke-dasharray', (d) => (!d.certainty ? 4 : 0))
+    .attr('x', (d) => margin.left / 2 + d.emergence * containerPortion)
+    .attr('y', (_, i) => i * 37)
+    .attr('width', (d) => containerWidth - d.emergence * containerPortion)
+    .attr('height', 30)
+    .on('click', (d) => {
+      newDisplay(d);
+    })
 
-      (update) =>
-        update.call((update) =>
-          update.transition(t).attr('y', (_, i) => i * 37)
-        ),
-
-      (exit) =>
-        exit
-          .attr('fill', 'red')
-          .call((exit) => exit.transition(t).style('opacity', 0).remove())
-    );
-  /*.on('dblclick', () => {
-      d3.event.preventDefault();
-      drawData();
-    });*/
+    .exit()
+    .remove();
 
   meaningsGroup
-    .append('g')
     .style('fill', 'black')
     .selectAll('text')
     .data(elements)
+
     .enter()
     .append('text')
     .attr('class', 'data')
@@ -192,7 +177,10 @@ function drawData(elements = definitions) {
     .attr('text-anchor', 'start')
     .attr('x', (d) => margin.left / 2 + d.emergence * containerPortion)
     .attr('y', (_, i) => i * 37)
-    .text((d) => d.meaning);
+    .text((d) => d.meaning)
+
+    .exit()
+    .remove();
 
   drawScale(earliest, latest, containerPortion);
 }
