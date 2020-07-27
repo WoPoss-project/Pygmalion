@@ -148,47 +148,50 @@ function submit(event) {
   const final = [];
 
   const semanticRelationships = document.querySelectorAll('.relationship');
-  for (let i = 0; i < semanticRelationships.length; i++) {
-    const dataCols = semanticRelationships[i].childNodes[1].childNodes;
-    const values = [];
-    for (let j = 0; j < dataCols.length; j++) {
-      const value =
-        dataCols[j].firstChild.type === 'checkbox'
-          ? dataCols[j].firstChild.checked
-          : dataCols[j].firstChild.value;
-      values.push(value);
-    }
-    final.push({
-      origin: values[0],
-      direction: values[1],
-      destination: values[2],
-      certitude: values[3],
-    });
-  }
 
-  for (let i = 0; i < final.length; i++) {
-    data.meanings.forEach((meaning) => {
-      if (meaning.modalities.length > 1) {
-        meaning.modalities.forEach((modality) => {
+  if (semanticRelationships.length > 0) {
+    for (let i = 0; i < semanticRelationships.length; i++) {
+      const dataCols = semanticRelationships[i].childNodes[1].childNodes;
+      const values = [];
+      for (let j = 0; j < dataCols.length; j++) {
+        const value =
+          dataCols[j].firstChild.type === 'checkbox'
+            ? dataCols[j].firstChild.checked
+            : dataCols[j].firstChild.value;
+        values.push(value);
+      }
+      final.push({
+        origin: values[0],
+        direction: values[1],
+        destination: values[2],
+        certitude: values[3],
+      });
+    }
+
+    for (let i = 0; i < final.length; i++) {
+      data.meanings.forEach((meaning) => {
+        if (meaning.modalities.length > 1) {
+          meaning.modalities.forEach((modality) => {
+            modality = addRelationships(modality);
+            if (modality.id === final[i].origin) {
+              modality = editModality(modality, final[i]);
+            }
+          });
+        } else {
+          let modality = meaning.modalities[0];
           modality = addRelationships(modality);
           if (modality.id === final[i].origin) {
             modality = editModality(modality, final[i]);
           }
-        });
-      } else {
-        let modality = meaning.modalities[0];
-        modality = addRelationships(modality);
-        if (modality.id === final[i].origin) {
-          modality = editModality(modality, final[i]);
         }
-      }
-    });
+      });
+    }
+    localStorage.setItem('card', JSON.stringify(data));
   }
-  console.log(data);
 }
 
 function addRelationships(modality) {
-  if (!modality.relationship) {
+  if (!'relationships' in modality) {
     modality['relationships'] = {
       origins: [],
       destinations: [],
@@ -200,9 +203,15 @@ function addRelationships(modality) {
 
 function editModality(modality, final) {
   final.direction === 'unspecified'
-    ? modality.relationships.unspecified.push(final.destination)
+    ? !modality.relationships.unspecified.includes(final.destination)
+      ? modality.relationships.unspecified.push(final.destination)
+      : modality
     : final.direction === 'to'
-    ? modality.relationships.destinations.push(final.destination)
-    : modality.relationships.origins.push(final.destination);
+    ? !modality.relationships.destinations.includes(final.destination)
+      ? modality.relationships.destinations.push(final.destination)
+      : modality
+    : !modality.relationships.origins.includes(final.destination)
+    ? modality.relationships.origins.push(final.destination)
+    : modality;
   return modality;
 }
