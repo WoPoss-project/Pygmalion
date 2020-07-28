@@ -158,12 +158,12 @@ function drawData(elements = definitions) {
     .style('stroke-width', 3)
     .style('stroke', (d) => color(d.modal))
     .style('stroke-dasharray', (d) => (!d.certainty ? 4 : 0))
-    .attr('x', (d) => margin.left / 2 + d.emergence * containerPortion)
+    .attr('x', (d) => d.emergence * containerPortion)
     .attr('y', (_, i) => i * 37)
     .attr('width', (d) => containerWidth - d.emergence * containerPortion)
     .attr('height', 30)
     .on('click', newDisplay)
-    .on('dblclick', (d) => {
+    .on('dblclick', () => {
       d3.event.preventDefault();
       drawData();
     });
@@ -172,13 +172,13 @@ function drawData(elements = definitions) {
     .selectAll('text')
     .data(elements)
 
-    .join((enter) => enter.append('text'))
+    .join('text')
     .style('fill', 'black')
     .attr('class', 'data')
     .attr('dy', '1.66em')
     .attr('dx', '1.25em')
     .attr('text-anchor', 'start')
-    .attr('x', (d) => margin.left / 2 + d.emergence * containerPortion)
+    .attr('x', (d) => d.emergence * containerPortion)
     .attr('y', (_, i) => i * 37)
     .text((d) => d.meaning);
 
@@ -211,7 +211,7 @@ function drawScale(earliest, latest, containerPortion) {
       .attr('class', 'scale')
       .attr('width', containerPortion)
       .attr('height', 30)
-      .attr('x', (_, i) => margin.left / 2 + i * containerPortion)
+      .attr('x', (_, i) => i * containerPortion)
       .attr('y', 0)
       .style('stroke', (d, i) => `rgb(45, ${120 + 6 * i}, ${180 + 7 * i})`)
       .style('stroke-width', 3)
@@ -224,7 +224,7 @@ function drawScale(earliest, latest, containerPortion) {
       .append('text')
       .attr('class', 'scale')
       .text((d) => d)
-      .attr('x', (d, i) => margin.left / 2 + i * containerPortion)
+      .attr('x', (d, i) => i * containerPortion)
       .attr('y', 0)
       .attr('dx', 15)
       .attr('dy', 22)
