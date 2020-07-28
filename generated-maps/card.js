@@ -132,6 +132,9 @@ function modalityFormatting(meaning, modalitiy) {
 function drawData(elements = definitions) {
   const t = svg.transition().duration(750);
 
+  //const ids = elements.map((d) => d.id);
+  //console.log(ids);
+
   meaningsGroup.style('width', (w / 100) * 80);
 
   let containerWidth = meaningsGroup.style('width');
@@ -141,13 +144,15 @@ function drawData(elements = definitions) {
   let containerPortion = Math.floor(
     containerWidth / range(earliest, latest).length
   );
-
   meaningsGroup
     .selectAll('rect')
     .data(elements)
 
-    .enter()
-    .append('rect')
+    .join(
+      (enter) => enter.append('rect'),
+      (update) => update.attr('stroke', 'black'),
+      (exit) => exit.transition().duration(500).style('opacity', 0).remove()
+    )
     .attr('class', 'data')
     .style('fill', 'white')
     .style('stroke-width', 3)
@@ -157,30 +162,25 @@ function drawData(elements = definitions) {
     .attr('y', (_, i) => i * 37)
     .attr('width', (d) => containerWidth - d.emergence * containerPortion)
     .attr('height', 30)
-    .on('click', (d) => {
-      newDisplay(d);
-    })
-
-    .exit()
-    .remove();
+    .on('click', newDisplay)
+    .on('dblclick', (d) => {
+      d3.event.preventDefault();
+      drawData();
+    });
 
   meaningsGroup
-    .style('fill', 'black')
     .selectAll('text')
     .data(elements)
 
-    .enter()
-    .append('text')
+    .join((enter) => enter.append('text'))
+    .style('fill', 'black')
     .attr('class', 'data')
     .attr('dy', '1.66em')
     .attr('dx', '1.25em')
     .attr('text-anchor', 'start')
     .attr('x', (d) => margin.left / 2 + d.emergence * containerPortion)
     .attr('y', (_, i) => i * 37)
-    .text((d) => d.meaning)
-
-    .exit()
-    .remove();
+    .text((d) => d.meaning);
 
   drawScale(earliest, latest, containerPortion);
 }
@@ -208,6 +208,7 @@ function drawScale(earliest, latest, containerPortion) {
       .data(romanDates)
       .enter()
       .append('rect')
+      .attr('class', 'scale')
       .attr('width', containerPortion)
       .attr('height', 30)
       .attr('x', (_, i) => margin.left / 2 + i * containerPortion)
@@ -221,6 +222,7 @@ function drawScale(earliest, latest, containerPortion) {
       .data(romanDates)
       .enter()
       .append('text')
+      .attr('class', 'scale')
       .text((d) => d)
       .attr('x', (d, i) => margin.left / 2 + i * containerPortion)
       .attr('y', 0)
@@ -306,6 +308,7 @@ function newDisplay(event) {
       }
     });
   });
+  console.log(keptElements);
   drawData(keptElements);
 }
 
