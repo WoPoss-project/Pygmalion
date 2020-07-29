@@ -238,7 +238,9 @@ function drawData(elements = definitions) {
     .attr('x', (d) => d.emergence * containerPortion)
     .attr('y', (_, i) => i * 37)
     .attr('width', (d) => containerWidth - d.emergence * containerPortion)
-    .attr('height', 30)
+    .attr('height', (d) => {
+      return checkHeight(d, containerWidth - d.emergence * containerPortion);
+    })
     .on('click', (d) => {
       tip.transition().duration(50).style('opacity', 0);
       newDisplay(d);
@@ -277,15 +279,65 @@ function drawData(elements = definitions) {
     .attr('dy', '1.66em')
     .attr('dx', '1.25em')
     .attr('text-anchor', 'start')
-    .attr('x', (d) => d.emergence * containerPortion)
-    .attr('y', (_, i) => i * 37)
     .text((d) => d.meaning)
+    .attr('y', (_, i) => i * 37)
+    .attr('x', (d) => d.emergence * containerPortion)
+    .call(wrap, containerWidth, containerPortion)
 
     .transition()
     .duration(duration)
     .style('opacity', 1);
 
   drawScale(earliest, latest, containerPortion);
+}
+
+function checkHeight(d, boxWidth) {
+  const arrowHeight = 30;
+  const length = d.meaning.length;
+  if (length * 12 >= boxWidth) {
+    return arrowHeight * 2;
+  } else {
+    return arrowHeight;
+  }
+}
+
+function wrap(text, cW, cP) {
+  text.each(function () {
+    var text = d3.select(this),
+      words = text.text().split(/\s+/).reverse(),
+      word,
+      line = [],
+      lineNumber = 0,
+      lineHeight = 1.5, // ems
+      x = text.attr('x'),
+      y = text.attr('y'),
+      dy = parseFloat(text.attr('dy')),
+      tspan = text
+        .text(null)
+        .append('tspan')
+        .attr('x', x)
+        .attr('y', y)
+        .attr('dy', dy + 'em');
+
+    const width = cW - x;
+
+    while ((word = words.pop())) {
+      line.push(word);
+      tspan.text(line.join(' '));
+      if (tspan.node().getComputedTextLength() > width) {
+        line.pop();
+        tspan.text(line.join(' '));
+        line = [word];
+        tspan = text
+          .append('tspan')
+          .attr('x', x)
+          .attr('y', y)
+          .attr('dy', ++lineNumber * lineHeight + dy + 'em')
+          .attr('dx', 15)
+          .text(word);
+      }
+    }
+  });
 }
 
 function drawScale(earliest, latest, containerPortion) {
