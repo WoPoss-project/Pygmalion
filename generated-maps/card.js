@@ -211,6 +211,14 @@ function drawData(elements = definitions) {
     containerWidth / range(earliest, latest).length
   );
 
+  let tip = d3
+    .select('body')
+    .append('div')
+    .attr('class', 'tooltip-donut')
+    .style('opacity', 0);
+
+  const duration = 250;
+
   meaningsGroup
     .selectAll('rect')
     .data(elements)
@@ -218,9 +226,11 @@ function drawData(elements = definitions) {
     .join(
       (enter) => enter.append('rect'),
       (update) => update.attr('stroke', 'black'),
-      (exit) => exit.transition().duration(500).style('opacity', 0).remove()
+      (exit) =>
+        exit.transition().duration(duration).style('opacity', 0).remove()
     )
     .attr('class', 'data')
+    .style('opacity', 0)
     .style('fill', 'white')
     .style('stroke-width', 3)
     .style('stroke', (d) => color(d.modal))
@@ -229,25 +239,51 @@ function drawData(elements = definitions) {
     .attr('y', (_, i) => i * 37)
     .attr('width', (d) => containerWidth - d.emergence * containerPortion)
     .attr('height', 30)
-    .on('click', newDisplay)
+    .on('click', (d) => {
+      tip.transition().duration(50).style('opacity', 0);
+      newDisplay(d);
+    })
     .on('dblclick', () => {
       d3.event.preventDefault();
       drawData();
-    });
+    })
+    .on('mouseover', (d) => {
+      tip.transition().duration(50).style('opacity', 1);
+      tip
+        .html(d.attestation)
+        .style('left', d3.event.pageX + 10 + 'px')
+        .style('top', d3.event.pageY - 15 + 'px');
+    })
+    .on('mouseout', () => {
+      tip.transition().duration(50).style('opacity', 0);
+    })
+    .transition()
+    .duration(duration)
+    .style('opacity', 1);
 
   meaningsGroup
     .selectAll('text')
     .data(elements)
 
-    .join('text')
+    .join(
+      (enter) => enter.append('text'),
+      (update) => update.style('fill', 'black'),
+      (exit) =>
+        exit.transition().duration(duration).style('opacity', 0).remove()
+    )
     .style('fill', 'black')
+    .style('opacity', 0)
     .attr('class', 'data')
     .attr('dy', '1.66em')
     .attr('dx', '1.25em')
     .attr('text-anchor', 'start')
     .attr('x', (d) => d.emergence * containerPortion)
     .attr('y', (_, i) => i * 37)
-    .text((d) => d.meaning);
+    .text((d) => d.meaning)
+
+    .transition()
+    .duration(duration)
+    .style('opacity', 1);
 
   drawScale(earliest, latest, containerPortion);
 }
