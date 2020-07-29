@@ -4,6 +4,8 @@ const definitions = prepareDefinitions();
 const earliest = d3.min(definitions, (d) => d.emergence);
 const latest = d3.max(definitions, (d) => d.emergence);
 
+const lineGenerator = d3.line();
+
 if (data.dataFormat === 'cent') {
   definitions.forEach((def) => {
     if (def.emergence > 0) {
@@ -35,16 +37,21 @@ const h = Number(svg.style('height').split('px')[0]);
 const legend = svg
   .append('g')
   .attr('class', 'legend')
+  .attr('transform', `translate(${margin.left}, ${(h / 100) * 12.75})`);
+
+const etymology = svg
+  .append('g')
+  .attr('class', 'etymology')
   .attr('transform', `translate(${margin.left}, ${(h / 100) * 3})`);
 
 const meaningsGroup = svg
   .append('g')
   .attr('class', 'meanings')
-  .attr('transform', `translate(${margin.left}, ${(h / 100) * 18.5})`);
+  .attr('transform', `translate(${margin.left}, ${(h / 100) * 27})`);
 
 const scale = svg
   .append('g')
-  .attr('transform', `translate(${margin.left}, ${(h / 100) * 15})`);
+  .attr('transform', `translate(${margin.left}, ${(h / 100) * 23})`);
 
 function basicDisplay() {
   const options = [
@@ -97,6 +104,7 @@ function basicDisplay() {
     .attr('dx', 15)
     .attr('dy', 10);
 
+  drawEtymology();
   drawData();
 }
 
@@ -129,12 +137,60 @@ function modalityFormatting(meaning, modalitiy) {
   };
 }
 
+function drawEtymology() {
+  const ety = data.etymology;
+  const newEty = [];
+  ety.forEach((e) => {
+    newEty.push(Object.values(e));
+  });
+
+  let longest = '';
+  newEty.forEach((e) => {
+    longest += e.join(' ');
+    longest += ' ';
+  });
+  longest += ' ' + data.headword;
+  longest = longest.split(' ').reduce((longest, word) => {
+    word.length > longest.length ? (longest = word) : (longest += '');
+    return longest;
+  });
+
+  const gw = 10 * longest.length;
+  const gh = 80;
+
+  for (let i = 0; i < newEty.length + 1; i++) {
+    const g = etymology
+      .append('g')
+      .attr('transform', `translate(${i * gw}, ${(h / 100) * 3})`);
+    g.append('rect')
+      .attr('width', gw)
+      .attr('height', gh)
+      .attr('x', 0)
+      .attr('y', 0)
+      .style('stroke', 'black')
+      .attr('stroke-width', 3)
+      .style('fill', 'none');
+    if (newEty[i]) {
+      for (let j = 0; j < newEty[i].length; j++) {
+        g.append('text')
+          .text(newEty[i][j])
+          .attr('x', 0)
+          .attr('y', j * 25)
+          .attr('dx', 12)
+          .attr('dy', 20);
+      }
+    } else {
+      g.append('text')
+        .text(data.headword)
+        .attr('x', 0)
+        .attr('y', 25)
+        .attr('dx', 12)
+        .attr('dy', 20);
+    }
+  }
+}
+
 function drawData(elements = definitions) {
-  const t = svg.transition().duration(750);
-
-  //const ids = elements.map((d) => d.id);
-  //console.log(ids);
-
   elements.sort((a, b) => {
     const compareConstruct = (a, b) => (a < b ? -1 : b < a ? 1 : 0);
     const compareDate = (a, b) => Math.sign(a - b);
@@ -224,8 +280,6 @@ function drawScale(earliest, latest, containerPortion) {
       .attr('height', 30)
       .attr('x', (_, i) => i * containerPortion)
       .attr('y', 0)
-      .style('stroke', (d, i) => `rgb(45, ${120 + 6 * i}, ${180 + 7 * i})`)
-      .style('stroke-width', 3)
       .style('fill', (d, i) => `rgb(45, ${120 + 6 * i}, ${180 + 7 * i})`);
 
     scale
@@ -235,7 +289,7 @@ function drawScale(earliest, latest, containerPortion) {
       .append('text')
       .attr('class', 'scale')
       .text((d) => d)
-      .attr('x', (d, i) => i * containerPortion)
+      .attr('x', (_, i) => i * containerPortion)
       .attr('y', 0)
       .attr('dx', 15)
       .attr('dy', 22)
