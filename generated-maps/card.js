@@ -135,6 +135,16 @@ function drawData(elements = definitions) {
   //const ids = elements.map((d) => d.id);
   //console.log(ids);
 
+  elements.sort((a, b) => {
+    const compareConstruct = (a, b) => (a < b ? -1 : b < a ? 1 : 0);
+    const compareDate = (a, b) => Math.sign(a - b);
+
+    return (
+      compareConstruct(a.construct, b.construct) ||
+      compareDate(a.emergence, b.emergence)
+    );
+  });
+
   meaningsGroup.style('width', (w / 100) * 80);
 
   let containerWidth = meaningsGroup.style('width');
@@ -144,6 +154,7 @@ function drawData(elements = definitions) {
   let containerPortion = Math.floor(
     containerWidth / range(earliest, latest).length
   );
+
   meaningsGroup
     .selectAll('rect')
     .data(elements)
