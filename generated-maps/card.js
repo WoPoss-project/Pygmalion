@@ -277,7 +277,7 @@ function drawData(elements = definitions) {
     .style('opacity', 0)
     .attr('class', 'data')
     .attr('dy', '1.66em')
-    .attr('dx', '1.25em')
+    .attr('dx', '1.1em')
     .attr('text-anchor', 'start')
     .text((d) => d.meaning)
     .attr('y', (_, i) => i * 37)
@@ -292,12 +292,11 @@ function drawData(elements = definitions) {
 }
 
 function checkHeight(d, boxWidth) {
-  const arrowHeight = 30;
   const length = d.meaning.length;
   if (length * 12 >= boxWidth) {
-    return arrowHeight * 2;
+    return 50;
   } else {
-    return arrowHeight;
+    return 30;
   }
 }
 
@@ -333,7 +332,7 @@ function wrap(text, cW, cP) {
           .attr('x', x)
           .attr('y', y)
           .attr('dy', ++lineNumber * lineHeight + dy + 'em')
-          .attr('dx', 15)
+          .attr('dx', '1.1em')
           .text(word);
       }
     }
