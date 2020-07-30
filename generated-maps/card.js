@@ -219,28 +219,36 @@ function drawData(elements = definitions) {
 
   const duration = 250;
 
+  console.log(elements);
   meaningsGroup
-    .selectAll('rect')
-    .data(elements)
+    .selectAll('g')
+    .data(elements, (d) => d)
 
     .join(
-      (enter) => enter.append('rect'),
-      (update) => update.attr('stroke', 'black'),
+      (enter) =>
+        enter
+          .append('g')
+          .attr('class', 'data')
+          .call(addElems, containerWidth, containerPortion, duration, tip),
       (exit) =>
         exit.transition().duration(duration).style('opacity', 0).remove()
-    )
-    .attr('class', 'data')
+    );
+
+  drawScale(earliest, latest, containerPortion);
+}
+
+function addElems(elements, cW, cP, dur, tip) {
+  elements
+    .append('rect')
     .style('opacity', 0)
     .style('fill', 'white')
     .style('stroke-width', 3)
     .style('stroke', (d) => color(d.modal))
     .style('stroke-dasharray', (d) => (!d.certainty ? 4 : 0))
-    .attr('x', (d) => d.emergence * containerPortion)
+    .attr('x', (d) => d.emergence * cP)
     .attr('y', (_, i) => i * 37)
-    .attr('width', (d) => containerWidth - d.emergence * containerPortion)
-    .attr('height', (d) => {
-      return checkHeight(d, containerWidth - d.emergence * containerPortion);
-    })
+    .attr('width', (d) => cW - d.emergence * cP)
+    .attr('height', (d) => 30)
     .on('click', (d) => {
       tip.transition().duration(50).style('opacity', 0);
       newDisplay(d);
@@ -259,48 +267,41 @@ function drawData(elements = definitions) {
     .on('mouseout', () => {
       tip.transition().duration(50).style('opacity', 0);
     })
-    .transition()
-    .duration(duration)
-    .style('opacity', 1);
-
-  meaningsGroup
-    .selectAll('text')
-    .data(elements)
-
-    .join(
-      (enter) => enter.append('text'),
-      (update) => update.style('fill', 'black'),
-      (exit) =>
-        exit.transition().duration(duration).style('opacity', 0).remove()
-    )
+    .call((enter) => enter.transition().duration(dur).style('opacity', 1));
+  elements
+    .insert('text')
     .style('fill', 'black')
     .style('opacity', 0)
-    .attr('class', 'data')
     .attr('dy', '1.66em')
     .attr('dx', '1.1em')
     .attr('text-anchor', 'start')
     .text((d) => d.meaning)
     .attr('y', (_, i) => i * 37)
-    .attr('x', (d) => d.emergence * containerPortion)
-    .call(wrap, containerWidth, containerPortion)
+    .attr('x', (d) => d.emergence * cP)
+    .call(wrap, cW, cP)
+    .call((enter) => enter.transition().duration(dur).style('opacity', 1));
+}
 
-    .transition()
-    .duration(duration)
-    .style('opacity', 1);
-
-  drawScale(earliest, latest, containerPortion);
+function updateElems(elements) {
+  elements
+    .selectAll('rect')
+    .style('stroke', (d) => {
+      console.log(d);
+      return color(d.modal);
+    })
+    .style('stroke-dasharray', (d) => (!d.certainty ? 4 : 0));
 }
 
 function checkHeight(d, boxWidth) {
   const length = d.meaning.length;
-  if (length * 12 >= boxWidth) {
+  if (length * 5.5 >= boxWidth) {
     return 50;
   } else {
     return 30;
   }
 }
 
-function wrap(text, cW, cP) {
+function wrap(text, cW) {
   text.each(function () {
     var text = d3.select(this),
       words = text.text().split(/\s+/).reverse(),
@@ -319,11 +320,10 @@ function wrap(text, cW, cP) {
         .attr('dy', dy + 'em');
 
     const width = cW - x;
-
     while ((word = words.pop())) {
       line.push(word);
       tspan.text(line.join(' '));
-      if (tspan.node().getComputedTextLength() > width) {
+      if (tspan.text().length * 6 > width) {
         line.pop();
         tspan.text(line.join(' '));
         line = [word];
@@ -334,6 +334,10 @@ function wrap(text, cW, cP) {
           .attr('dy', ++lineNumber * lineHeight + dy + 'em')
           .attr('dx', '1.1em')
           .text(word);
+        d3.select(text.node().parentNode.firstChild).attr(
+          'height',
+          (lineNumber + 1) * 24
+        );
       }
     }
   });
