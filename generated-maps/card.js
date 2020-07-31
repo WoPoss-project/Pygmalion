@@ -144,27 +144,21 @@ function drawEtymology() {
     newEty.push(Object.values(e));
   });
 
-  let longest = '';
-  newEty.forEach((e) => {
-    longest += e.join(' ');
-    longest += ' ';
-  });
-  longest += ' ' + data.headword;
-  longest = longest.split(' ').reduce((longest, word) => {
-    word.length > longest.length ? (longest = word) : (longest += '');
-    return longest;
-  });
-
-  const gw = 10 * longest.length;
-  const gh = 80;
+  let totalLength = 0;
 
   for (let i = 0; i < newEty.length + 1; i++) {
+    const gw = newEty[i]
+      ? newEty[i][2].split(' ').join('').length * 7.5 >
+        newEty[i][1].length * 7.5
+        ? newEty[i][2].split(' ').join('').length * 7.5
+        : newEty[i][1].length * 7.5
+      : data.headword.length * 12;
     const g = etymology
       .append('g')
-      .attr('transform', `translate(${i * gw}, ${(h / 100) * 3})`);
+      .attr('transform', `translate(${totalLength}, ${(h / 100) * 3})`);
     g.append('rect')
       .attr('width', gw)
-      .attr('height', gh)
+      .attr('height', 80)
       .attr('x', 0)
       .attr('y', 0)
       .style('stroke', 'black')
@@ -187,22 +181,12 @@ function drawEtymology() {
         .attr('dx', 12)
         .attr('dy', 20);
     }
+    totalLength += gw;
   }
 }
 
 function drawData(elements = definitions) {
-  elements.sort((a, b) => {
-    const compareConstruct = (a, b) => (a < b ? -1 : b < a ? 1 : 0);
-    const compareDate = (a, b) => Math.sign(a - b);
-
-    return (
-      compareConstruct(a.construct, b.construct) ||
-      compareDate(a.emergence, b.emergence)
-    );
-  });
-
   meaningsGroup.style('width', (w / 100) * 80);
-
   let containerWidth = meaningsGroup.style('width');
   containerWidth = Number(
     containerWidth.substring(0, containerWidth.length - 2)
@@ -217,30 +201,35 @@ function drawData(elements = definitions) {
     .attr('class', 'tooltip-donut')
     .style('opacity', 0);
 
-  const duration = 250;
+  elements.sort((a, b) => {
+    const compareConstruct = (a, b) => (a < b ? -1 : b < a ? 1 : 0);
+    const compareDate = (a, b) => Math.sign(a - b);
 
-  console.log(elements);
+    return (
+      compareConstruct(a.construct, b.construct) ||
+      compareDate(a.emergence, b.emergence)
+    );
+  });
+
+  meaningsGroup.selectAll('g').remove();
+
   meaningsGroup
     .selectAll('g')
     .data(elements, (d) => d)
 
-    .join(
-      (enter) =>
-        enter
-          .append('g')
-          .attr('class', 'data')
-          .call(addElems, containerWidth, containerPortion, duration, tip),
-      (exit) =>
-        exit.transition().duration(duration).style('opacity', 0).remove()
-    );
+    .enter()
+    .append('g')
+    .attr('class', 'data')
+    .style('opacity', 0)
+    .call(addElems, containerWidth, containerPortion, tip)
+    .call((enter) => enter.transition().duration(250).style('opacity', 1));
 
   drawScale(earliest, latest, containerPortion);
 }
 
-function addElems(elements, cW, cP, dur, tip) {
+function addElems(elements, cW, cP, tip) {
   elements
     .append('rect')
-    .style('opacity', 0)
     .style('fill', 'white')
     .style('stroke-width', 3)
     .style('stroke', (d) => color(d.modal))
@@ -266,20 +255,18 @@ function addElems(elements, cW, cP, dur, tip) {
     })
     .on('mouseout', () => {
       tip.transition().duration(50).style('opacity', 0);
-    })
-    .call((enter) => enter.transition().duration(dur).style('opacity', 1));
+    });
+
   elements
     .insert('text')
     .style('fill', 'black')
-    .style('opacity', 0)
     .attr('dy', '1.66em')
     .attr('dx', '1.1em')
     .attr('text-anchor', 'start')
     .text((d) => d.meaning)
     .attr('y', (_, i) => i * 37)
     .attr('x', (d) => d.emergence * cP)
-    .call(wrap, cW, cP)
-    .call((enter) => enter.transition().duration(dur).style('opacity', 1));
+    .call(wrap, cW, cP);
 }
 
 function updateElems(elements) {
@@ -289,7 +276,13 @@ function updateElems(elements) {
       console.log(d);
       return color(d.modal);
     })
-    .style('stroke-dasharray', (d) => (!d.certainty ? 4 : 0));
+    .style('stroke-dasharray', (d) => (!d.certainty ? 4 : 0))
+    .call((update) =>
+      update
+        .transition()
+        .duration(250)
+        .attr('y', (_, i) => i * 37)
+    );
 }
 
 function checkHeight(d, boxWidth) {
@@ -450,13 +443,11 @@ function range(start, end) {
 }
 
 function newDisplay(event) {
-  const keptIds = [event.id];
+  const keptIds = [
+    event.id,
+    ...Object.values(event.relationships).reduce((a, b) => a.concat(b)),
+  ];
   const keptElements = [];
-  for (const [_, value] of Object.entries(event.relationships)) {
-    if (value != '') {
-      value.forEach((val) => keptIds.push(val));
-    }
-  }
   keptIds.forEach((id) => {
     definitions.forEach((def) => {
       if (Object.values(def).includes(id)) {
