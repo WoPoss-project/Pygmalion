@@ -257,16 +257,56 @@ function drawData(elements = definitions) {
 }
 
 function addElems(elements, cW, cP, tip) {
-  elements
+  /*elements
     .append('rect')
     .style('fill', 'white')
     .style('stroke-width', 3)
     .style('stroke', (d) => color(d.modal))
     .style('stroke-dasharray', (d) => (!d.certainty ? 4 : 0))
-    .attr('x', (d) => d.emergence * cP)
+    .attr('x', (d) => d.emergence * cP + 10)
     .attr('y', (_, i) => i * 37)
     .attr('width', (d) => cW - d.emergence * cP)
-    .attr('height', (d) => 30)
+    .attr('height', () => 30)
+    .on('click', (d) => {
+      tip.transition().duration(50).style('opacity', 0);
+      newDisplay(d);
+    })
+    .on('dblclick', () => {
+      d3.event.preventDefault();
+      drawData();
+    })
+    .on('mouseover', (d) => {
+      tip.transition().duration(50).style('opacity', 1);
+      tip
+        .html(d.attestation)
+        .style('left', d3.event.pageX + 10 + 'px')
+        .style('top', d3.event.pageY - 15 + 'px');
+    })
+    .on('mouseout', () => {
+      tip.transition().duration(50).style('opacity', 0);
+    });
+*/
+  elements
+    .append('path')
+    .attr('d', (d, i) => {
+      const x = d.emergence * cP + 10;
+      const y = i * 37;
+      const width = cW - x;
+      return lineGenerator([
+        [x, y],
+        [x + 10, y],
+        [x + width, y],
+        [x + width + 10, y + 15],
+        [x + width, y + 30],
+        [x + 10, y + 30],
+        [x, y + 30],
+        [x, y],
+      ]);
+    })
+    .style('stroke-dasharray', (d) => (!d.certainty ? 4 : 0))
+    .style('fill', 'white')
+    .style('stroke', (d) => color(d.modal))
+    .style('stroke-width', 3)
     .on('click', (d) => {
       tip.transition().duration(50).style('opacity', 0);
       newDisplay(d);
@@ -294,7 +334,7 @@ function addElems(elements, cW, cP, tip) {
     .attr('text-anchor', 'start')
     .text((d) => d.meaning)
     .attr('y', (_, i) => i * 37)
-    .attr('x', (d) => d.emergence * cP)
+    .attr('x', (d) => d.emergence * cP + 10)
     .call(wrap, cW, cP);
 }
 
@@ -356,12 +396,65 @@ function wrap(text, cW) {
           .attr('dy', ++lineNumber * lineHeight + dy + 'em')
           .attr('dx', '1.1em')
           .text(word);
-        d3.select(text.node().parentNode.firstChild).attr(
-          'height',
-          (lineNumber + 1) * 24
+
+        let nodes = text.node().parentNode.parentNode.childNodes;
+        let parent = text.node().parentNode;
+        let nodesToMove = range(
+          [...nodes].indexOf(parent) + 1,
+          nodes.length - 1
+        );
+        nodesToMove = nodesToMove.map((index) => nodes[index]);
+        nodesToMove.forEach((node) => {
+          const path = node.childNodes[0],
+            text = node.childNodes[1],
+            coords = getCoords(path);
+          const pathX = Number(coords[0][0]),
+            pathY = Number(coords[0][1]) + 30 * lineNumber,
+            pathWidth = Number(coords[2][0]) - pathX;
+          d3.select(path).attr('d', () => {
+            return lineGenerator([
+              [pathX, pathY],
+              [pathX + 10, pathY],
+              [pathX + pathWidth, pathY],
+              [pathX + pathWidth + 10, pathY + 15],
+              [pathX + pathWidth, pathY + 30],
+              [pathX + 10, pathY + 30],
+              [pathX, pathY + 30],
+              [pathX, pathY],
+            ]);
+          });
+          let t = d3.select(text);
+          t.attr('y', Number(t.attr('y')) + 30 * lineNumber);
+        });
+        let node = text.node().parentNode.firstChild;
+        let coords = getCoords(node);
+        const pathX = Number(coords[0][0]),
+          pathY = Number(coords[0][1]),
+          pathWidth = Number(coords[2][0]) - pathX;
+        d3.select(node).attr(
+          'd',
+          lineGenerator([
+            [pathX, pathY],
+            [pathX + 10, pathY],
+            [pathX + pathWidth, pathY],
+            [pathX + pathWidth + 10, pathY + 15 + 15 * lineNumber],
+            [pathX + pathWidth, pathY + 30 + 30 * lineNumber],
+            [pathX + 10, pathY + 30 + 30 * lineNumber],
+            [pathX, pathY + 30 + 30 * lineNumber],
+            [pathX, pathY],
+          ])
         );
       }
     }
+  });
+}
+
+function getCoords(path) {
+  path = d3.select(path);
+  d = path.attr('d').split(/(?=[LMC])/);
+  return d.map((coord) => {
+    coord = coord.substring(1);
+    return coord.split(',');
   });
 }
 
