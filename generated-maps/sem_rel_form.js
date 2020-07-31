@@ -187,6 +187,7 @@ function submit(event) {
       });
     }
     localStorage.setItem('card', JSON.stringify(data));
+    console.log(JSON.parse(localStorage.getItem('card')));
   }
 }
 
