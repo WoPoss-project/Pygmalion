@@ -360,9 +360,9 @@ function drawScale(earliest, latest, containerPortion) {
       .enter()
       .append('rect')
       .attr('class', 'scale')
-      .attr('width', containerPortion)
+      .attr('width', containerPortion + 0.5)
       .attr('height', 30)
-      .attr('x', (_, i) => i * containerPortion)
+      .attr('x', (_, i) => i * (containerPortion + 0.5))
       .attr('y', 0)
       .style('fill', (d, i) => `rgb(45, ${120 + 6 * i}, ${180 + 7 * i})`);
 
