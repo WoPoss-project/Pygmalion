@@ -381,19 +381,46 @@ function drawScale(earliest, latest, containerPortion) {
       }
     });
 
-    romanDates.push('...');
+    romanDates.push('');
 
     scale
-      .selectAll('rect')
+      .selectAll('path')
       .data(romanDates)
       .enter()
-      .append('rect')
+      .append('path')
       .attr('class', 'scale')
-      .attr('width', containerPortion + 0.5)
+      .attr('d', (_, i) => {
+        const width = containerPortion + 0.5;
+        const x = i * width;
+        if (i === 0) {
+          return lineGenerator([
+            [x, 0],
+            [x + 10, 0],
+            [x + width, 0],
+            [x + width + 10, 15],
+            [x + width, 30],
+            [x + 10, 30],
+            [x, 30],
+            [x, 0],
+          ]);
+        } else {
+          return lineGenerator([
+            [x, 0],
+            [x + 10, 0],
+            [x + width, 0],
+            [x + width + 10, 15],
+            [x + width, 30],
+            [x + 10, 30],
+            [x, 30],
+            [x + 10, 15],
+            [x, 0],
+          ]);
+        }
+      })
       .attr('height', 30)
       .attr('x', (_, i) => i * (containerPortion + 0.5))
       .attr('y', 0)
-      .style('fill', (d, i) => `rgb(45, ${120 + 6 * i}, ${180 + 7 * i})`);
+      .style('fill', (_, i) => `rgb(45, ${100 + 8 * i}, ${160 + 9 * i})`);
 
     scale
       .selectAll('text')
@@ -402,7 +429,7 @@ function drawScale(earliest, latest, containerPortion) {
       .append('text')
       .attr('class', 'scale')
       .text((d) => d)
-      .attr('x', (_, i) => i * containerPortion)
+      .attr('x', (_, i) => i * (containerPortion + 0.5))
       .attr('y', 0)
       .attr('dx', 15)
       .attr('dy', 22)
