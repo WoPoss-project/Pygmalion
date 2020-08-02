@@ -608,6 +608,6 @@ function newDisplay(event) {
   drawData(keptElements);
 }
 
-if (data != null) {
+if (data) {
   basicDisplay();
 }
