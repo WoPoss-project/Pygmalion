@@ -240,67 +240,55 @@ function drawData(elements = definitions) {
     );
   });
 
-  meaningsGroup.selectAll('g').remove();
-
   meaningsGroup
     .selectAll('g')
-    .data(elements, (d) => d)
+    .data(elements, (d) => d.id)
 
-    .enter()
-    .append('g')
-    .attr('class', 'data')
-    .style('opacity', 0)
-    .call(addElems, containerWidth, containerPortion, tip)
-    .call((enter) => enter.transition().duration(250).style('opacity', 1));
+    .join(
+      (enter) =>
+        enter
+          .append('g')
+          .attr('class', 'data')
+          .attr(
+            'transform',
+            (d, i) =>
+              `translate(${d.emergence * containerPortion + 10}, ${i * 37})`
+          )
+          .style('opacity', 0)
+          .call(addElems, containerWidth, containerPortion, tip)
+          .call((enter) =>
+            enter.transition().duration(250).style('opacity', 1)
+          ),
+      (update) =>
+        update
+          .call(updateElems, containerWidth, containerPortion)
+          .transition()
+          .duration(250)
+          .attr(
+            'transform',
+            (d, i) =>
+              `translate(${d.emergence * containerPortion + 10}, ${i * 37})`
+          ),
+      (exit) => exit.transition().duration(250).style('opacity', 0).remove()
+    );
 
   drawScale(earliest, latest, containerPortion);
 }
 
 function addElems(elements, cW, cP, tip) {
-  /*elements
-    .append('rect')
-    .style('fill', 'white')
-    .style('stroke-width', 3)
-    .style('stroke', (d) => color(d.modal))
-    .style('stroke-dasharray', (d) => (!d.certainty ? 4 : 0))
-    .attr('x', (d) => d.emergence * cP + 10)
-    .attr('y', (_, i) => i * 37)
-    .attr('width', (d) => cW - d.emergence * cP)
-    .attr('height', () => 30)
-    .on('click', (d) => {
-      tip.transition().duration(50).style('opacity', 0);
-      newDisplay(d);
-    })
-    .on('dblclick', () => {
-      d3.event.preventDefault();
-      drawData();
-    })
-    .on('mouseover', (d) => {
-      tip.transition().duration(50).style('opacity', 1);
-      tip
-        .html(d.attestation)
-        .style('left', d3.event.pageX + 10 + 'px')
-        .style('top', d3.event.pageY - 15 + 'px');
-    })
-    .on('mouseout', () => {
-      tip.transition().duration(50).style('opacity', 0);
-    });
-*/
   elements
     .append('path')
-    .attr('d', (d, i) => {
-      const x = d.emergence * cP + 10;
-      const y = i * 37;
-      const width = cW - x;
+    .attr('d', (d) => {
+      const width = cW - (d.emergence * cP + 10);
       return lineGenerator([
-        [x, y],
-        [x + 10, y],
-        [x + width, y],
-        [x + width + 10, y + 15],
-        [x + width, y + 30],
-        [x + 10, y + 30],
-        [x, y + 30],
-        [x, y],
+        [0, 0],
+        [0 + 10, 0],
+        [0 + width, 0],
+        [0 + width + 10, 15],
+        [0 + width, 30],
+        [0 + 10, 30],
+        [0, 30],
+        [0, 0],
       ]);
     })
     .style('stroke-dasharray', (d) => (!d.certainty ? 4 : 0))
@@ -333,25 +321,13 @@ function addElems(elements, cW, cP, tip) {
     .attr('dx', '1.1em')
     .attr('text-anchor', 'start')
     .text((d) => d.meaning)
-    .attr('y', (_, i) => i * 37)
-    .attr('x', (d) => d.emergence * cP + 10)
+    .attr('y', 0)
+    .attr('x', 0)
     .call(wrap, cW, cP);
 }
 
-function updateElems(elements) {
-  elements
-    .selectAll('rect')
-    .style('stroke', (d) => {
-      console.log(d);
-      return color(d.modal);
-    })
-    .style('stroke-dasharray', (d) => (!d.certainty ? 4 : 0))
-    .call((update) =>
-      update
-        .transition()
-        .duration(250)
-        .attr('y', (_, i) => i * 37)
-    );
+function updateElems(elements, cW, cP) {
+  elements.selectAll('text').call(wrap, cW, cP);
 }
 
 function checkHeight(d, boxWidth) {
@@ -363,9 +339,9 @@ function checkHeight(d, boxWidth) {
   }
 }
 
-function wrap(text, cW) {
+function wrap(text, cW, cP) {
   text.each(function () {
-    var text = d3.select(this),
+    let text = d3.select(this),
       words = text.text().split(/\s+/).reverse(),
       word,
       line = [],
@@ -379,15 +355,16 @@ function wrap(text, cW) {
         .append('tspan')
         .attr('x', x)
         .attr('y', y)
-        .attr('dy', dy + 'em');
+        .attr('dy', dy + 'em'),
+      emergence = text.data()[0].emergence;
 
-    const width = cW - x;
+    const width = cW - (emergence * cP + 10);
     while ((word = words.pop())) {
       line.push(word);
       tspan.text(line.join(' '));
       if (tspan.text().length * 6 > width) {
         line.pop();
-        tspan.text(line.join(' '));
+        tspan.text(line.join(' ') + ' ');
         line = [word];
         tspan = text
           .append('tspan')
@@ -397,6 +374,24 @@ function wrap(text, cW) {
           .attr('dx', '1.1em')
           .text(word);
 
+        // Modify destination path
+        let node = text.node().parentNode.firstChild;
+        const yModifier = lineNumber + 1;
+        d3.select(node).attr(
+          'd',
+          lineGenerator([
+            [0, 0],
+            [10, 0],
+            [width, 0],
+            [width + 10, 15 * yModifier],
+            [width, 30 * yModifier],
+            [10, 30 * yModifier],
+            [0, 30 * yModifier],
+            [0, 0],
+          ])
+        );
+
+        // move other blocks
         let nodes = text.node().parentNode.parentNode.childNodes;
         let parent = text.node().parentNode;
         let nodesToMove = range(
@@ -405,7 +400,18 @@ function wrap(text, cW) {
         );
         nodesToMove = nodesToMove.map((index) => nodes[index]);
         nodesToMove.forEach((node) => {
-          const path = node.childNodes[0],
+          const g = d3.select(node);
+          let transform = g.attr('transform');
+          let xy = transform
+            .split('(')[1]
+            .split(')')[0]
+            .split(', ')
+            .map((coord) => Number(coord));
+          g.attr(
+            'transform',
+            `translate(${xy[0]}, ${xy[1] + 30 * lineNumber})`
+          );
+          /*const path = node.childNodes[0],
             text = node.childNodes[1],
             coords = getCoords(path);
           const pathX = Number(coords[0][0]),
@@ -424,26 +430,8 @@ function wrap(text, cW) {
             ]);
           });
           let t = d3.select(text);
-          t.attr('y', Number(t.attr('y')) + 30 * lineNumber);
+          t.attr('y', Number(t.attr('y')) + 30 * lineNumber);*/
         });
-        let node = text.node().parentNode.firstChild;
-        let coords = getCoords(node);
-        const pathX = Number(coords[0][0]),
-          pathY = Number(coords[0][1]),
-          pathWidth = Number(coords[2][0]) - pathX;
-        d3.select(node).attr(
-          'd',
-          lineGenerator([
-            [pathX, pathY],
-            [pathX + 10, pathY],
-            [pathX + pathWidth, pathY],
-            [pathX + pathWidth + 10, pathY + 15 + 15 * lineNumber],
-            [pathX + pathWidth, pathY + 30 + 30 * lineNumber],
-            [pathX + 10, pathY + 30 + 30 * lineNumber],
-            [pathX, pathY + 30 + 30 * lineNumber],
-            [pathX, pathY],
-          ])
-        );
       }
     }
   });
