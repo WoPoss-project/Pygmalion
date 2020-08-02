@@ -192,7 +192,7 @@ function submit(event) {
 }
 
 function addRelationships(modality) {
-  if (!'relationships' in modality) {
+  if (!('relationships' in modality)) {
     modality['relationships'] = {
       origins: [],
       destinations: [],
