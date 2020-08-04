@@ -301,6 +301,7 @@ function addElems(elements, cW, cP, tip) {
     })
     .on('dblclick', () => {
       d3.event.preventDefault();
+      elements.remove();
       drawData();
     })
     .on('mouseover', (d) => {
