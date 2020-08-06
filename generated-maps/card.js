@@ -34,6 +34,19 @@ const svg = d3
 const w = Number(svg.style('width').split('px')[0]);
 const h = Number(svg.style('height').split('px')[0]);
 
+/*svg
+  .append('svg:defs')
+  .append('svg:marker')
+  .attr('id', 'arrow')
+  .attr('refX', 6)
+  .attr('refY', 6)
+  .attr('markerWidth', 30)
+  .attr('markerHeight', 30)
+  .attr('orient', 'auto')
+  .append('path')
+  .attr('d', 'M 0 0 12 6 0 12 3 6')
+  .style('fill', 'black');*/
+
 const legend = svg
   .append('g')
   .attr('class', 'legend')
@@ -43,6 +56,11 @@ const etymology = svg
   .append('g')
   .attr('class', 'etymology')
   .attr('transform', `translate(${margin.left}, ${(h / 100) * 3})`);
+
+const relationshipGroup = svg
+  .append('g')
+  .attr('class', 'relationship')
+  .attr('transform', `translate(${margin.left}, ${(h / 100) * 27})`);
 
 const meaningsGroup = svg
   .append('g')
@@ -302,6 +320,7 @@ function addElems(elements, cW, cP, tip) {
     .on('dblclick', () => {
       d3.event.preventDefault();
       elements.remove();
+      relationshipGroup.selectAll('.rel').remove();
       drawData();
     })
     .on('mouseover', (d) => {
@@ -328,7 +347,49 @@ function addElems(elements, cW, cP, tip) {
 }
 
 function updateElems(elements, cW, cP) {
-  elements.selectAll('text').call(wrap, cW, cP);
+  elements.selectAll('text').call(wrap, cW, cP, 'update');
+
+  const elementsData = elements.data();
+  if (elementsData.length > 0) {
+    const element = elementsData.reduce((acc, curr) =>
+      curr.rel === 'origin' ? (acc = curr) : acc
+    );
+    const elementIndex = elementsData.indexOf(element);
+    const indexes = range(
+      0 - elementIndex,
+      elementsData.length - 1 - elementIndex
+    );
+
+    const x0 = cW + 5;
+    const y0 = elementIndex * 37 + 15;
+
+    relationshipGroup
+      .selectAll('.rel')
+      .data(elementsData, (d) => d.id)
+      .enter()
+      .append('path')
+      .attr('class', 'rel')
+      .attr('fill', 'none')
+      .attr('stroke', 'black')
+      .attr('stroke-width', 3)
+      .attr('d', (d, i) => {
+        const lineNumber = wrap(d.meaning, cW, cP, d);
+        const x1 = x0 + (Math.abs(indexes[i]) * cP) / 5;
+        const y1 = y0 + indexes[i] * 3;
+        const y2 =
+          lineNumber > 0
+            ? indexes[i] * 37 + lineNumber * 15 + y0
+            : indexes[i] * 37 + y0;
+        return lineGenerator([
+          [x0, y1],
+          [x1, y1],
+          [x1, y2],
+          [x0, y2],
+        ]);
+      });
+    //.attr('marker-end', 'url(#arrow)')
+    console.log(elements.data());
+  }
 }
 
 function checkHeight(d, boxWidth) {
@@ -340,79 +401,81 @@ function checkHeight(d, boxWidth) {
   }
 }
 
-function wrap(text, cW, cP) {
-  text.each(function () {
-    let text = d3.select(this),
-      words = text.text().split(/\s+/).reverse(),
-      word,
-      line = [],
-      lineNumber = 0,
-      lineHeight = 1.5, // ems
-      x = text.attr('x'),
-      y = text.attr('y'),
-      dy = parseFloat(text.attr('dy')),
-      tspan = text
-        .text(null)
-        .append('tspan')
-        .attr('x', x)
-        .attr('y', y)
-        .attr('dy', dy + 'em'),
-      emergence = text.data()[0].emergence;
-
-    const width = cW - (emergence * cP + 10);
-    while ((word = words.pop())) {
-      line.push(word);
-      tspan.text(line.join(' '));
-      if (tspan.text().length * 6 > width) {
-        line.pop();
-        tspan.text(line.join(' ') + ' ');
-        line = [word];
+function wrap(text, cW, cP, r = 'add') {
+  if (typeof text != 'string') {
+    text.each(function () {
+      let text = d3.select(this),
+        words = text.text().split(/\s+/).reverse(),
+        word,
+        line = [],
+        lineNumber = 0,
+        lineHeight = 1.5, // ems
+        x = text.attr('x'),
+        y = text.attr('y'),
+        dy = parseFloat(text.attr('dy')),
         tspan = text
+          .text(null)
           .append('tspan')
           .attr('x', x)
           .attr('y', y)
-          .attr('dy', ++lineNumber * lineHeight + dy + 'em')
-          .attr('dx', '1.1em')
-          .text(word);
+          .attr('dy', dy + 'em'),
+        emergence = text.data()[0].emergence;
 
-        // Modify destination path
-        let node = text.node().parentNode.firstChild;
-        const yModifier = lineNumber + 1;
-        d3.select(node).attr(
-          'd',
-          lineGenerator([
-            [0, 0],
-            [10, 0],
-            [width, 0],
-            [width + 10, 15 * yModifier],
-            [width, 30 * yModifier],
-            [10, 30 * yModifier],
-            [0, 30 * yModifier],
-            [0, 0],
-          ])
-        );
+      const width = cW - (emergence * cP + 10);
+      while ((word = words.pop())) {
+        line.push(word);
+        tspan.text(line.join(' '));
+        if (tspan.text().length * 6 > width) {
+          line.pop();
+          tspan.text(line.join(' ') + ' ');
+          line = [word];
+          tspan = text
+            .append('tspan')
+            .attr('x', x)
+            .attr('y', y)
+            .attr('dy', ++lineNumber * lineHeight + dy + 'em')
+            .attr('dx', '1.1em')
+            .text(word);
 
-        // move other blocks
-        let nodes = text.node().parentNode.parentNode.childNodes;
-        let parent = text.node().parentNode;
-        let nodesToMove = range(
-          [...nodes].indexOf(parent) + 1,
-          nodes.length - 1
-        );
-        nodesToMove = nodesToMove.map((index) => nodes[index]);
-        nodesToMove.forEach((node) => {
-          const g = d3.select(node);
-          let transform = g.attr('transform');
-          let xy = transform
-            .split('(')[1]
-            .split(')')[0]
-            .split(', ')
-            .map((coord) => Number(coord));
-          g.attr(
-            'transform',
-            `translate(${xy[0]}, ${xy[1] + 30 * lineNumber})`
+          // Modify destination path
+          let node = text.node().parentNode.firstChild;
+          const yModifier = lineNumber + 1;
+          d3.select(node).attr(
+            'd',
+            lineGenerator([
+              [0, 0],
+              [10, 0],
+              [width, 0],
+              [width + 10, 15 * yModifier],
+              [width, 30 * yModifier],
+              [10, 30 * yModifier],
+              [0, 30 * yModifier],
+              [0, 0],
+            ])
           );
-          /*const path = node.childNodes[0],
+
+          // move other blocks
+          let nodes = text.node().parentNode.parentNode.childNodes;
+          let parent = text.node().parentNode;
+          let nodesToMove = range(
+            [...nodes].indexOf(parent) + 1,
+            nodes.length - 1
+          );
+          nodesToMove = nodesToMove.map((index) => nodes[index]);
+          nodesToMove.forEach((node) => {
+            const g = d3.select(node);
+            let transform = g.attr('transform');
+            let xy = transform
+              .split('(')[1]
+              .split(')')[0]
+              .split(', ')
+              .map((coord) => Number(coord));
+            g.attr(
+              'transform',
+              `translate(${xy[0]}, ${xy[1] + 30 * lineNumber})`
+            );
+
+            /*const path = node.childNodes[0],
             text = node.childNodes[1],
             coords = getCoords(path);
           const pathX = Number(coords[0][0]),
@@ -432,10 +495,27 @@ function wrap(text, cW, cP) {
           });
           let t = d3.select(text);
           t.attr('y', Number(t.attr('y')) + 30 * lineNumber);*/
-        });
+          });
+        }
+      }
+    });
+  } else {
+    let words = text.split(/\s+/).reverse(),
+      word,
+      line = [],
+      lineNumber = 0,
+      emergence = r.emergence,
+      width = cW - (emergence * cP + 10);
+    while ((word = words.pop())) {
+      line.push(word);
+      if (line.join(' ').length * 6 > width) {
+        line.pop();
+        line = [word];
+        ++lineNumber;
       }
     }
-  });
+    return lineNumber;
+  }
 }
 
 function getCoords(path) {
@@ -593,8 +673,23 @@ function newDisplay(event) {
       }
     });
   });
-  console.log(keptElements);
-  drawData(keptElements);
+  drawData(addRelationshipInfo(event.relationships, keptElements));
+}
+
+function addRelationshipInfo(relationships, elements) {
+  for (const direction in relationships) {
+    relationships[direction].forEach((id) => {
+      elements.forEach((el) => {
+        if (!('rel' in el)) {
+          el['rel'] = 'origin';
+        }
+        if (id === el.id) {
+          el['rel'] = direction;
+        }
+      });
+    });
+  }
+  return elements;
 }
 
 if (data) {
