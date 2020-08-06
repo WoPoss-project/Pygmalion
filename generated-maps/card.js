@@ -60,7 +60,7 @@ function basicDisplay() {
     ['Modal: epistemic', 'epistemic'],
     ['Not modal', 'notModal'],
     ['Premodal', 'premodal'],
-    ['Postmodal: futurity', 'postmodal'],
+    ['Postmodal', 'postmodal'],
   ];
 
   for (let i = 0; i < options.length; i++) {
