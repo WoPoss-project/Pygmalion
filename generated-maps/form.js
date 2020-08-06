@@ -349,7 +349,7 @@ function createModalSelect() {
     ['Modal: dynamic', 'dynamic'],
     ['Modal: epistemic', 'epistemic'],
     ['Premodal', 'premodal'],
-    ['Postmodal: futurity', 'postmodal'],
+    ['Postmodal', 'postmodal'],
   ];
 
   for (optionIndex in options) {
