@@ -16,7 +16,7 @@ if (data.dataFormat === 'cent') {
 }
 
 const width = '100%';
-const height = '100%';
+const height = `${definitions.length * 60}px`;
 const margin = {
   top: 100,
   left: 150,
@@ -232,7 +232,7 @@ function drawEtymology() {
   }
 }
 
-function drawData(elements = definitions, updateElements = false) {
+function drawData(elements = definitions, allowUpdate = false) {
   meaningsGroup.style('width', (w / 100) * 80);
   let containerWidth = meaningsGroup.style('width');
   containerWidth = Number(
@@ -284,7 +284,7 @@ function drawData(elements = definitions, updateElements = false) {
             containerWidth,
             containerPortion,
             elements,
-            updateElements
+            allowUpdate
           )
           .transition()
           .duration(250)
@@ -383,7 +383,7 @@ function updateElems(elements, cW, cP, elementsData, displayRels) {
       .style('opacity', 0)
       .attr('d', (d, i) => {
         const lineNumber = wrap(d.meaning, cW, cP, d);
-        const x1 = x0 + (Math.abs(indexes[i]) * cP) / indexes.length;
+        const x1 = x0 + (Math.abs(indexes[i]) * margin.right) / indexes.length;
         const y1 = y0;
         const y2 =
           lineNumber > 0
