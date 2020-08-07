@@ -232,7 +232,7 @@ function drawEtymology() {
   }
 }
 
-function drawData(elements = definitions) {
+function drawData(elements = definitions, updateElements = false) {
   meaningsGroup.style('width', (w / 100) * 80);
   let containerWidth = meaningsGroup.style('width');
   containerWidth = Number(
@@ -279,7 +279,13 @@ function drawData(elements = definitions) {
           ),
       (update) =>
         update
-          .call(updateElems, containerWidth, containerPortion)
+          .call(
+            updateElems,
+            containerWidth,
+            containerPortion,
+            elements,
+            updateElements
+          )
           .transition()
           .duration(250)
           .attr(
@@ -346,11 +352,10 @@ function addElems(elements, cW, cP, tip) {
     .call(wrap, cW, cP);
 }
 
-function updateElems(elements, cW, cP) {
+function updateElems(elements, cW, cP, elementsData, displayRels) {
   elements.selectAll('text').call(wrap, cW, cP, 'update');
 
-  const elementsData = elements.data();
-  if (elementsData.length > 0) {
+  if (displayRels) {
     const element = elementsData.reduce((acc, curr) =>
       curr.rel === 'origin' ? (acc = curr) : acc
     );
@@ -479,27 +484,6 @@ function wrap(text, cW, cP, r = 'add') {
               'transform',
               `translate(${xy[0]}, ${xy[1] + 30 * lineNumber})`
             );
-
-            /*const path = node.childNodes[0],
-            text = node.childNodes[1],
-            coords = getCoords(path);
-          const pathX = Number(coords[0][0]),
-            pathY = Number(coords[0][1]) + 30 * lineNumber,
-            pathWidth = Number(coords[2][0]) - pathX;
-          d3.select(path).attr('d', () => {
-            return lineGenerator([
-              [pathX, pathY],
-              [pathX + 10, pathY],
-              [pathX + pathWidth, pathY],
-              [pathX + pathWidth + 10, pathY + 15],
-              [pathX + pathWidth, pathY + 30],
-              [pathX + 10, pathY + 30],
-              [pathX, pathY + 30],
-              [pathX, pathY],
-            ]);
-          });
-          let t = d3.select(text);
-          t.attr('y', Number(t.attr('y')) + 30 * lineNumber);*/
           });
         }
       }
@@ -680,10 +664,15 @@ function newDisplay(event) {
       }
     });
   });
-  drawData(addRelationshipInfo(event.relationships, keptElements));
+  console.log(keptElements);
+  drawData(addRelationshipInfo(event.relationships, keptElements), true);
 }
 
 function addRelationshipInfo(relationships, elements) {
+  definitions.forEach((def) => {
+    delete def.rel;
+    delete def.relCert;
+  });
   for (const direction in relationships) {
     relationships[direction].forEach((rel) => {
       elements.forEach((el) => {
@@ -692,6 +681,7 @@ function addRelationshipInfo(relationships, elements) {
           el['relCert'] = true;
         }
         if (rel.rel === el.id) {
+          console.log(rel.rel, el.id, direction);
           el['rel'] = direction;
           el['relCert'] = rel.cert;
         }
