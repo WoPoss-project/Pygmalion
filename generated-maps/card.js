@@ -373,6 +373,7 @@ function updateElems(elements, cW, cP) {
       .attr('fill', 'none')
       .attr('stroke', 'black')
       .attr('stroke-width', 3)
+      //.attr('marker-end', 'url(#arrow)')
       .style('stroke-dasharray', (d) => (!d.relCert ? 4 : 0))
       .style('opacity', 0)
       .attr('d', (d, i) => {
@@ -393,7 +394,6 @@ function updateElems(elements, cW, cP) {
       .transition()
       .duration(500)
       .style('opacity', 1);
-    //.attr('marker-end', 'url(#arrow)')
   }
 }
 

@@ -166,7 +166,6 @@ function submit(event) {
         destination: values[2],
         certitude: values[3],
       });
-      console.log(values);
     }
 
     for (let i = 0; i < final.length; i++) {
@@ -175,14 +174,18 @@ function submit(event) {
           meaning.modalities.forEach((modality) => {
             modality = addRelationships(modality);
             if (modality.id === final[i].origin) {
-              modality = editModality(modality, final[i]);
+              modality = editModality(modality, final[i], 'og');
+            } else if (modality.id === final[i].destination) {
+              modality = editModality(modality, final[i], 'de');
             }
           });
         } else {
           let modality = meaning.modalities[0];
           modality = addRelationships(modality);
           if (modality.id === final[i].origin) {
-            modality = editModality(modality, final[i]);
+            modality = editModality(modality, final[i], 'og');
+          } else if (modality.id === final[i].destination) {
+            modality = editModality(modality, final[i], 'de');
           }
         }
       });
@@ -203,24 +206,27 @@ function addRelationships(modality) {
   return modality;
 }
 
-function editModality(modality, final) {
-  final.direction === 'unspecified'
-    ? !modality.relationships.unspecified.includes(final.destination)
-      ? modality.relationships.unspecified.push({
-          rel: final.destination,
-          cert: final.certitude,
-        })
-      : modality
+function editModality(modality, final, type) {
+  let direction;
+  type === 'de'
+    ? final.direction === 'to'
+      ? (direction = 'origins')
+      : final.direction === 'from'
+      ? (direction = 'destinations')
+      : (direction = 'unspecified')
     : final.direction === 'to'
-    ? !modality.relationships.destinations.includes(final.destination)
-      ? modality.relationships.destinations.push({
-          rel: final.destination,
-          cert: final.certitude,
-        })
-      : modality
-    : !modality.relationships.origins.includes(final.destination)
-    ? modality.relationships.origins.push({
-        rel: final.destination,
+    ? (direction = 'destinations')
+    : final.direction === 'from'
+    ? (direction = 'origins')
+    : (direction = 'unspecified');
+
+  const arr = modality.relationships[direction];
+  const check = arr.some(
+    (el) => el.rel === (type === 'og' ? final.destination : final.origin)
+  );
+  !check
+    ? modality.relationships[direction].push({
+        rel: type === 'og' ? final.destination : final.origin,
         cert: final.certitude,
       })
     : modality;
