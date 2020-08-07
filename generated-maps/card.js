@@ -34,42 +34,55 @@ const svg = d3
 const w = Number(svg.style('width').split('px')[0]);
 const h = Number(svg.style('height').split('px')[0]);
 
-/*svg
+svg
   .append('svg:defs')
   .append('svg:marker')
-  .attr('id', 'arrow')
-  .attr('refX', 6)
-  .attr('refY', 6)
+  .attr('id', 'arrow1')
+  .attr('refX', 5.5)
+  .attr('refY', 1.75)
   .attr('markerWidth', 30)
   .attr('markerHeight', 30)
-  .attr('orient', 'auto')
+  .attr('orient', 'auto-start-reverse')
   .append('path')
-  .attr('d', 'M 0 0 12 6 0 12 3 6')
-  .style('fill', 'black');*/
+  .attr('d', 'M 0 0 4 1.5 0 4 0.25 1.5')
+  .style('fill', 'black');
+
+svg
+  .append('svg:defs')
+  .append('svg:marker')
+  .attr('id', 'arrow2')
+  .attr('refX', -2)
+  .attr('refY', 1.75)
+  .attr('markerWidth', 30)
+  .attr('markerHeight', 30)
+  .attr('orient', '0deg')
+  .append('path')
+  .attr('d', 'M 0 0 4 1.5 0 4 0.25 1.5')
+  .style('fill', 'black');
 
 const legend = svg
   .append('g')
   .attr('class', 'legend')
-  .attr('transform', `translate(${margin.left}, ${(h / 100) * 12.75})`);
+  .attr('transform', `translate(${w - margin.right * 5.5}, ${margin.top / 4})`);
 
 const etymology = svg
   .append('g')
   .attr('class', 'etymology')
-  .attr('transform', `translate(${margin.left}, ${(h / 100) * 3})`);
+  .attr('transform', `translate(${margin.left}, 0)`);
 
 const relationshipGroup = svg
   .append('g')
   .attr('class', 'relationship')
-  .attr('transform', `translate(${margin.left}, ${(h / 100) * 27})`);
+  .attr('transform', `translate(${margin.left}, ${margin.top * 2})`);
 
 const meaningsGroup = svg
   .append('g')
   .attr('class', 'meanings')
-  .attr('transform', `translate(${margin.left}, ${(h / 100) * 27})`);
+  .attr('transform', `translate(${margin.left}, ${margin.top * 2})`);
 
 const scale = svg
   .append('g')
-  .attr('transform', `translate(${margin.left}, ${(h / 100) * 23})`);
+  .attr('transform', `translate(${margin.left}, ${margin.top * 1.5})`);
 
 function basicDisplay() {
   const options = [
@@ -365,8 +378,9 @@ function updateElems(elements, cW, cP, elementsData, displayRels) {
       elementsData.length - 1 - elementIndex
     );
 
+    const offset = wrap(element.meaning, cW, cP, element) * 15;
     const x0 = cW + 5;
-    const y0 = elementIndex * 37 + 15;
+    const y0 = elementIndex * 37 + 15 + offset;
 
     relationshipGroup.selectAll('.rel').remove();
     relationshipGroup
@@ -378,7 +392,13 @@ function updateElems(elements, cW, cP, elementsData, displayRels) {
       .attr('fill', 'none')
       .attr('stroke', 'black')
       .attr('stroke-width', 3)
-      //.attr('marker-end', 'url(#arrow)')
+      .attr('marker-end', (d) =>
+        d.rel === 'destinations'
+          ? 'url(#arrow1)'
+          : d.rel === 'origins'
+          ? 'url(#arrow2)'
+          : false
+      )
       .style('stroke-dasharray', (d) => (!d.relCert ? 4 : 0))
       .style('opacity', 0)
       .attr('d', (d, i) => {
@@ -387,8 +407,8 @@ function updateElems(elements, cW, cP, elementsData, displayRels) {
         const y1 = y0;
         const y2 =
           lineNumber > 0
-            ? indexes[i] * 37 + lineNumber * 15 + y0
-            : indexes[i] * 37 + y0;
+            ? indexes[i] * 37 + lineNumber * 15 + y0 - offset
+            : indexes[i] * 37 + y0 - offset;
         return lineGenerator([
           [x0, y1],
           [x1, y1],
