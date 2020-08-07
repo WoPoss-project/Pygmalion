@@ -166,6 +166,7 @@ function submit(event) {
         destination: values[2],
         certitude: values[3],
       });
+      console.log(values);
     }
 
     for (let i = 0; i < final.length; i++) {
@@ -205,14 +206,23 @@ function addRelationships(modality) {
 function editModality(modality, final) {
   final.direction === 'unspecified'
     ? !modality.relationships.unspecified.includes(final.destination)
-      ? modality.relationships.unspecified.push(final.destination)
+      ? modality.relationships.unspecified.push({
+          rel: final.destination,
+          cert: final.certitude,
+        })
       : modality
     : final.direction === 'to'
     ? !modality.relationships.destinations.includes(final.destination)
-      ? modality.relationships.destinations.push(final.destination)
+      ? modality.relationships.destinations.push({
+          rel: final.destination,
+          cert: final.certitude,
+        })
       : modality
     : !modality.relationships.origins.includes(final.destination)
-    ? modality.relationships.origins.push(final.destination)
+    ? modality.relationships.origins.push({
+        rel: final.destination,
+        cert: final.certitude,
+      })
     : modality;
   return modality;
 }

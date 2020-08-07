@@ -363,6 +363,7 @@ function updateElems(elements, cW, cP) {
     const x0 = cW + 5;
     const y0 = elementIndex * 37 + 15;
 
+    relationshipGroup.selectAll('.rel').remove();
     relationshipGroup
       .selectAll('.rel')
       .data(elementsData, (d) => d.id)
@@ -372,10 +373,12 @@ function updateElems(elements, cW, cP) {
       .attr('fill', 'none')
       .attr('stroke', 'black')
       .attr('stroke-width', 3)
+      .style('stroke-dasharray', (d) => (!d.relCert ? 4 : 0))
+      .style('opacity', 0)
       .attr('d', (d, i) => {
         const lineNumber = wrap(d.meaning, cW, cP, d);
-        const x1 = x0 + (Math.abs(indexes[i]) * cP) / 5;
-        const y1 = y0 + indexes[i] * 3;
+        const x1 = x0 + (Math.abs(indexes[i]) * cP) / indexes.length;
+        const y1 = y0;
         const y2 =
           lineNumber > 0
             ? indexes[i] * 37 + lineNumber * 15 + y0
@@ -386,9 +389,11 @@ function updateElems(elements, cW, cP) {
           [x1, y2],
           [x0, y2],
         ]);
-      });
+      })
+      .transition()
+      .duration(500)
+      .style('opacity', 1);
     //.attr('marker-end', 'url(#arrow)')
-    console.log(elements.data());
   }
 }
 
@@ -663,7 +668,9 @@ function range(start, end) {
 function newDisplay(event) {
   const keptIds = [
     event.id,
-    ...Object.values(event.relationships).reduce((a, b) => a.concat(b)),
+    ...Object.values(event.relationships)
+      .reduce((a, b) => a.concat(b))
+      .map((r) => r.rel),
   ];
   const keptElements = [];
   keptIds.forEach((id) => {
@@ -678,13 +685,15 @@ function newDisplay(event) {
 
 function addRelationshipInfo(relationships, elements) {
   for (const direction in relationships) {
-    relationships[direction].forEach((id) => {
+    relationships[direction].forEach((rel) => {
       elements.forEach((el) => {
-        if (!('rel' in el)) {
+        if (!('rel' in el) && !('relCert' in el)) {
           el['rel'] = 'origin';
+          el['relCert'] = true;
         }
-        if (id === el.id) {
+        if (rel.rel === el.id) {
           el['rel'] = direction;
+          el['relCert'] = rel.cert;
         }
       });
     });
