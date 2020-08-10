@@ -285,12 +285,13 @@ function drawData(elements = definitions, allowUpdate = false) {
     }
   });
 
+  svg.attr('height', `${margin.top * 2 - 5}px`)
+  
+  let total = 0
+  lines.forEach(l => total += (l+1)*37)
   svg.attr(
     'height',
-    lines.reduce((acc, curr) => {
-      acc += (curr + 1) * 33;
-      return acc;
-    })
+    Number(svg.attr('height').split('px')[0]) + total
   );
 
   meaningsGroup
