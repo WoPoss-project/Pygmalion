@@ -275,6 +275,12 @@ function drawData(elements = definitions, allowUpdate = false) {
     wrap(elem.meaning, containerWidth, containerPortion, elem)
   );
 
+  svg.attr('height', `${margin.top * 2 - 5}px`);
+
+  let total = 0;
+  lines.forEach((l) => (total += (l + 1) * 37));
+  svg.attr('height', Number(svg.attr('height').split('px')[0]) + total);
+
   let control = 0;
   lines.forEach((l) => {
     if (l > control) {
@@ -284,15 +290,6 @@ function drawData(elements = definitions, allowUpdate = false) {
       control = l;
     }
   });
-
-  svg.attr('height', `${margin.top * 2 - 5}px`)
-  
-  let total = 0
-  lines.forEach(l => total += (l+1)*37)
-  svg.attr(
-    'height',
-    Number(svg.attr('height').split('px')[0]) + total
-  );
 
   meaningsGroup
     .selectAll('g')
