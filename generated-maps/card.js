@@ -271,6 +271,8 @@ function drawData(elements = definitions, allowUpdate = false) {
     );
   });
 
+  let lineNumbers = 0;
+
   meaningsGroup
     .selectAll('g')
     .data(elements, (d) => d.id)
@@ -301,11 +303,14 @@ function drawData(elements = definitions, allowUpdate = false) {
           )
           .transition()
           .duration(250)
-          .attr(
-            'transform',
-            (d, i) =>
-              `translate(${d.emergence * containerPortion + 10}, ${i * 37})`
-          ),
+          .attr('transform', (d, i) => {
+            const lines = wrap(d.meaning, containerWidth, containerPortion, d);
+            const translate = `translate(${
+              d.emergence * containerPortion + 10
+            }, ${i * 37 + 30 * lineNumbers})`;
+            lineNumbers = lineNumbers < lines ? lines : lineNumbers;
+            return translate;
+          }),
       (exit) => exit.transition().duration(250).style('opacity', 0).remove()
     );
 
@@ -381,6 +386,7 @@ function updateElems(elements, cW, cP, elementsData, displayRels) {
     const offset = wrap(element.meaning, cW, cP, element) * 15;
     const x0 = cW + 5;
     const y0 = elementIndex * 37 + 15 + offset;
+    let lineNumber = 0;
 
     relationshipGroup.selectAll('.rel').remove();
     relationshipGroup
@@ -402,12 +408,13 @@ function updateElems(elements, cW, cP, elementsData, displayRels) {
       .style('stroke-dasharray', (d) => (!d.relCert ? 4 : 0))
       .style('opacity', 0)
       .attr('d', (d, i) => {
-        const lineNumber = wrap(d.meaning, cW, cP, d);
+        const lines = wrap(d.meaning, cW, cP, d);
+        lineNumber = lines > 0 ? lines : lineNumber;
         const x1 = x0 + (Math.abs(indexes[i]) * margin.right) / indexes.length;
         const y1 = y0;
         const y2 =
           lineNumber > 0
-            ? indexes[i] * 37 + lineNumber * 15 + y0 - offset
+            ? indexes[i] * 37 + lineNumber * (lines > 0 ? 15 : 30) + y0 - offset
             : indexes[i] * 37 + y0 - offset;
         return lineGenerator([
           [x0, y1],
