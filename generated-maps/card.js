@@ -277,11 +277,13 @@ function drawData(elements = definitions, allowUpdate = false) {
   let control = 0;
   lines.forEach((l) => {
     if (l > control) {
-      lines[lines.indexOf(l) + 1] = l;
-      lines[lines.indexOf(l)] = lines[lines.indexOf(l) - 1];
+      const index = lines.indexOf(l);
+      range(index + 1, lines.length - 1).forEach((n) => (lines[n] += 1));
+      lines[index] -= 1;
       control = l;
     }
   });
+  console.log(lines);
 
   meaningsGroup
     .selectAll('g')
