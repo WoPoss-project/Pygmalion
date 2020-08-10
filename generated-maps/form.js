@@ -120,7 +120,7 @@ function createSense(event) {
   const senseLabelDiv = document.createElement('div');
   senseLabelDiv.className = 'col-25';
   const senseLabel = document.createElement('label');
-  senseLabel.innerHTML = 'Definition';
+  senseLabel.innerHTML = 'Meaning';
 
   senseLabelDiv.appendChild(senseLabel);
 
@@ -138,7 +138,7 @@ function createSense(event) {
 
   groupRow = selectRow('Semantic group', 'group', 'Add a group...');
   constructRow = selectRow(
-    'Construction',
+    'Collocation',
     'construction',
     'Add a construction...'
   );
@@ -189,7 +189,7 @@ function createModality(event) {
   div.className = 'modal';
 
   const modalityLabel = document.createElement('label');
-  modalityLabel.innerHTML = 'Modality';
+  modalityLabel.innerHTML = 'Description';
 
   const deleteModalLabel = document.createElement('label');
   deleteModalLabel.innerHTML = 'Delete modality';
@@ -199,11 +199,11 @@ function createModality(event) {
   const modalAttestation = document.createElement('input');
   modalAttestation.type = 'text';
   modalAttestation.className = 'attest';
-  modalAttestation.placeholder = "Modality's first attestation";
+  modalAttestation.placeholder = 'First attestation(s)';
 
   const smalls = [
     'Modality type',
-    'Modality/Meaning emergence date',
+    'Date of meaning emergence',
     'First attestation',
   ];
 
@@ -220,7 +220,7 @@ function createModality(event) {
   confidenceCheckbox.checked = true;
 
   const confidenceLabel = document.createElement('label');
-  confidenceLabel.innerHTML = 'Modal meaning is certain';
+  confidenceLabel.innerHTML = '(Modal) meaning is certain';
 
   // If the function was called by an event...
   if (event) {
@@ -271,7 +271,7 @@ function createModality(event) {
     modalitiesRowDiv.appendChild(modalitiesDiv);
 
     const newModalButton = document.createElement('button');
-    newModalButton.innerHTML = 'Add modal meaning';
+    newModalButton.innerHTML = 'Add (modal) meaning in the same arrow';
     newModalButton.style.width = '100%';
     newModalButton.addEventListener('click', createModality);
     modalitiesRowDiv.appendChild(newModalButton);

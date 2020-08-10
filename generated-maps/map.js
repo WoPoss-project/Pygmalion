@@ -15,17 +15,17 @@ if (data.dataFormat === 'cent') {
   });
 }
 
-const width = '100%';
-const height = `${definitions.length * 60}px`;
 const margin = {
   top: 100,
   left: 250,
   right: 100,
   bottom: 0,
 };
+const width = '100%';
+const height = `${margin.top * 2 - 5 + definitions.length * 37}px`;
 
 const svg = d3
-  .select('#card')
+  .select('#map')
   .append('svg')
   .attr('width', width)
   .attr('height', height)
@@ -274,6 +274,7 @@ function drawData(elements = definitions, allowUpdate = false) {
   lines = elements.map((elem) =>
     wrap(elem.meaning, containerWidth, containerPortion, elem)
   );
+
   let control = 0;
   lines.forEach((l) => {
     if (l > control) {
@@ -283,7 +284,14 @@ function drawData(elements = definitions, allowUpdate = false) {
       control = l;
     }
   });
-  console.log(lines);
+
+  svg.attr(
+    'height',
+    lines.reduce((acc, curr) => {
+      acc += (curr + 1) * 33;
+      return acc;
+    })
+  );
 
   meaningsGroup
     .selectAll('g')
@@ -313,7 +321,8 @@ function drawData(elements = definitions, allowUpdate = false) {
             containerWidth,
             containerPortion,
             elements,
-            allowUpdate
+            allowUpdate,
+            lines
           )
           .transition()
           .duration(250)
@@ -382,8 +391,8 @@ function addElems(elements, cW, cP, tip) {
     .call(wrap, cW, cP);
 }
 
-function updateElems(elements, cW, cP, elementsData, displayRels) {
-  elements.selectAll('text').call(wrap, cW, cP, 'update');
+function updateElems(elements, cW, cP, elementsData, displayRels, test) {
+  //elements.selectAll('text').call(wrap, cW, cP, 'update');
 
   if (displayRels) {
     const element = elementsData.reduce((acc, curr) =>
