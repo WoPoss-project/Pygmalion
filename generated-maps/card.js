@@ -271,7 +271,17 @@ function drawData(elements = definitions, allowUpdate = false) {
     );
   });
 
-  let lineNumbers = 0;
+  lines = elements.map((elem) =>
+    wrap(elem.meaning, containerWidth, containerPortion, elem)
+  );
+  let control = 0;
+  lines.forEach((l) => {
+    if (l > control) {
+      lines[lines.indexOf(l) + 1] = l;
+      lines[lines.indexOf(l)] = lines[lines.indexOf(l) - 1];
+      control = l;
+    }
+  });
 
   meaningsGroup
     .selectAll('g')
@@ -285,7 +295,9 @@ function drawData(elements = definitions, allowUpdate = false) {
           .attr(
             'transform',
             (d, i) =>
-              `translate(${d.emergence * containerPortion + 10}, ${i * 37})`
+              `translate(${d.emergence * containerPortion + 10}, ${
+                i * 37 + lines[i] * 30
+              })`
           )
           .style('opacity', 0)
           .call(addElems, containerWidth, containerPortion, tip)
@@ -303,14 +315,13 @@ function drawData(elements = definitions, allowUpdate = false) {
           )
           .transition()
           .duration(250)
-          .attr('transform', (d, i) => {
-            const lines = wrap(d.meaning, containerWidth, containerPortion, d);
-            const translate = `translate(${
-              d.emergence * containerPortion + 10
-            }, ${i * 37 + 30 * lineNumbers})`;
-            lineNumbers = lineNumbers < lines ? lines : lineNumbers;
-            return translate;
-          }),
+          .attr(
+            'transform',
+            (d, i) =>
+              `translate(${d.emergence * containerPortion + 10}, ${
+                i * 37 + lines[i] * 30
+              })`
+          ),
       (exit) => exit.transition().duration(250).style('opacity', 0).remove()
     );
 
@@ -343,7 +354,6 @@ function addElems(elements, cW, cP, tip) {
     })
     .on('dblclick', () => {
       d3.event.preventDefault();
-      elements.remove();
       relationshipGroup.selectAll('.rel').remove();
       drawData();
     })
@@ -490,28 +500,6 @@ function wrap(text, cW, cP, r = 'add') {
               [0, 0],
             ])
           );
-
-          // move other blocks
-          let nodes = text.node().parentNode.parentNode.childNodes;
-          let parent = text.node().parentNode;
-          let nodesToMove = range(
-            [...nodes].indexOf(parent) + 1,
-            nodes.length - 1
-          );
-          nodesToMove = nodesToMove.map((index) => nodes[index]);
-          nodesToMove.forEach((node) => {
-            const g = d3.select(node);
-            let transform = g.attr('transform');
-            let xy = transform
-              .split('(')[1]
-              .split(')')[0]
-              .split(', ')
-              .map((coord) => Number(coord));
-            g.attr(
-              'transform',
-              `translate(${xy[0]}, ${xy[1] + 30 * lineNumber})`
-            );
-          });
         }
       }
     });
@@ -708,7 +696,6 @@ function addRelationshipInfo(relationships, elements) {
           el['relCert'] = true;
         }
         if (rel.rel === el.id) {
-          console.log(rel.rel, el.id, direction);
           el['rel'] = direction;
           el['relCert'] = rel.cert;
         }
