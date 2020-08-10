@@ -19,7 +19,7 @@ const width = '100%';
 const height = `${definitions.length * 60}px`;
 const margin = {
   top: 100,
-  left: 150,
+  left: 250,
   right: 100,
   bottom: 0,
 };
@@ -63,7 +63,7 @@ svg
 const legend = svg
   .append('g')
   .attr('class', 'legend')
-  .attr('transform', `translate(${w - margin.right * 5.5}, ${margin.top / 4})`);
+  .attr('transform', `translate(${margin.left * 3}, ${margin.top / 4})`);
 
 const etymology = svg
   .append('g')
@@ -248,9 +248,9 @@ function drawEtymology() {
 function drawData(elements = definitions, allowUpdate = false) {
   meaningsGroup.style('width', (w / 100) * 80);
   let containerWidth = meaningsGroup.style('width');
-  containerWidth = Number(
-    containerWidth.substring(0, containerWidth.length - 2)
-  );
+  containerWidth =
+    Number(containerWidth.substring(0, containerWidth.length - 2)) -
+    margin.right;
   let containerPortion = Math.floor(
     containerWidth / range(earliest, latest).length
   );
