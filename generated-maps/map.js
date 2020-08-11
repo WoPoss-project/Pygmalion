@@ -73,7 +73,7 @@ const etymology = svg
 const relationshipGroup = svg
   .append('g')
   .attr('class', 'relationship')
-  .attr('transform', `translate(${margin.left}, ${margin.top * 2})`);
+  .attr('transform', `translate(${margin.left}, ${margin.top * 2 + 15})`);
 
 const meaningsGroup = svg
   .append('g')
@@ -271,9 +271,10 @@ function drawData(elements = definitions, allowUpdate = false) {
     );
   });
 
-  lines = elements.map((elem) =>
+  const lines = elements.map((elem) =>
     wrap(elem.meaning, containerWidth, containerPortion, elem)
   );
+  const spaces = [...lines];
 
   svg.attr('height', `${margin.top * 2 - 5}px`);
 
@@ -281,15 +282,16 @@ function drawData(elements = definitions, allowUpdate = false) {
   lines.forEach((l) => (total += (l + 1) * 37));
   svg.attr('height', Number(svg.attr('height').split('px')[0]) + total);
 
-  let control = 0;
-  lines.forEach((l) => {
-    if (l > control) {
-      const index = lines.indexOf(l);
-      range(index + 1, lines.length - 1).forEach((n) => (lines[n] += 1));
-      lines[index] -= 1;
+  const linesOriginal = [...lines];
+  for (let i = 0; i < lines.length; i++) {
+    const l = linesOriginal[i];
+    const index = i;
+    if (l > 0) {
+      range(index + 1, lines.length - 1).forEach((n) => (lines[n] += l));
+      lines[index] -= l;
       control = l;
     }
-  });
+  }
 
   meaningsGroup
     .selectAll('g')
@@ -320,7 +322,7 @@ function drawData(elements = definitions, allowUpdate = false) {
             containerPortion,
             elements,
             allowUpdate,
-            lines
+            spaces
           )
           .transition()
           .duration(250)
@@ -402,9 +404,25 @@ function updateElems(elements, cW, cP, elementsData, displayRels, test) {
       elementsData.length - 1 - elementIndex
     );
 
-    const offset = wrap(element.meaning, cW, cP, element) * 15;
-    const x0 = cW + 5;
-    const y0 = elementIndex * 37 + 15 + offset;
+    let offsetValue = 0;
+    range(0, elementIndex).forEach((n) =>
+      test[n] > 0 ? (offsetValue += test[n]) : n
+    );
+
+    const t = [];
+    range(0, test.length - 2).forEach((n) => t.push(test[n] + test[n + 1]));
+    const multipliers = t.map((n) => n * 0.5 + 1);
+    let maxY = 0;
+    const y = multipliers.map((m) => {
+      maxY += m * 37;
+      return maxY;
+    });
+    y.splice(elementIndex, 0, 0);
+
+    console.log(elementIndex * 37, offsetValue);
+    const offset = offsetValue * 30 - y[elementIndex];
+    const x0 = cW + 10;
+    const y0 = elementIndex * 37 + offset;
     let lineNumber = 0;
 
     relationshipGroup.selectAll('.rel').remove();
@@ -427,20 +445,23 @@ function updateElems(elements, cW, cP, elementsData, displayRels, test) {
       .style('stroke-dasharray', (d) => (!d.relCert ? 4 : 0))
       .style('opacity', 0)
       .attr('d', (d, i) => {
-        const lines = wrap(d.meaning, cW, cP, d);
-        lineNumber = lines > 0 ? lines : lineNumber;
-        const x1 = x0 + (Math.abs(indexes[i]) * margin.right) / indexes.length;
-        const y1 = y0;
-        const y2 =
-          lineNumber > 0
-            ? indexes[i] * 37 + lineNumber * (lines > 0 ? 15 : 30) + y0 - offset
-            : indexes[i] * 37 + y0 - offset;
-        return lineGenerator([
-          [x0, y1],
-          [x1, y1],
-          [x1, y2],
-          [x0, y2],
-        ]);
+        const modifier = indexes[i];
+        const lineHeight = wrap(d.meaning, cW, cP, d);
+        lineNumber += lineHeight > 0 ? lineHeight : 0;
+        const x1 = x0 + (Math.abs(modifier) * margin.right) / indexes.length;
+        const y1 =
+          y0 - offset + modifier * 37 + lineNumber * (lineHeight > 0 ? 15 : 30);
+
+        const points =
+          i != elementIndex
+            ? [
+                [x0, y0],
+                [x1, y0],
+                [x1, y1],
+                [x0, y1],
+              ]
+            : [[x0, y0]];
+        return lineGenerator(points);
       })
       .transition()
       .duration(500)

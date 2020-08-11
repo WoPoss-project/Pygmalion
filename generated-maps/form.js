@@ -192,7 +192,7 @@ function createModality(event) {
   modalityLabel.innerHTML = 'Description';
 
   const deleteModalLabel = document.createElement('label');
-  deleteModalLabel.innerHTML = 'Delete modality';
+  deleteModalLabel.innerHTML = 'Delete description';
   deleteModalLabel.className = 'delete';
   deleteModalLabel.addEventListener('click', deleteEntry);
 
@@ -271,7 +271,7 @@ function createModality(event) {
     modalitiesRowDiv.appendChild(modalitiesDiv);
 
     const newModalButton = document.createElement('button');
-    newModalButton.innerHTML = 'Add (modal) meaning in the same arrow';
+    newModalButton.innerHTML = 'Add new (modal) description';
     newModalButton.style.width = '100%';
     newModalButton.addEventListener('click', createModality);
     modalitiesRowDiv.appendChild(newModalButton);
