@@ -22,7 +22,7 @@ const margin = {
   bottom: 0,
 };
 const width = '100%';
-const height = `${margin.top * 2 - 5 + definitions.length * 37}px`;
+const height = margin.top * 2 - 5 + definitions.length * 37;
 
 const svg = d3
   .select('#map')
@@ -274,13 +274,12 @@ function drawData(elements = definitions, allowUpdate = false) {
   const lines = elements.map((elem) =>
     wrap(elem.meaning, containerWidth, containerPortion, elem)
   );
-  const spaces = [...lines];
-
-  svg.attr('height', `${margin.top * 2 - 5}px`);
 
   let total = 0;
   lines.forEach((l) => (total += (l + 1) * 37));
-  svg.attr('height', Number(svg.attr('height').split('px')[0]) + total);
+  const newHeight = margin.top * 2 - 5 + total;
+
+  svg.transition().duration(250).attr('height', newHeight);
 
   const linesOriginal = [...lines];
   for (let i = 0; i < lines.length; i++) {
@@ -322,7 +321,7 @@ function drawData(elements = definitions, allowUpdate = false) {
             containerPortion,
             elements,
             allowUpdate,
-            spaces
+            lines
           )
           .transition()
           .duration(250)
@@ -391,7 +390,7 @@ function addElems(elements, cW, cP, tip) {
     .call(wrap, cW, cP);
 }
 
-function updateElems(elements, cW, cP, elementsData, displayRels, test) {
+function updateElems(elements, cW, cP, elementsData, displayRels, lines) {
   //elements.selectAll('text').call(wrap, cW, cP, 'update');
 
   if (displayRels) {
@@ -406,24 +405,13 @@ function updateElems(elements, cW, cP, elementsData, displayRels, test) {
 
     let offsetValue = 0;
     range(0, elementIndex).forEach((n) =>
-      test[n] > 0 ? (offsetValue += test[n]) : n
+      lines[n] > 0 ? (offsetValue += lines[n]) : n
     );
 
-    const t = [];
-    range(0, test.length - 2).forEach((n) => t.push(test[n] + test[n + 1]));
-    const multipliers = t.map((n) => n * 0.5 + 1);
-    let maxY = 0;
-    const y = multipliers.map((m) => {
-      maxY += m * 37;
-      return maxY;
-    });
-    y.splice(elementIndex, 0, 0);
-
-    console.log(elementIndex * 37, offsetValue);
-    const offset = offsetValue * 30 - y[elementIndex];
+    const offset =
+      lines[elementIndex] * 30 + wrap(element.meaning, cW, cP, element) * 15;
     const x0 = cW + 10;
     const y0 = elementIndex * 37 + offset;
-    let lineNumber = 0;
 
     relationshipGroup.selectAll('.rel').remove();
     relationshipGroup
@@ -447,11 +435,9 @@ function updateElems(elements, cW, cP, elementsData, displayRels, test) {
       .attr('d', (d, i) => {
         const modifier = indexes[i];
         const lineHeight = wrap(d.meaning, cW, cP, d);
-        lineNumber += lineHeight > 0 ? lineHeight : 0;
+        const off = lines[i] * 30 + lineHeight * 15;
         const x1 = x0 + (Math.abs(modifier) * margin.right) / indexes.length;
-        const y1 =
-          y0 - offset + modifier * 37 + lineNumber * (lineHeight > 0 ? 15 : 30);
-
+        const y1 = y0 - offset + modifier * 37 + off;
         const points =
           i != elementIndex
             ? [
