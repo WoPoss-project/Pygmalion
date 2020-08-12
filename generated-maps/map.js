@@ -17,7 +17,7 @@ if (data.dataFormat === 'cent') {
 
 const margin = {
   top: 100,
-  left: 250,
+  left: 200,
   right: 100,
   bottom: 0,
 };
@@ -38,7 +38,7 @@ svg
   .append('svg:defs')
   .append('svg:marker')
   .attr('id', 'arrow1')
-  .attr('refX', 4)
+  .attr('refX', 4.25)
   .attr('refY', 1.75)
   .attr('markerWidth', 30)
   .attr('markerHeight', 30)
@@ -74,6 +74,11 @@ const relationshipGroup = svg
   .append('g')
   .attr('class', 'relationship')
   .attr('transform', `translate(${margin.left}, ${margin.top * 2 + 15})`);
+
+const constructsAndGroups = svg
+  .append('g')
+  .attr('class', 'relationship')
+  .attr('transform', `translate(${margin.left}, ${margin.top * 2})`);
 
 const meaningsGroup = svg
   .append('g')
@@ -137,21 +142,6 @@ function basicDisplay() {
 
   drawEtymology();
   drawData();
-}
-
-function prepareDefinitions() {
-  const meanings = data.meanings;
-  const definitions = [];
-  meanings.forEach((meaning) => {
-    if (meaning.modalities.length > 1) {
-      meaning.modalities.forEach((modalitiy) => {
-        definitions.push(modalityFormatting(meaning, modalitiy));
-      });
-    } else {
-      definitions.push(modalityFormatting(meaning, meaning.modalities[0]));
-    }
-  });
-  return definitions;
 }
 
 function modalityFormatting(meaning, modalitiy) {
@@ -292,6 +282,8 @@ function drawData(elements = definitions, allowUpdate = false) {
     }
   }
 
+  drawConstructsOrGroups(elements, containerWidth, containerPortion, lines);
+
   meaningsGroup
     .selectAll('g')
     .data(elements, (d) => d.id)
@@ -336,6 +328,64 @@ function drawData(elements = definitions, allowUpdate = false) {
     );
 
   drawScale(earliest, latest, containerPortion);
+}
+
+function drawConstructsOrGroups(elements, cW, cP, lines) {
+  constructsAndGroups.selectAll('path').remove();
+  constructsAndGroups.selectAll('text').remove();
+  const dataList = [...new Set(elements.map((el) => el.construct))];
+  dataList.forEach((group) => {
+    if (group != 'None') {
+      const indexes = [];
+      elements.forEach((el) =>
+        el.construct == group ? indexes.push(elements.indexOf(el)) : false
+      );
+      const max = Math.max(...indexes);
+      const min = Math.min(...indexes);
+      const x0 = elements[min].emergence * cP;
+      const x1 = elements[max].emergence * cP;
+      const x2 = Math.min(x0, x1) - 15;
+      const xMiddle = x2 - 10;
+      const y0 = min * 37 + lines[min] * 30;
+      const y1 =
+        max * 37 +
+        lines[max] * 30 +
+        (wrap(elements[max].meaning, cW, cP, elements[max]) + 1) * 30;
+      const pathHeight = y1 - y0;
+      const yMiddle = y1 - pathHeight / 2;
+
+      if (min < max) {
+        constructsAndGroups
+          .append('path')
+          .attr(
+            'd',
+            lineGenerator([
+              [x0, y0],
+              [x2, y0],
+              [x2, yMiddle],
+              [xMiddle, yMiddle],
+              [x2, yMiddle],
+              [x2, y1],
+              [x0, y1],
+            ])
+          )
+          .attr('fill', 'none')
+          .style('stroke', 'black')
+          .style('stroke-width', 1);
+      }
+      constructsAndGroups
+        .append('text')
+        .text(group)
+        .attr('x', () => {
+          if (min < max) {
+            return xMiddle - getTextWidth(group) - 5;
+          } else {
+            return x0 - getTextWidth(group);
+          }
+        })
+        .attr('y', yMiddle + 4);
+    }
+  });
 }
 
 function addElems(elements, cW, cP, tip) {
@@ -403,11 +453,6 @@ function updateElems(elements, cW, cP, elementsData, displayRels, lines) {
       elementsData.length - 1 - elementIndex
     );
 
-    let offsetValue = 0;
-    range(0, elementIndex).forEach((n) =>
-      lines[n] > 0 ? (offsetValue += lines[n]) : n
-    );
-
     const offset =
       lines[elementIndex] * 30 + wrap(element.meaning, cW, cP, element) * 15;
     const x0 = cW + 10;
@@ -455,96 +500,45 @@ function updateElems(elements, cW, cP, elementsData, displayRels, lines) {
   }
 }
 
-function checkHeight(d, boxWidth) {
-  const length = d.meaning.length;
-  if (length * 5.5 >= boxWidth) {
-    return 50;
-  } else {
-    return 30;
-  }
-}
-
-function wrap(text, cW, cP, r = 'add') {
-  if (typeof text != 'string') {
-    text.each(function () {
-      let text = d3.select(this),
-        words = text.text().split(/\s+/).reverse(),
-        word,
-        line = [],
-        lineNumber = 0,
-        lineHeight = 1.5, // ems
-        x = text.attr('x'),
-        y = text.attr('y'),
-        dy = parseFloat(text.attr('dy')),
-        tspan = text
-          .text(null)
-          .append('tspan')
-          .attr('x', x)
-          .attr('y', y)
-          .attr('dy', dy + 'em'),
-        emergence = text.data()[0].emergence;
-
-      const width = cW - (emergence * cP + 10);
-      while ((word = words.pop())) {
-        line.push(word);
-        tspan.text(line.join(' '));
-        if (tspan.text().length * 6 > width) {
-          line.pop();
-          tspan.text(line.join(' ') + ' ');
-          line = [word];
-          tspan = text
-            .append('tspan')
-            .attr('x', x)
-            .attr('y', y)
-            .attr('dy', ++lineNumber * lineHeight + dy + 'em')
-            .attr('dx', '1.1em')
-            .text(word);
-
-          // Modify destination path
-          let node = text.node().parentNode.firstChild;
-          const yModifier = lineNumber + 1;
-          d3.select(node).attr(
-            'd',
-            lineGenerator([
-              [0, 0],
-              [10, 0],
-              [width, 0],
-              [width + 10, 15 * yModifier],
-              [width, 30 * yModifier],
-              [10, 30 * yModifier],
-              [0, 30 * yModifier],
-              [0, 0],
-            ])
-          );
-        }
+function newDisplay(event) {
+  const keptIds = [
+    event.id,
+    ...Object.values(event.relationships)
+      .reduce((a, b) => a.concat(b))
+      .map((r) => r.rel),
+  ];
+  const keptElements = [];
+  keptIds.forEach((id) => {
+    definitions.forEach((def) => {
+      if (Object.values(def).includes(id)) {
+        keptElements.push(def);
       }
     });
-  } else {
-    let words = text.split(/\s+/).reverse(),
-      word,
-      line = [],
-      lineNumber = 0,
-      emergence = r.emergence,
-      width = cW - (emergence * cP + 10);
-    while ((word = words.pop())) {
-      line.push(word);
-      if (line.join(' ').length * 6 > width) {
-        line.pop();
-        line = [word];
-        ++lineNumber;
-      }
-    }
-    return lineNumber;
-  }
+  });
+  console.log(keptElements);
+  drawData(addRelationshipInfo(event.relationships, keptElements), true);
 }
 
-function getCoords(path) {
-  path = d3.select(path);
-  d = path.attr('d').split(/(?=[LMC])/);
-  return d.map((coord) => {
-    coord = coord.substring(1);
-    return coord.split(',');
+function addRelationshipInfo(relationships, elements) {
+  definitions.forEach((def) => {
+    delete def.rel;
+    delete def.relCert;
   });
+  for (const direction in relationships) {
+    relationships[direction].forEach((rel) => {
+      elements.forEach((el) => {
+        if (!('rel' in el) && !('relCert' in el)) {
+          el['rel'] = 'origin';
+          el['relCert'] = true;
+        }
+        if (rel.rel === el.id) {
+          el['rel'] = direction;
+          el['relCert'] = rel.cert;
+        }
+      });
+    });
+  }
+  return elements;
 }
 
 function drawScale(earliest, latest, containerPortion) {
@@ -621,6 +615,95 @@ function drawScale(earliest, latest, containerPortion) {
   }
 }
 
+function prepareDefinitions() {
+  const meanings = data.meanings;
+  const definitions = [];
+  meanings.forEach((meaning) => {
+    if (meaning.modalities.length > 1) {
+      meaning.modalities.forEach((modalitiy) => {
+        definitions.push(modalityFormatting(meaning, modalitiy));
+      });
+    } else {
+      definitions.push(modalityFormatting(meaning, meaning.modalities[0]));
+    }
+  });
+  return definitions;
+}
+
+function wrap(text, cW, cP, r = 'add') {
+  if (typeof text != 'string') {
+    text.each(function () {
+      let text = d3.select(this),
+        words = text.text().split(/\s+/).reverse(),
+        word,
+        line = [],
+        lineNumber = 0,
+        lineHeight = 1.5, // ems
+        x = text.attr('x'),
+        y = text.attr('y'),
+        dy = parseFloat(text.attr('dy')),
+        tspan = text
+          .text(null)
+          .append('tspan')
+          .attr('x', x)
+          .attr('y', y)
+          .attr('dy', dy + 'em'),
+        emergence = text.data()[0].emergence;
+
+      const width = cW - (emergence * cP + 10);
+      while ((word = words.pop())) {
+        line.push(word);
+        tspan.text(line.join(' '));
+        if (tspan.text().length * 6 > width) {
+          line.pop();
+          tspan.text(line.join(' ') + ' ');
+          line = [word];
+          tspan = text
+            .append('tspan')
+            .attr('x', x)
+            .attr('y', y)
+            .attr('dy', ++lineNumber * lineHeight + dy + 'em')
+            .attr('dx', '1.1em')
+            .text(word);
+
+          // Modify destination path
+          let node = text.node().parentNode.firstChild;
+          const yModifier = lineNumber + 1;
+          d3.select(node).attr(
+            'd',
+            lineGenerator([
+              [0, 0],
+              [10, 0],
+              [width, 0],
+              [width + 10, 15 * yModifier],
+              [width, 30 * yModifier],
+              [10, 30 * yModifier],
+              [0, 30 * yModifier],
+              [0, 0],
+            ])
+          );
+        }
+      }
+    });
+  } else {
+    let words = text.split(/\s+/).reverse(),
+      word,
+      line = [],
+      lineNumber = 0,
+      emergence = r.emergence,
+      width = cW - (emergence * cP + 10);
+    while ((word = words.pop())) {
+      line.push(word);
+      if (line.join(' ').length * 6 > width) {
+        line.pop();
+        line = [word];
+        ++lineNumber;
+      }
+    }
+    return lineNumber;
+  }
+}
+
 function color(modal) {
   const conversion = {
     notModal: 'lightgrey',
@@ -680,45 +763,29 @@ function range(start, end) {
     .map((_, idx) => start + idx);
 }
 
-function newDisplay(event) {
-  const keptIds = [
-    event.id,
-    ...Object.values(event.relationships)
-      .reduce((a, b) => a.concat(b))
-      .map((r) => r.rel),
-  ];
-  const keptElements = [];
-  keptIds.forEach((id) => {
-    definitions.forEach((def) => {
-      if (Object.values(def).includes(id)) {
-        keptElements.push(def);
-      }
-    });
-  });
-  console.log(keptElements);
-  drawData(addRelationshipInfo(event.relationships, keptElements), true);
+function getTextWidth(text) {
+  // create a dummy element
+  const dummy = document.createElement('span');
+  dummy.id = 'ruler';
+  dummy.innerHTML = text;
+  dummy.style.visibility = 'hidden';
+  dummy.style.whiteSpace = 'nowrap';
+  dummy.style.fontFamily = 'Arial, Helvetica, sans-serif';
+  dummy.style.fontSize = '12px';
+  document.body.appendChild(dummy);
+
+  const dummyWidth = $('#ruler').width();
+  document.body.removeChild(document.getElementById('ruler'));
+  return dummyWidth;
 }
 
-function addRelationshipInfo(relationships, elements) {
-  definitions.forEach((def) => {
-    delete def.rel;
-    delete def.relCert;
+function getCoords(path) {
+  path = d3.select(path);
+  d = path.attr('d').split(/(?=[LMC])/);
+  return d.map((coord) => {
+    coord = coord.substring(1);
+    return coord.split(',');
   });
-  for (const direction in relationships) {
-    relationships[direction].forEach((rel) => {
-      elements.forEach((el) => {
-        if (!('rel' in el) && !('relCert' in el)) {
-          el['rel'] = 'origin';
-          el['relCert'] = true;
-        }
-        if (rel.rel === el.id) {
-          el['rel'] = direction;
-          el['relCert'] = rel.cert;
-        }
-      });
-    });
-  }
-  return elements;
 }
 
 if (data) {
