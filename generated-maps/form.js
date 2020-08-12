@@ -5,9 +5,10 @@ const addSense = document.getElementById('addSense');
 const newSenses = document.getElementById('newSenses');
 const etymologyArea = document.getElementById('etymology');
 const etymologicalStep = document.getElementById('etymologicalStep');
+const noEtymology = document.getElementById('noEtymology');
 const submitForm = document.getElementById('submitForm');
 
-// Event on the "Add a sense" button
+// Event on the "Add a meaning" button
 addSense.addEventListener('click', createSense);
 
 // Event on the select-type input for the date format
@@ -24,6 +25,7 @@ dateSpec.addEventListener('change', function () {
 });
 
 etymologicalStep.addEventListener('click', addEtymologicalStep);
+noEtymology.addEventListener('click', proceedWithNoEtymology);
 
 submitForm.addEventListener('click', confirmForm);
 
@@ -31,7 +33,7 @@ submitForm.addEventListener('click', confirmForm);
 function addEtymologicalStep(event) {
   event.preventDefault();
 
-  etymologicalStep.style.float = 'right';
+  noEtymology.style.visibility = 'hidden';
 
   const div = document.createElement('div');
   div.className = 'etymologyStep';
@@ -105,6 +107,28 @@ function addEtymologicalStep(event) {
   div.appendChild(definitionlDiv);
 
   etymologyArea.appendChild(div);
+}
+
+function proceedWithNoEtymology(event) {
+  event.preventDefault();
+  Swal.fire({
+    icon: 'info',
+    title: 'No etymology',
+    text:
+      'We have registered your choice to not include an etymology. If you change your mind, simply click "I wish to proceed with etymology"',
+  });
+  etymologicalStep.style.visibility = 'hidden';
+  noEtymology.innerHTML = 'I wish to proceed with etymology';
+  noEtymology.removeEventListener('click', proceedWithNoEtymology);
+  noEtymology.addEventListener('click', proceedWithEtymology);
+}
+
+function proceedWithEtymology(event) {
+  event.preventDefault();
+  etymologicalStep.style.visibility = 'visible';
+  noEtymology.innerHTML = 'I wish to proceed without etymology';
+  noEtymology.removeEventListener('click', proceedWithEtymology);
+  noEtymology.addEventListener('click', proceedWithNoEtymology);
 }
 
 // Add a sense/definition to the form
@@ -370,16 +394,16 @@ function deleteEntry(event) {
     (grandParent.childNodes.length > 1 && parent.className === 'modal') ||
     parent.className === 'etymologyStep'
   ) {
+    if (
+      parent.className === 'etymologyStep' &&
+      grandParent.childNodes.length - 1 == 0
+    ) {
+      noEtymology.style.visibility = 'visible';
+    }
     while (parent.firstChild) {
       parent.removeChild(parent.firstChild);
     }
     grandParent.removeChild(parent);
-    if (
-      parent.className === 'etymologyStep' &&
-      grandParent.childNodes.length <= 0
-    ) {
-      etymologicalStep.style.float = 'left';
-    }
   } else {
     Swal.fire({
       icon: 'warning',
