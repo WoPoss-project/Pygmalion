@@ -244,6 +244,7 @@ function createModality(event) {
   const smalls = [
     'Modality type',
     'Date of meaning emergence',
+    'Date of meaning disappearance',
     'First attestation',
   ];
 
@@ -330,8 +331,12 @@ function mainModal(div, lab, del, smalls, test, check, conf) {
   div.appendChild(smalls[0]);
   div.appendChild(modalDatePicker(dateSpec.value));
   div.appendChild(smalls[1]);
-  div.appendChild(test);
+  let disp = modalDatePicker(dateSpec.value);
+  disp.className = 'disp';
+  div.appendChild(disp);
   div.appendChild(smalls[2]);
+  div.appendChild(test);
+  div.appendChild(smalls[3]);
   div.appendChild(check);
   div.appendChild(conf);
   return div;
@@ -581,24 +586,33 @@ function confirmForm(event) {
                       if (modEl.value || modEl.value === '') {
                         if (
                           modEl.value === '' &&
+                          modEl.className != 'disp' &&
                           modEl.nodeName != 'BUTTON' &&
                           modEl.className != 'attest'
                         ) {
                           mandatory(modEl);
                           missingField = true;
-                        }
-                        if (modEl.type === 'checkbox') {
+                        } else if (modEl.type === 'checkbox') {
                           modalityValues.push(modEl.checked);
-                        } else if (modEl.className === 'date') {
-                          let conversion = dateConversion(
-                            dateSpec.value,
-                            modEl,
-                            missingField
-                          );
-                          if (conversion) {
-                            modalityValues.push(convertedDate[0]);
+                        } else if (
+                          modEl.className === 'date' ||
+                          modEl.className === 'disp'
+                        ) {
+                          if (
+                            modEl.className === 'disp' &&
+                            modEl.value === ''
+                          ) {
+                            modalityValues.push('None');
                           } else {
-                            missingField = true;
+                            let conversion = dateConversion(
+                              dateSpec.value,
+                              modEl
+                            );
+                            if (conversion) {
+                              modalityValues.push(conversion);
+                            } else {
+                              missingField = true;
+                            }
                           }
                         } else {
                           modalityValues.push(modEl.value);
@@ -609,8 +623,9 @@ function confirmForm(event) {
                       id: randomId(),
                       modal: modalityValues[0],
                       emergence: modalityValues[1],
-                      attestation: modalityValues[2],
-                      certainty: modalityValues[3],
+                      disparition: modalityValues[2],
+                      attestation: modalityValues[3],
+                      certainty: modalityValues[4],
                     };
                     if (v.length == 4) {
                       v[3].push(modalityObject);
@@ -673,7 +688,7 @@ function mandatory(element) {
   });
 }
 
-function dateConversion(format, element, missingField) {
+function dateConversion(format, element) {
   let date;
   if (format === 'cent') {
     let century;
