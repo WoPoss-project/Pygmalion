@@ -38,19 +38,12 @@ function addEtymologicalStep(event) {
   const div = document.createElement('div');
   div.className = 'etymologyStep';
 
-  const etymologyLabel = document.querySelectorAll('.ety');
+  const labelRow = document.createElement('div');
+  labelRow.className = 'row';
+
   const label = document.createElement('label');
   label.className = 'ety';
-  if (etymologyLabel.length === 0) {
-    label.innerHTML = 'Origin';
-  } else {
-    const labelValue = etymologyLabel[etymologyLabel.length - 1].innerHTML;
-    if (labelValue === 'Origin') {
-      label.innerHTML = 'Evolution 1';
-    } else {
-      label.innerHTML = `Evolution ${Number(labelValue.split(' ')[1]) + 1}`;
-    }
-  }
+  label.innerHTML = 'Etymological step';
 
   const etymologyDelete = document.createElement('label');
   etymologyDelete.innerHTML = 'Delete entry';
@@ -59,8 +52,11 @@ function addEtymologicalStep(event) {
 
   const br = document.createElement('br');
 
+  const dataRow = document.createElement('div');
+  dataRow.className = 'row';
+
   const periodDiv = document.createElement('div');
-  periodDiv.className = 'col-33';
+  periodDiv.className = 'col-25';
 
   const period = document.createElement('input');
   period.type = 'text';
@@ -68,7 +64,7 @@ function addEtymologicalStep(event) {
   period.placeholder = 'e.g. PIE, PI, LAT, ...';
 
   const etymologicalDiv = document.createElement('div');
-  etymologicalDiv.className = 'col-33';
+  etymologicalDiv.className = 'col-25';
 
   const etymologicalForm = document.createElement('input');
   etymologicalForm.type = 'text';
@@ -76,12 +72,24 @@ function addEtymologicalStep(event) {
   etymologicalForm.placeholder = 'Etymological form...';
 
   const definitionlDiv = document.createElement('div');
-  definitionlDiv.className = 'col-33';
+  definitionlDiv.className = 'col-25';
 
   const shortDefinition = document.createElement('input');
   shortDefinition.type = 'text';
   shortDefinition.className = 'shortDefinition';
   shortDefinition.placeholder = 'Short, one-word, definition';
+
+  const etymologicalStepConfidenceDiv = document.createElement('div');
+  etymologicalStepConfidenceDiv.className = 'col-25';
+
+  const etymologicalStepConfidence = document.createElement('input');
+  etymologicalStepConfidence.type = 'checkbox';
+  etymologicalStepConfidence.name = 'etyConfidence';
+  etymologicalStepConfidence.className = 'etyConfidence';
+  etymologicalStepConfidence.checked = true;
+
+  const etymologicalStepConfidenceLabel = document.createElement('label');
+  etymologicalStepConfidenceLabel.innerHTML = 'Etymology is certain';
 
   const smalls = ['Language/period', 'Etymological form', 'Short definition'];
   smalls.forEach((el) => {
@@ -90,21 +98,29 @@ function addEtymologicalStep(event) {
     smalls[smalls.indexOf(el)] = small;
   });
 
-  div.appendChild(label);
-  div.appendChild(etymologyDelete);
-  div.appendChild(br);
+  labelRow.appendChild(label);
+  labelRow.appendChild(etymologyDelete);
+  labelRow.appendChild(br);
+
+  div.appendChild(labelRow);
 
   periodDiv.appendChild(period);
   periodDiv.appendChild(smalls[0]);
-  div.appendChild(periodDiv);
+  dataRow.appendChild(periodDiv);
 
   etymologicalDiv.appendChild(etymologicalForm);
   etymologicalDiv.appendChild(smalls[1]);
-  div.appendChild(etymologicalDiv);
+  dataRow.appendChild(etymologicalDiv);
 
   definitionlDiv.appendChild(shortDefinition);
   definitionlDiv.appendChild(smalls[2]);
-  div.appendChild(definitionlDiv);
+  dataRow.appendChild(definitionlDiv);
+
+  etymologicalStepConfidenceDiv.appendChild(etymologicalStepConfidence);
+  etymologicalStepConfidenceDiv.appendChild(etymologicalStepConfidenceLabel);
+  dataRow.appendChild(etymologicalStepConfidenceDiv);
+
+  div.appendChild(dataRow);
 
   etymologyArea.appendChild(div);
 }
@@ -387,18 +403,23 @@ function createModalSelect() {
 
 // Function to delete a modality
 function deleteEntry(event) {
-  const parent = event.target.parentNode;
-  const grandParent = parent.parentNode;
+  let parent = event.target.parentNode;
+  let grandParent = parent.parentNode;
+  const grandGrandParent = grandParent.parentNode;
   // Will not work if the user is about to delete the only modality for a definition
   if (
     (grandParent.childNodes.length > 1 && parent.className === 'modal') ||
-    parent.className === 'etymologyStep'
+    grandParent.className === 'etymologyStep'
   ) {
     if (
-      parent.className === 'etymologyStep' &&
-      grandParent.childNodes.length - 1 == 0
+      grandParent.className === 'etymologyStep' &&
+      grandGrandParent.childNodes.length - 1 == 0
     ) {
       noEtymology.style.visibility = 'visible';
+    }
+    if (grandParent.className === 'etymologyStep') {
+      parent = grandParent;
+      grandParent = grandGrandParent;
     }
     while (parent.firstChild) {
       parent.removeChild(parent.firstChild);
@@ -501,15 +522,17 @@ function confirmForm(event) {
 
   if (headwordInput.value != '') {
     if (definitionTexts.length > 0) {
-      let etymology = [[], [], []];
+      let etymology = [[], [], [], []];
       const etymologyPeriods = document.querySelectorAll('.period');
       const etymologyForms = document.querySelectorAll('.etymologicalForm');
       const etymologyDefinitions = document.querySelectorAll(
         '.shortDefinition'
       );
+      const etymologyConfidence = document.querySelectorAll('.etyConfidence');
       etymologyPeriods.forEach((el) => etymology[0].push(el.value));
       etymologyForms.forEach((el) => etymology[1].push(el.value));
       etymologyDefinitions.forEach((el) => etymology[2].push(el.value));
+      etymologyConfidence.forEach((el) => etymology[3].push(el.checked));
       const etymologicalData = [];
       for (let c = 0; c < etymology[0].length; c++) {
         const data = [];
@@ -524,6 +547,7 @@ function confirmForm(event) {
           period: data[0],
           form: data[1],
           def: data[2],
+          certitude: data[3],
         });
       }
 
@@ -547,7 +571,6 @@ function confirmForm(event) {
                     mandatory(value);
                     missingField = true;
                   }
-
                   v.push(value.value);
                 } else {
                   const modalities = value.childNodes;
@@ -567,9 +590,16 @@ function confirmForm(event) {
                         if (modEl.type === 'checkbox') {
                           modalityValues.push(modEl.checked);
                         } else if (modEl.className === 'date') {
-                          modalityValues.push(
-                            dateConversion(dateSpec.value, modEl)
+                          let conversion = dateConversion(
+                            dateSpec.value,
+                            modEl,
+                            missingField
                           );
+                          if (conversion) {
+                            modalityValues.push(convertedDate[0]);
+                          } else {
+                            missingField = true;
+                          }
                         } else {
                           modalityValues.push(modEl.value);
                         }
@@ -615,7 +645,7 @@ function confirmForm(event) {
           icon: 'error',
           title: 'Error!',
           text:
-            'Please fill in all the mandatory fields and make sure the emergence dates are encoded correctly!',
+            'Please fill in all the mandatory fields and make sure the emergence dates are encoded according to the documentation!',
         });
       }
       return;
@@ -643,7 +673,7 @@ function mandatory(element) {
   });
 }
 
-function dateConversion(format, element) {
+function dateConversion(format, element, missingField) {
   let date;
   if (format === 'cent') {
     let century;
@@ -696,6 +726,7 @@ function dateConversion(format, element) {
           'Dates are not encoded correctly. Century format is as follows: "II BC", "IX BC", "VI BC" for the centuries before Christ and "II", "XX", "IV" for the centuries after Christ. Specific years should be typed as follows: "1700", "100", "-50", "-500". Centuries will be inferred from the years.',
       });
       mandatory(element);
+      return false;
     }
   } else if (format === 'dec') {
     let decade;
@@ -718,6 +749,8 @@ function dateConversion(format, element) {
             text:
               'Dates are not encoded correctly. Please make sure you format decades as follows: "200s BC", "50s BC", "10s", "1920s".',
           });
+          mandatory(element);
+          return false;
         }
       } else {
         Swal.fire({
@@ -726,6 +759,8 @@ function dateConversion(format, element) {
           text:
             'Dates are not encoded correctly. Please make sure you format decades as follows: "200s BC", "50s BC", "10s", "1920s".',
         });
+        mandatory(element);
+        return false;
       }
     }
     decade = Number(decade.slice(0, -1));
@@ -743,6 +778,8 @@ function dateConversion(format, element) {
         text:
           'Dates are not encoded correctly. Please make sure you format decades as follows: "200s BC", "50s BC", "10s", "1920s", or that you entered a valid year (-202, -19, 1414, 1932)',
       });
+      mandatory(element);
+      return false;
     }
   } else if (
     Number(element.value) &&
@@ -757,6 +794,8 @@ function dateConversion(format, element) {
       text:
         'Dates are not encoded correctly. Please make sure the years you entered are correct',
     });
+    mandatory(element);
+    return false;
   }
   return date;
 }
