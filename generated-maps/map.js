@@ -371,7 +371,11 @@ function drawConstructsOrGroups(elements, cW, cP, lines) {
           )
           .attr('fill', 'none')
           .style('stroke', 'black')
-          .style('stroke-width', 1);
+          .style('stroke-width', 1)
+          .style('opacity', 0)
+          .transition()
+          .duration(500)
+          .style('opacity', 1);
       }
       constructsAndGroups
         .append('text')
@@ -383,7 +387,11 @@ function drawConstructsOrGroups(elements, cW, cP, lines) {
             return x0 - getTextWidth(group);
           }
         })
-        .attr('y', yMiddle + 4);
+        .attr('y', yMiddle + 4)
+        .style('opacity', 0)
+        .transition()
+        .duration(500)
+        .style('opacity', 1);
     }
   });
 }
