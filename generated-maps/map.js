@@ -16,7 +16,7 @@ if (data.dataFormat === 'cent') {
     }
   });
 } else if (data.dataFormat === 'dec') {
-  const r = range10(earliest, latest + 100);
+  const r = range10(earliest, latest + 150);
   definitions.forEach((def) => {
     if (earliest < 0) {
       def.emergence = r.indexOf(def.emergence);
@@ -287,7 +287,7 @@ function drawData(elements = definitions, allowUpdate = false) {
           ? range(earliest, latest).length - 1
           : range(earliest, latest).length)
       : data.dataFormat === 'dec'
-      ? containerWidth / range10(earliest, latest + 100).length
+      ? containerWidth / range10(earliest, latest + 150).length
       : 0;
 
   let tip = d3
@@ -341,7 +341,7 @@ function drawData(elements = definitions, allowUpdate = false) {
           .attr(
             'transform',
             (d, i) =>
-              `translate(${d.emergence * containerPortion + 10}, ${
+              `translate(${d.emergence * containerPortion}, ${
                 i * 37 + lines[i] * 30
               })`
           )
@@ -365,14 +365,14 @@ function drawData(elements = definitions, allowUpdate = false) {
           .attr(
             'transform',
             (d, i) =>
-              `translate(${d.emergence * containerPortion + 10}, ${
+              `translate(${d.emergence * containerPortion}, ${
                 i * 37 + lines[i] * 30
               })`
           ),
       (exit) => exit.transition().duration(250).style('opacity', 0).remove()
     );
 
-  drawScale(earliest, latest, containerPortion, containerWidth);
+  drawScale(earliest, latest, containerWidth);
 }
 
 function drawConstructsOrGroups(elements, cW, cP, lines) {
@@ -448,11 +448,9 @@ function addElems(elements, cW, cP, tip) {
       const width = cW - d.emergence * cP;
       return lineGenerator([
         [0, 0],
-        [0 + 10, 0],
-        [0 + 10 + width, 0],
-        [0 + 10 + width + 10, 15],
-        [0 + 10 + width, 30],
-        [0 + 10, 30],
+        [0 + width, 0],
+        [0 + width + 10, 15],
+        [0 + width, 30],
         [0, 30],
         [0, 0],
       ]);
@@ -475,7 +473,7 @@ function addElems(elements, cW, cP, tip) {
       tip
         // TODO: adapt for centuries
         .html(
-          range10(earliest, latest + 100)[d.emergence] + 's: ' + d.attestation
+          range10(earliest, latest + 150)[d.emergence] + 's: ' + d.attestation
         )
         .style('left', d3.event.pageX + 10 + 'px')
         .style('top', d3.event.pageY - 15 + 'px');
@@ -597,75 +595,85 @@ function addRelationshipInfo(relationships, elements) {
   return elements;
 }
 
-function drawScale(earliest, latest, cP, cW) {
+function drawScale(earliest, latest, cW) {
+  const dates = [];
+
+  let centuries;
   if (data.dataFormat == 'cent') {
-    const centuries = range(earliest, latest);
-    const romanDates = [];
-    centuries.forEach((cent) => {
-      let number = '';
-      if (cent < 0) {
-        number = `${romanize(cent)} BC`;
-      } else {
-        number = romanize(cent);
-      }
-      if (!romanDates.includes(number) && number != '') {
-        romanDates.push(number);
-      }
-    });
-
-    scale
-      .selectAll('path')
-      .data(romanDates)
-      .enter()
-      .append('path')
-      .attr('class', 'scale')
-      .attr('d', (d, i) => {
-        const width = cP + 0.5;
-        const x = i * width;
-        if (i === 0) {
-          return lineGenerator([
-            [x, 0],
-            [x + 10 + width, 0],
-            [x + 10 + width + 10, 15],
-            [x + 10 + width, 30],
-            [x, 30],
-            [x, 0],
-          ]);
-        } else {
-          return lineGenerator([
-            [x, 0],
-            [x + 10 + width, 0],
-            [x + 10 + width + 10, 15],
-            [x + 10 + width, 30],
-            [x + 10, 30],
-            [x, 30],
-            [x + 10, 15],
-            [x, 0],
-          ]);
-        }
-      })
-      .attr('height', 30)
-      .attr('x', (_, i) => i * (cP + 0.5))
-      .attr('y', 0)
-      .style('fill', (_, i) => `rgb(45, ${100 + 8 * i}, ${160 + 9 * i})`)
-      .style('stroke', (_, i) => `rgb(45, ${100 + 8 * i}, ${160 + 9 * i})`)
-      .style('stroke-width', 2);
-
-    scale
-      .selectAll('text')
-      .data(romanDates)
-      .enter()
-      .append('text')
-      .attr('class', 'scale')
-      .text((d) => d)
-      .attr('x', (_, i) => i * (cP + 0.5))
-      .attr('y', 0)
-      .attr('dx', 15)
-      .attr('dy', 22)
-      .attr('font-size', 20)
-      .attr('style', 'font-weight: bold')
-      .style('fill', 'white');
+    // recode data for centuries
+    centuries = range(earliest, latest);
+  } else if (data.dataFormat == 'dec') {
+    // recode data for decades
+    const decades = range10(earliest, latest + 150);
+    centuries = [...new Set(decades.map((dec) => centuryFromYear(dec)))];
   }
+
+  const cP =
+    cW / (centuries.includes(0) ? centuries.length - 1 : centuries.length);
+
+  centuries.forEach((cent) => {
+    let number = '';
+    if (cent < 0) {
+      number = `${romanize(cent)} BC`;
+    } else {
+      number = romanize(cent);
+    }
+    if (!dates.includes(number) && number != '') {
+      dates.push(number);
+    }
+  });
+
+  scale
+    .selectAll('path')
+    .data(dates)
+    .enter()
+    .append('path')
+    .attr('class', 'scale')
+    .attr('d', (d, i) => {
+      let x = i * cP;
+      if (i === 0) {
+        return lineGenerator([
+          [x, 0],
+          [x + cP, 0],
+          [x + cP + 10, 15],
+          [x + cP, 30],
+          [x, 30],
+          [x, 0],
+        ]);
+      } else {
+        return lineGenerator([
+          [x, 0],
+          [x + cP, 0],
+          [x + cP + 10, 15],
+          [x + cP, 30],
+          [x + 10, 30],
+          [x, 30],
+          [x + 10, 15],
+          [x, 0],
+        ]);
+      }
+    })
+    .attr('height', 30)
+    .attr('x', (_, i) => i * (cP + 0.5))
+    .attr('y', 0)
+    .style('fill', (_, i) => `rgb(45, ${100 + 8 * i}, ${160 + 9 * i})`);
+  // .style('stroke', (_, i) => `rgb(45, ${100 + 8 * i}, ${160 + 9 * i})`)
+  // .style('stroke-width', 2);
+
+  scale
+    .selectAll('text')
+    .data(dates)
+    .enter()
+    .append('text')
+    .attr('class', 'scale')
+    .text((d) => d)
+    .attr('x', (_, i) => i * cP)
+    .attr('y', 0)
+    .attr('dx', (_, i) => (i === 0 ? 6 : 12))
+    .attr('dy', 22)
+    .attr('font-size', 20)
+    .attr('style', 'font-weight: bold')
+    .style('fill', 'white');
 }
 
 function prepareDefinitions() {
@@ -845,6 +853,15 @@ function getCoords(path) {
     coord = coord.substring(1);
     return coord.split(',');
   });
+}
+
+function centuryFromYear(year) {
+  const century = Math.floor((Math.abs(year) - 1) / 100) + 1;
+  if (year > 0) {
+    return century;
+  } else {
+    return -1 * century;
+  }
 }
 
 if (data) {
