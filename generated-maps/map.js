@@ -48,12 +48,12 @@ svg
   .append('svg:marker')
   .attr('id', 'arrow1')
   .attr('refX', 4.25)
-  .attr('refY', 1.75)
+  .attr('refY', 2)
   .attr('markerWidth', 30)
   .attr('markerHeight', 30)
   .attr('orient', 'auto-start-reverse')
   .append('path')
-  .attr('d', 'M 0 0 4 1.5 0 4 0.25 1.5')
+  .attr('d', 'M 0 0 4 2 0 4 0.25 2')
   .style('fill', 'black');
 
 svg
@@ -61,12 +61,12 @@ svg
   .append('svg:marker')
   .attr('id', 'arrow2')
   .attr('refX', -1)
-  .attr('refY', 1.75)
+  .attr('refY', 2)
   .attr('markerWidth', 30)
   .attr('markerHeight', 30)
   .attr('orient', '0deg')
   .append('path')
-  .attr('d', 'M 0 0 4 1.5 0 4 0.25 1.5')
+  .attr('d', 'M 0 0 4 2 0 4 0.25 2')
   .style('fill', 'black');
 
 const legend = svg
