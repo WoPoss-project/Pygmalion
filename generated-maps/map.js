@@ -15,6 +15,13 @@ if (data.dataFormat === 'cent') {
       def.emergence += Math.abs(earliest);
     }
   });
+} else if (data.dataFormat === 'dec') {
+  const r = range10(earliest, latest + 100);
+  definitions.forEach((def) => {
+    if (earliest < 0) {
+      def.emergence = r.indexOf(def.emergence);
+    }
+  });
 }
 
 const margin = {
@@ -269,17 +276,18 @@ function drawEtymology() {
 function drawData(elements = definitions, allowUpdate = false) {
   meaningsGroup.style('width', (w / 100) * 80);
   let containerWidth = meaningsGroup.style('width');
-  containerWidth =
+  containerWidth = Math.floor(
     Number(containerWidth.substring(0, containerWidth.length - 2)) -
-    margin.right;
+      margin.right
+  );
   let containerPortion =
     data.dataFormat === 'cent'
-      ? Math.floor(
-          containerWidth /
-            (range(earliest, latest).includes(0)
-              ? range(earliest, latest).length - 1
-              : range(earliest, latest).length)
-        )
+      ? containerWidth /
+        (range(earliest, latest).includes(0)
+          ? range(earliest, latest).length - 1
+          : range(earliest, latest).length)
+      : data.dataFormat === 'dec'
+      ? containerWidth / range10(earliest, latest + 100).length
       : 0;
 
   let tip = d3
@@ -437,13 +445,13 @@ function addElems(elements, cW, cP, tip) {
   elements
     .append('path')
     .attr('d', (d) => {
-      const width = cW - (d.emergence * cP + 10);
+      const width = cW - d.emergence * cP;
       return lineGenerator([
         [0, 0],
         [0 + 10, 0],
-        [0 + width, 0],
-        [0 + width + 10, 15],
-        [0 + width, 30],
+        [0 + 10 + width, 0],
+        [0 + 10 + width + 10, 15],
+        [0 + 10 + width, 30],
         [0 + 10, 30],
         [0, 30],
         [0, 0],
@@ -465,7 +473,10 @@ function addElems(elements, cW, cP, tip) {
     .on('mouseover', (d) => {
       tip.transition().duration(50).style('opacity', 1);
       tip
-        .html(d.attestation)
+        // TODO: adapt for centuries
+        .html(
+          range10(earliest, latest + 100)[d.emergence] + 's: ' + d.attestation
+        )
         .style('left', d3.event.pageX + 10 + 'px')
         .style('top', d3.event.pageY - 15 + 'px');
     })
@@ -602,8 +613,6 @@ function drawScale(earliest, latest, cP, cW) {
       }
     });
 
-    //romanDates.push('');
-
     scale
       .selectAll('path')
       .data(romanDates)
@@ -616,18 +625,18 @@ function drawScale(earliest, latest, cP, cW) {
         if (i === 0) {
           return lineGenerator([
             [x, 0],
-            [x + width, 0],
-            [x + width + 10, 15],
-            [x + width, 30],
+            [x + 10 + width, 0],
+            [x + 10 + width + 10, 15],
+            [x + 10 + width, 30],
             [x, 30],
             [x, 0],
           ]);
         } else {
           return lineGenerator([
             [x, 0],
-            [x + width, 0],
-            [x + width + 10, 15],
-            [x + width, 30],
+            [x + 10 + width, 0],
+            [x + 10 + width + 10, 15],
+            [x + 10 + width, 30],
             [x + 10, 30],
             [x, 30],
             [x + 10, 15],
@@ -694,7 +703,7 @@ function wrap(text, cW, cP, r = 'add') {
           .attr('dy', dy + 'em'),
         emergence = text.data()[0].emergence;
 
-      const width = cW - (emergence * cP + 10);
+      const width = cW - emergence * cP;
       while ((word = words.pop())) {
         line.push(word);
         tspan.text(line.join(' '));
@@ -718,9 +727,9 @@ function wrap(text, cW, cP, r = 'add') {
             lineGenerator([
               [0, 0],
               [10, 0],
-              [width, 0],
-              [width + 10, 15 * yModifier],
-              [width, 30 * yModifier],
+              [10 + width, 0],
+              [10 + width + 10, 15 * yModifier],
+              [10 + width, 30 * yModifier],
               [10, 30 * yModifier],
               [0, 30 * yModifier],
               [0, 0],
@@ -805,6 +814,12 @@ function range(start, end) {
   return Array(end - start + 1)
     .fill()
     .map((_, idx) => start + idx);
+}
+
+function range10(start, end) {
+  return Array((end - start + 10) / 10)
+    .fill()
+    .map((_, idx) => start + idx * 10);
 }
 
 function getTextWidth(text) {
