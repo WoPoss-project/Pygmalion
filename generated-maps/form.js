@@ -15,13 +15,15 @@ addSense.addEventListener('click', createSense);
 
 // Event on the select-type input for the date format
 dateSpec.addEventListener('change', function () {
-  const dates = document.querySelectorAll('.date');
-  const change = event.target.value;
+  const dates = [...document.querySelectorAll('.date')];
+  [...document.querySelectorAll('.disp')].forEach((e) => dates.push(e));
+  const change = event.target;
   dates.forEach((el) => {
     const value = el.value;
     const parent = el.parentNode;
-    const newChild = modalDatePicker(change);
+    const newChild = modalDatePicker(change.value);
     newChild.value = value;
+    newChild.className = el.className;
     parent.replaceChild(newChild, el);
   });
 });
@@ -212,7 +214,6 @@ function createSense(event) {
 // Creates and returns an input element with the correct values
 function modalDatePicker(spec) {
   const dateElement = document.createElement('input');
-  dateElement.className = 'date';
   if (spec === 'cent') {
     dateElement.type = 'text';
     dateElement.placeholder = 'Century (II BC, I BC, I, II) or Year';
@@ -333,7 +334,9 @@ function mainModal(div, lab, del, smalls, test, check, conf) {
   div.appendChild(del);
   div.appendChild(createModalSelect());
   div.appendChild(smalls[0]);
-  div.appendChild(modalDatePicker(dateSpec.value));
+  let date = modalDatePicker(dateSpec.value);
+  date.className = 'date';
+  div.appendChild(date);
   div.appendChild(smalls[1]);
   let disp = modalDatePicker(dateSpec.value);
   disp.className = 'disp';
