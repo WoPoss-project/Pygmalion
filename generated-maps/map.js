@@ -68,7 +68,7 @@ const legend = svg
 const etymology = svg
   .append('g')
   .attr('class', 'etymology')
-  .attr('transform', `translate(${margin.left}, 0)`);
+  .attr('transform', `translate(${margin.left}, ${margin.top / 4})`);
 
 const relationshipGroup = svg
   .append('g')
@@ -161,77 +161,106 @@ function modalityFormatting(meaning, modalitiy) {
 function drawEtymology() {
   const ety = data.etymology;
   const newEty = [];
-  ety.forEach((e) => {
-    newEty.push(Object.values(e));
-  });
+  let gw = getTextWidth('No etymology') + 25;
 
   let totalLength = 0;
   const gh = 80;
 
-  for (let i = 0; i < newEty.length + 1; i++) {
-    let gw = newEty[i]
-      ? newEty[i][2].split(' ').join('').length * 7.5 >
-        newEty[i][1].length * 7.5
-        ? newEty[i][2].split(' ').join('').length * 7.5
-        : newEty[i][1].length * 7.5
-      : data.headword[data.headword.length - 1] ===
-        data.headword[data.headword.length - 1].toLowerCase()
-      ? data.headword.length * 8
-      : data.headword.length * 11.5;
-    gw += 25;
+  if (ety) {
+    ety.forEach((e) => {
+      newEty.push(Object.values(e));
+    });
 
+    for (let i = 0; i < newEty.length + 1; i++) {
+      gw = newEty[i]
+        ? getTextWidth(newEty[i][2]) > getTextWidth(newEty[i][1])
+          ? getTextWidth(newEty[i][2])
+          : getTextWidth(newEty[i][1])
+        : getTextWidth(data.headword);
+      gw += 50;
+
+      const g = etymology
+        .append('g')
+        .attr('transform', `translate(${totalLength}, 0)`);
+
+      g.append('path')
+        .attr('d', () => {
+          if (i == 0) {
+            return lineGenerator([
+              [0, 0],
+              [25, 0],
+              [gw, 0],
+              [gw + 25, gh / 2],
+              [gw, gh],
+              [25, gh],
+              [0, gh],
+              [0, 0],
+            ]);
+          } else {
+            return lineGenerator([
+              [0, 0],
+              [25, 0],
+              [gw, 0],
+              [gw + 25, gh / 2],
+              [gw, gh],
+              [25, gh],
+              [0, gh],
+              [25, gh / 2],
+              [0, 0],
+            ]);
+          }
+        })
+        .style('fill', 'none')
+        .style('stroke', 'black')
+        .style('stroke-width', 3)
+        .style('stroke-dasharray', () =>
+          newEty[i] ? (newEty[i][3] ? 0 : 4) : 0
+        );
+      if (newEty[i]) {
+        for (let j = 0; j < newEty[i].length - 1; j++) {
+          g.append('text')
+            .text(newEty[i][j])
+            .attr('x', i === 0 ? 18 : 25)
+            .attr('y', j * 25)
+            .attr('dx', 12)
+            .attr('dy', 20);
+        }
+      } else {
+        g.append('text')
+          .text(data.headword)
+          .attr('x', 20)
+          .attr('y', gh / 2 + 3)
+          .attr('dx', 22);
+      }
+      totalLength += gw;
+    }
+  } else {
     const g = etymology
       .append('g')
-      .attr('transform', `translate(${totalLength}, ${(h / 100) * 3})`);
+      .attr('transform', `translate(${totalLength}, 0)`);
 
     g.append('path')
-      .attr('d', () => {
-        if (i == 0) {
-          return lineGenerator([
-            [0, 0],
-            [25, 0],
-            [gw, 0],
-            [gw + 25, gh / 2],
-            [gw, gh],
-            [25, gh],
-            [0, gh],
-            [0, 0],
-          ]);
-        } else {
-          return lineGenerator([
-            [0, 0],
-            [25, 0],
-            [gw, 0],
-            [gw + 25, gh / 2],
-            [gw, gh],
-            [25, gh],
-            [0, gh],
-            [25, gh / 2],
-            [0, 0],
-          ]);
-        }
-      })
+      .attr(
+        'd',
+        lineGenerator([
+          [0, 0],
+          [25, 0],
+          [gw, 0],
+          [gw + 25, gh / 2],
+          [gw, gh],
+          [25, gh],
+          [0, gh],
+          [0, 0],
+        ])
+      )
       .style('fill', 'none')
       .style('stroke', 'black')
       .style('stroke-width', 3);
-    if (newEty[i]) {
-      for (let j = 0; j < newEty[i].length; j++) {
-        g.append('text')
-          .text(newEty[i][j])
-          .attr('x', i === 0 ? 18 : 25)
-          .attr('y', j * 25)
-          .attr('dx', 12)
-          .attr('dy', 20);
-      }
-    } else {
-      g.append('text')
-        .text(data.headword)
-        .attr('x', 25)
-        .attr('y', 25)
-        .attr('dx', 12)
-        .attr('dy', 20);
-    }
-    totalLength += gw;
+
+    g.append('text')
+      .text('No etymology')
+      .attr('x', 20)
+      .attr('y', gh / 2 + 3);
   }
 }
 

@@ -8,6 +8,8 @@ const etymologicalStep = document.getElementById('etymologicalStep');
 const noEtymology = document.getElementById('noEtymology');
 const submitForm = document.getElementById('submitForm');
 
+let withEtymology = true;
+
 // Event on the "Add a meaning" button
 addSense.addEventListener('click', createSense);
 
@@ -137,6 +139,7 @@ function proceedWithNoEtymology(event) {
   noEtymology.innerHTML = 'I wish to proceed with etymology';
   noEtymology.removeEventListener('click', proceedWithNoEtymology);
   noEtymology.addEventListener('click', proceedWithEtymology);
+  withEtymology = false;
 }
 
 function proceedWithEtymology(event) {
@@ -145,6 +148,7 @@ function proceedWithEtymology(event) {
   noEtymology.innerHTML = 'I wish to proceed without etymology';
   noEtymology.removeEventListener('click', proceedWithEtymology);
   noEtymology.addEventListener('click', proceedWithNoEtymology);
+  withEtymology = true;
 }
 
 // Add a sense/definition to the form
@@ -527,33 +531,39 @@ function confirmForm(event) {
 
   if (headwordInput.value != '') {
     if (definitionTexts.length > 0) {
-      let etymology = [[], [], [], []];
-      const etymologyPeriods = document.querySelectorAll('.period');
-      const etymologyForms = document.querySelectorAll('.etymologicalForm');
-      const etymologyDefinitions = document.querySelectorAll(
-        '.shortDefinition'
-      );
-      const etymologyConfidence = document.querySelectorAll('.etyConfidence');
-      etymologyPeriods.forEach((el) => etymology[0].push(el.value));
-      etymologyForms.forEach((el) => etymology[1].push(el.value));
-      etymologyDefinitions.forEach((el) => etymology[2].push(el.value));
-      etymologyConfidence.forEach((el) => etymology[3].push(el.checked));
-      const etymologicalData = [];
-      for (let c = 0; c < etymology[0].length; c++) {
-        const data = [];
-        for (let i = 0; i < etymology.length; i++) {
-          for (let j = 0; j < etymology[i].length; j++) {
-            if (j === c) {
-              data.push(etymology[i][j]);
+      let etymologicalData;
+      if (withEtymology) {
+        let etymology = [[], [], [], []];
+        const etymologyPeriods = document.querySelectorAll('.period');
+        const etymologyForms = document.querySelectorAll('.etymologicalForm');
+        const etymologyDefinitions = document.querySelectorAll(
+          '.shortDefinition'
+        );
+        const etymologyConfidence = document.querySelectorAll('.etyConfidence');
+        etymologyPeriods.forEach((el) => etymology[0].push(el.value));
+        etymologyForms.forEach((el) => etymology[1].push(el.value));
+        etymologyDefinitions.forEach((el) => etymology[2].push(el.value));
+        etymologyConfidence.forEach((el) => etymology[3].push(el.checked));
+
+        etymologicalData = [];
+        for (let c = 0; c < etymology[0].length; c++) {
+          const data = [];
+          for (let i = 0; i < etymology.length; i++) {
+            for (let j = 0; j < etymology[i].length; j++) {
+              if (j === c) {
+                data.push(etymology[i][j]);
+              }
             }
           }
+          etymologicalData.push({
+            period: data[0],
+            form: data[1],
+            def: data[2],
+            certitude: data[3],
+          });
         }
-        etymologicalData.push({
-          period: data[0],
-          form: data[1],
-          def: data[2],
-          certitude: data[3],
-        });
+      } else {
+        etymologicalData = false;
       }
 
       let missingField = false;
