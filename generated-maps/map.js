@@ -16,7 +16,7 @@ if (data.dataFormat === 'cent') {
     }
   });
 } else if (data.dataFormat === 'dec') {
-  const r = range10(findCent(earliest), findCent(latest) + 200);
+  const r = range10(findCent(earliest), findCent(latest) + 100);
 
   definitions.forEach((def) => {
     if (earliest < 0) {
@@ -285,13 +285,13 @@ function drawData(elements = definitions, allowUpdate = false) {
     data.dataFormat === 'cent'
       ? containerWidth /
         (range(earliest, latest).includes(0)
-          ? range(earliest, latest).length - 1
-          : range(earliest, latest).length)
+          ? range(earliest, latest + 1).length - 1
+          : range(earliest, latest + 1).length)
       : data.dataFormat === 'dec'
       ? containerWidth /
-        (range10(findCent(earliest), findCent(latest) + 200).includes(0)
-          ? range10(findCent(earliest), findCent(latest) + 200).length // - 1
-          : range10(findCent(earliest), findCent(latest) + 200).length)
+        (range10(findCent(earliest), findCent(latest) + 100).includes(0)
+          ? range10(findCent(earliest), findCent(latest) + 100).length // - 1
+          : range10(findCent(earliest), findCent(latest) + 100).length)
       : 10;
 
   let tip = d3
@@ -477,9 +477,11 @@ function addElems(elements, cW, cP, tip) {
       tip
         // TODO: adapt for centuries
         .html(() => {
-          const r = range10(findCent(earliest), findCent(latest) + 200);
-          // r.splice(r.indexOf(0), 1);
-          return r[d.emergence] + 's: ' + d.attestation;
+          if (data.dataFormat === 'dec') {
+            return r[d.emergence] + 's: ' + d.attestation;
+          } else {
+            return d.attestation;
+          }
         })
         .style('left', d3.event.pageX + 10 + 'px')
         .style('top', d3.event.pageY - 15 + 'px');
@@ -607,10 +609,10 @@ function drawScale(earliest, latest, cW) {
   let centuries;
   if (data.dataFormat == 'cent') {
     // recode data for centuries
-    centuries = range(earliest, latest);
+    centuries = range(earliest, latest + 1);
   } else if (data.dataFormat == 'dec') {
     // recode data for decades
-    const decadesForScale = range10(findCent(earliest), findCent(latest) + 200);
+    const decadesForScale = range10(findCent(earliest), findCent(latest) + 100);
     decadesForScale.splice(decadesForScale.indexOf(0), 1);
     centuries = [
       ...new Set(decadesForScale.map((dec) => centuryFromYear(dec))),
