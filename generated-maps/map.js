@@ -11,7 +11,9 @@ if (data.dataFormat === 'cent') {
     if (def.emergence > 0) {
       def.emergence -= 1;
     }
-    def.emergence += Math.abs(earliest);
+    if (earliest < 0) {
+      def.emergence += Math.abs(earliest);
+    }
   });
 }
 
@@ -230,7 +232,7 @@ function drawEtymology() {
           .text(data.headword)
           .attr('x', 20)
           .attr('y', gh / 2 + 3)
-          .attr('dx', 22);
+          .attr('dx', i == 0 ? 12.5 : 22);
       }
       totalLength += gw;
     }
@@ -270,9 +272,15 @@ function drawData(elements = definitions, allowUpdate = false) {
   containerWidth =
     Number(containerWidth.substring(0, containerWidth.length - 2)) -
     margin.right;
-  let containerPortion = Math.floor(
-    containerWidth / range(earliest, latest).length
-  );
+  let containerPortion =
+    data.dataFormat === 'cent'
+      ? Math.floor(
+          containerWidth /
+            (range(earliest, latest).includes(0)
+              ? range(earliest, latest).length - 1
+              : range(earliest, latest).length)
+        )
+      : 0;
 
   let tip = d3
     .select('body')
@@ -356,7 +364,7 @@ function drawData(elements = definitions, allowUpdate = false) {
       (exit) => exit.transition().duration(250).style('opacity', 0).remove()
     );
 
-  drawScale(earliest, latest, containerPortion);
+  drawScale(earliest, latest, containerPortion, containerWidth);
 }
 
 function drawConstructsOrGroups(elements, cW, cP, lines) {
@@ -578,7 +586,7 @@ function addRelationshipInfo(relationships, elements) {
   return elements;
 }
 
-function drawScale(earliest, latest, containerPortion) {
+function drawScale(earliest, latest, cP, cW) {
   if (data.dataFormat == 'cent') {
     const centuries = range(earliest, latest);
     const romanDates = [];
@@ -594,7 +602,7 @@ function drawScale(earliest, latest, containerPortion) {
       }
     });
 
-    romanDates.push('');
+    //romanDates.push('');
 
     scale
       .selectAll('path')
@@ -602,24 +610,21 @@ function drawScale(earliest, latest, containerPortion) {
       .enter()
       .append('path')
       .attr('class', 'scale')
-      .attr('d', (_, i) => {
-        const width = containerPortion + 0.5;
+      .attr('d', (d, i) => {
+        const width = cP + 0.5;
         const x = i * width;
         if (i === 0) {
           return lineGenerator([
             [x, 0],
-            [x + 10, 0],
             [x + width, 0],
             [x + width + 10, 15],
             [x + width, 30],
-            [x + 10, 30],
             [x, 30],
             [x, 0],
           ]);
         } else {
           return lineGenerator([
             [x, 0],
-            [x + 10, 0],
             [x + width, 0],
             [x + width + 10, 15],
             [x + width, 30],
@@ -631,9 +636,11 @@ function drawScale(earliest, latest, containerPortion) {
         }
       })
       .attr('height', 30)
-      .attr('x', (_, i) => i * (containerPortion + 0.5))
+      .attr('x', (_, i) => i * (cP + 0.5))
       .attr('y', 0)
-      .style('fill', (_, i) => `rgb(45, ${100 + 8 * i}, ${160 + 9 * i})`);
+      .style('fill', (_, i) => `rgb(45, ${100 + 8 * i}, ${160 + 9 * i})`)
+      .style('stroke', (_, i) => `rgb(45, ${100 + 8 * i}, ${160 + 9 * i})`)
+      .style('stroke-width', 2);
 
     scale
       .selectAll('text')
@@ -642,7 +649,7 @@ function drawScale(earliest, latest, containerPortion) {
       .append('text')
       .attr('class', 'scale')
       .text((d) => d)
-      .attr('x', (_, i) => i * (containerPortion + 0.5))
+      .attr('x', (_, i) => i * (cP + 0.5))
       .attr('y', 0)
       .attr('dx', 15)
       .attr('dy', 22)
