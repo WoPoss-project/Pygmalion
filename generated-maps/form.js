@@ -838,9 +838,14 @@ function centuryFromYear(year) {
 }
 
 function decadeFromYear(year) {
-  const arr = year.split('');
-  arr[arr.length - 1] = '0';
-  const decade = Number(arr.join(''));
+  let decade = Number(year);
+  while (decade % 10 != 0) {
+    if (decade < 0) {
+      decade--;
+    } else {
+      decade++;
+    }
+  }
   return decade;
 }
 

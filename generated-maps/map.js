@@ -16,7 +16,8 @@ if (data.dataFormat === 'cent') {
     }
   });
 } else if (data.dataFormat === 'dec') {
-  const r = range10(earliest, latest + 150);
+  const r = range10(findCent(earliest), findCent(latest) + 200);
+
   definitions.forEach((def) => {
     if (earliest < 0) {
       def.emergence = r.indexOf(def.emergence);
@@ -287,8 +288,11 @@ function drawData(elements = definitions, allowUpdate = false) {
           ? range(earliest, latest).length - 1
           : range(earliest, latest).length)
       : data.dataFormat === 'dec'
-      ? containerWidth / range10(earliest, latest + 150).length
-      : 0;
+      ? containerWidth /
+        (range10(findCent(earliest), findCent(latest) + 200).includes(0)
+          ? range10(findCent(earliest), findCent(latest) + 200).length // - 1
+          : range10(findCent(earliest), findCent(latest) + 200).length)
+      : 10;
 
   let tip = d3
     .select('body')
@@ -472,9 +476,11 @@ function addElems(elements, cW, cP, tip) {
       tip.transition().duration(50).style('opacity', 1);
       tip
         // TODO: adapt for centuries
-        .html(
-          range10(earliest, latest + 150)[d.emergence] + 's: ' + d.attestation
-        )
+        .html(() => {
+          const r = range10(findCent(earliest), findCent(latest) + 200);
+          // r.splice(r.indexOf(0), 1);
+          return r[d.emergence] + 's: ' + d.attestation;
+        })
         .style('left', d3.event.pageX + 10 + 'px')
         .style('top', d3.event.pageY - 15 + 'px');
     })
@@ -604,8 +610,11 @@ function drawScale(earliest, latest, cW) {
     centuries = range(earliest, latest);
   } else if (data.dataFormat == 'dec') {
     // recode data for decades
-    const decades = range10(earliest, latest + 150);
-    centuries = [...new Set(decades.map((dec) => centuryFromYear(dec)))];
+    const decadesForScale = range10(findCent(earliest), findCent(latest) + 200);
+    decadesForScale.splice(decadesForScale.indexOf(0), 1);
+    centuries = [
+      ...new Set(decadesForScale.map((dec) => centuryFromYear(dec))),
+    ];
   }
 
   const cP =
@@ -862,6 +871,17 @@ function centuryFromYear(year) {
   } else {
     return -1 * century;
   }
+}
+
+function findCent(dec) {
+  while (dec % 100 != 0) {
+    if (dec < 0) {
+      dec -= 10;
+    } else {
+      dec += 10;
+    }
+  }
+  return dec;
 }
 
 if (data) {
