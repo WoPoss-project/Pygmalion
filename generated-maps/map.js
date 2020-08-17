@@ -19,9 +19,12 @@ if (data.dataFormat === 'cent') {
   const r = range10(findCent(earliest), findCent(latest) + 100);
 
   definitions.forEach((def) => {
-    if (earliest < 0) {
-      def.emergence = r.indexOf(def.emergence);
-    }
+    def.emergence = r.indexOf(def.emergence);
+  });
+} else {
+  const r = range(findCent(earliest), findCent(latest) + 100);
+  definitions.forEach((def) => {
+    def.emergence = r.indexOf(def.emergence);
   });
 }
 
@@ -292,7 +295,10 @@ function drawData(elements = definitions, allowUpdate = false) {
         (range10(findCent(earliest), findCent(latest) + 100).includes(0)
           ? range10(findCent(earliest), findCent(latest) + 100).length // - 1
           : range10(findCent(earliest), findCent(latest) + 100).length)
-      : 10;
+      : containerWidth /
+        (range(findCent(earliest), findCent(latest) + 100).includes(0)
+          ? range(findCent(earliest), findCent(latest) + 100).length // - 1
+          : range(findCent(earliest), findCent(latest) + 100).length);
 
   let tip = d3
     .select('body')
@@ -477,10 +483,20 @@ function addElems(elements, cW, cP, tip) {
       tip
         // TODO: adapt for centuries
         .html(() => {
-          if (data.dataFormat === 'dec') {
-            return r[d.emergence] + 's: ' + d.attestation;
-          } else {
+          const r =
+            data.dataFormat != 'cent'
+              ? data.dataFormat === 'dec'
+                ? range10(findCent(earliest), findCent(latest) + 100)
+                : range(findCent(earliest), findCent(latest) + 100)
+              : 0;
+          if (data.dataFormat === 'cent') {
             return d.attestation;
+          } else {
+            return (
+              r[d.emergence] +
+              (data.dataFormat === 'dec' ? 's: ' : ': ') +
+              d.attestation
+            );
           }
         })
         .style('left', d3.event.pageX + 10 + 'px')
@@ -613,10 +629,14 @@ function drawScale(earliest, latest, cW) {
   } else if (data.dataFormat == 'dec') {
     // recode data for decades
     const decadesForScale = range10(findCent(earliest), findCent(latest) + 100);
-    decadesForScale.splice(decadesForScale.indexOf(0), 1);
+    // decadesForScale.splice(decadesForScale.indexOf(0), 1);
     centuries = [
       ...new Set(decadesForScale.map((dec) => centuryFromYear(dec))),
     ];
+  } else {
+    const yearsForScale = range(findCent(earliest), findCent(latest) + 100);
+    // decadesForScale.splice(decadesForScale.indexOf(0), 1);
+    centuries = [...new Set(yearsForScale.map((dec) => centuryFromYear(dec)))];
   }
 
   const cP =
@@ -876,13 +896,24 @@ function centuryFromYear(year) {
 }
 
 function findCent(dec) {
-  while (dec % 100 != 0) {
-    if (dec < 0) {
-      dec -= 10;
-    } else {
-      dec += 10;
+  if (dec % 10 == 0) {
+    while (dec % 100 != 0) {
+      if (dec < 0) {
+        dec -= 10;
+      } else {
+        dec += 10;
+      }
+    }
+  } else {
+    while (dec % 100 != 0) {
+      if (dec < 0) {
+        dec -= 1;
+      } else {
+        dec += 1;
+      }
     }
   }
+
   return dec;
 }
 
