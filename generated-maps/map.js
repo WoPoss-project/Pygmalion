@@ -26,10 +26,11 @@ if (data.dataFormat === 'cent') {
     def.emergence = r.indexOf(def.emergence);
   });
 } else {
-  const r = range(findCent(earliest), findCent(latest) + 100);
-  console.log(findCent(earliest), findCent(latest), latest);
+  const r = range(
+    earliest > 0 && latest > 0 ? findCent(earliest) - 99 : findCent(earliest),
+    findCent(latest) + 100
+  );
   definitions.forEach((def) => {
-    console.log(def.emergence);
     def.emergence = r.indexOf(def.emergence);
     def.disparition = r.indexOf(def.disparition);
   });
@@ -306,7 +307,7 @@ function drawData(elements = definitions, allowUpdate = false) {
       : containerWidth /
         (range(findCent(earliest), findCent(latest) + 100).includes(0)
           ? range(findCent(earliest), findCent(latest) + 100).length - 1
-          : range(findCent(earliest), findCent(latest) + 100).length);
+          : range(findCent(earliest) - 99, findCent(latest) + 100).length);
 
   let tip = d3
     .select('body')
@@ -499,7 +500,12 @@ function addElems(elements, cW, cP, tip) {
             data.dataFormat != 'cent'
               ? data.dataFormat === 'dec'
                 ? range10(findCent(earliest), findCent(latest) + 100)
-                : range(findCent(earliest), findCent(latest) + 100)
+                : range(
+                    earliest > 0 && latest > 0
+                      ? findCent(earliest) - 99
+                      : findCent(earliest),
+                    findCent(latest) + 100
+                  )
               : 0;
           if (data.dataFormat === 'cent') {
             return d.attestation;
@@ -648,7 +654,10 @@ function drawScale(earliest, latest, cW) {
       ...new Set(decadesForScale.map((dec) => centuryFromYear(dec))),
     ];
   } else {
-    const yearsForScale = range(findCent(earliest), findCent(latest) + 100);
+    const yearsForScale = range(
+      earliest > 0 && latest > 0 ? findCent(earliest) - 99 : findCent(earliest),
+      findCent(latest) + 100
+    );
     // decadesForScale.splice(decadesForScale.indexOf(0), 1);
     centuries = [...new Set(yearsForScale.map((dec) => centuryFromYear(dec)))];
   }
@@ -926,7 +935,7 @@ function findCent(dec) {
         dec += 1;
       }
     }
-    dec = dec < 0 ? dec : dec;
+    //dec = dec < 0 ? dec : dec;
   }
 
   return dec;
