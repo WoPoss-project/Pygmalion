@@ -553,7 +553,8 @@ function updateElems(elements, cW, cP, elementsData, displayRels, lines) {
 
     const offset =
       lines[elementIndex] * 30 + wrap(element.meaning, cW, cP, element) * 15;
-    const x0 = cW + 10;
+    const x0 =
+      element.disparition != -1 ? element.disparition * cP + 10 : cW + 10;
     const y0 = elementIndex * 37 + offset;
 
     relationshipGroup.selectAll('.rel').remove();
@@ -579,7 +580,9 @@ function updateElems(elements, cW, cP, elementsData, displayRels, lines) {
         const modifier = indexes[i];
         const lineHeight = wrap(d.meaning, cW, cP, d);
         const off = lines[i] * 30 + lineHeight * 15;
-        const x1 = x0 + (Math.abs(modifier) * margin.right) / indexes.length;
+        const x1 =
+          cW + 10 + (Math.abs(modifier) * margin.right) / indexes.length;
+        const x2 = d.disparition != -1 ? d.disparition * cP + 10 : cW + 10;
         const y1 = y0 - offset + modifier * 37 + off;
         const points =
           i != elementIndex
@@ -587,7 +590,7 @@ function updateElems(elements, cW, cP, elementsData, displayRels, lines) {
                 [x0, y0],
                 [x1, y0],
                 [x1, y1],
-                [x0, y1],
+                [x2, y1],
               ]
             : [[x0, y0]];
         return lineGenerator(points);
