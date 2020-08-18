@@ -27,7 +27,7 @@ if (data.dataFormat === 'cent') {
   });
 } else {
   const r = range(findCent(earliest), findCent(latest) + 100);
-  console.log(findCent(earliest));
+  console.log(findCent(earliest), findCent(latest), latest);
   definitions.forEach((def) => {
     console.log(def.emergence);
     def.emergence = r.indexOf(def.emergence);
@@ -926,7 +926,7 @@ function findCent(dec) {
         dec += 1;
       }
     }
-    dec = dec < 0 ? dec : dec - 99;
+    dec = dec < 0 ? dec : dec;
   }
 
   return dec;
