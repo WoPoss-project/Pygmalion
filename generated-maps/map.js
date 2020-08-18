@@ -911,9 +911,15 @@ function wrap(text, cW, cP, r = 'add') {
           .attr('x', x)
           .attr('y', y)
           .attr('dy', dy + 'em'),
-        emergence = text.data()[0].emergence;
+        emergence = text.data()[0].emergence,
+        disparition = text.data()[0].disparition;
 
-      const width = cW - emergence * cP;
+      let width = cW - emergence * cP;
+      if (disparition != -1 && !isNaN(disparition)) {
+        const end = cW - disparition * cP;
+        width = width - end;
+      }
+
       while ((word = words.pop())) {
         line.push(word);
         tspan.text(line.join(' '));
@@ -952,7 +958,12 @@ function wrap(text, cW, cP, r = 'add') {
       line = [],
       lineNumber = 0,
       emergence = r.emergence,
-      width = cW - (emergence * cP + 10);
+      disparition = r.disparition;
+    let width = cW - emergence * cP;
+    if (disparition != -1 && !isNaN(disparition)) {
+      const end = cW - disparition * cP;
+      width = width - end;
+    }
     while ((word = words.pop())) {
       line.push(word);
       if (line.join(' ').length * 6 > width) {
