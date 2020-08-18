@@ -532,7 +532,19 @@ function addElems(elements, cW, cP, tip) {
                   )
               : 0;
           if (data.dataFormat === 'cent') {
-            return d.attestation;
+            const em = d.emergence - Math.abs(earliest);
+            const dis = d.disparition - Math.abs(earliest);
+            return (
+              (em < 0 ? `${romanize(em)} BC` : romanize(em)) +
+              ' to ' +
+              (isNaN(d.disparition)
+                ? 'present'
+                : dis < 0
+                ? `${romanize(dis)} BC`
+                : romanize(dis)) +
+              ': ' +
+              d.attestation
+            );
           } else {
             return (
               r[d.emergence] +
