@@ -2,10 +2,11 @@ const data = JSON.parse(localStorage.getItem('card'));
 const definitions = prepareDefinitions();
 
 const earliest = d3.min(definitions, (d) => d.emergence);
+const emergenceMax = d3.max(definitions, (d) => d.emergence);
+definitions.forEach((d) => (d.disparition = +d.disparition));
+const disparitionMax = d3.max(definitions, (d) => d.disparition);
 const latest = d3.max(definitions, (d) =>
-  d.disparition != 'None' && d.emergence > d.disparition
-    ? d.emergence
-    : d.disparition
+  emergenceMax > disparitionMax ? d.emergence : d.disparition
 );
 
 const lineGenerator = d3.line();
@@ -20,7 +21,10 @@ if (data.dataFormat === 'cent') {
     }
   });
 } else if (data.dataFormat === 'dec') {
-  const r = range10(findCent(earliest), findCent(latest) + 100);
+  const r = range10(
+    earliest > 0 && latest > 0 ? findCent(earliest) - 100 : findCent(earliest),
+    findCent(latest) + 100
+  );
 
   definitions.forEach((def) => {
     def.emergence = r.indexOf(def.emergence);
@@ -304,7 +308,12 @@ function drawData(elements = definitions, allowUpdate = false) {
       ? containerWidth /
         (range10(findCent(earliest), findCent(latest) + 100).includes(0)
           ? range10(findCent(earliest), findCent(latest) + 100).length - 1
-          : range10(findCent(earliest), findCent(latest) + 100).length)
+          : range10(
+              earliest > 0 && latest > 0
+                ? findCent(earliest) - 100
+                : findCent(earliest),
+              findCent(latest) + 100
+            ).length)
       : containerWidth /
         (range(findCent(earliest), findCent(latest) + 100).includes(0)
           ? range(findCent(earliest), findCent(latest) + 100).length - 1
@@ -505,7 +514,12 @@ function addElems(elements, cW, cP, tip) {
           const r =
             data.dataFormat != 'cent'
               ? data.dataFormat === 'dec'
-                ? range10(findCent(earliest), findCent(latest) + 100)
+                ? range10(
+                    earliest > 0 && latest > 0
+                      ? findCent(earliest) - 100
+                      : findCent(earliest),
+                    findCent(latest) + 100
+                  )
                 : range(
                     earliest > 0 && latest > 0
                       ? findCent(earliest) - 99
@@ -661,7 +675,12 @@ function drawScale(earliest, latest, cW) {
     centuries = range(earliest, latest + 1);
   } else if (data.dataFormat == 'dec') {
     // recode data for decades
-    const decadesForScale = range10(findCent(earliest), findCent(latest) + 100);
+    const decadesForScale = range10(
+      earliest > 0 && latest > 0
+        ? findCent(earliest) - 100
+        : findCent(earliest),
+      findCent(latest) + 100
+    );
     // decadesForScale.splice(decadesForScale.indexOf(0), 1);
     centuries = [
       ...new Set(decadesForScale.map((dec) => centuryFromYear(dec))),
