@@ -628,22 +628,31 @@ function updateElems(elements, cW, cP, elementsData, displayRels, lines) {
 }
 
 function newDisplay(event) {
-  const keptIds = [
-    event.id,
-    ...Object.values(event.relationships)
-      .reduce((a, b) => a.concat(b))
-      .map((r) => r.rel),
-  ];
-  const keptElements = [];
-  keptIds.forEach((id) => {
-    definitions.forEach((def) => {
-      if (Object.values(def).includes(id)) {
-        keptElements.push(def);
-      }
+  if (event.relationships) {
+    const keptIds = [
+      event.id,
+      ...Object.values(event.relationships)
+        .reduce((a, b) => a.concat(b))
+        .map((r) => r.rel),
+    ];
+    const keptElements = [];
+    keptIds.forEach((id) => {
+      definitions.forEach((def) => {
+        if (Object.values(def).includes(id)) {
+          keptElements.push(def);
+        }
+      });
     });
-  });
-  console.log(keptElements);
-  drawData(addRelationshipInfo(event.relationships, keptElements), true);
+    console.log(keptElements);
+    drawData(addRelationshipInfo(event.relationships, keptElements), true);
+  } else {
+    Swal.fire({
+      icon: 'error',
+      title: 'No relationship data',
+      text:
+        'Please make sure you have specified relationships between the meanings.',
+    });
+  }
 }
 
 function addRelationshipInfo(relationships, elements) {
