@@ -2,7 +2,11 @@ const data = JSON.parse(localStorage.getItem('card'));
 const definitions = prepareDefinitions();
 
 const earliest = d3.min(definitions, (d) => d.emergence);
-const latest = d3.max(definitions, (d) => d.emergence);
+const latest = d3.max(definitions, (d) =>
+  d.disparition != 'None' && d.emergence > d.disparition
+    ? d.emergence
+    : d.disparition
+);
 
 const lineGenerator = d3.line();
 
@@ -23,8 +27,10 @@ if (data.dataFormat === 'cent') {
   });
 } else {
   const r = range(findCent(earliest), findCent(latest) + 100);
+  console.log(definitions);
   definitions.forEach((def) => {
     def.emergence = r.indexOf(def.emergence);
+    def.disparition = r.indexOf(def.disparition);
   });
 }
 
@@ -168,6 +174,7 @@ function modalityFormatting(meaning, modalitiy) {
     certainty: modalitiy.certainty,
     attestation: modalitiy.attestation,
     relationships: modalitiy.relationships,
+    disparition: modalitiy.disparition,
   };
 }
 
@@ -297,7 +304,7 @@ function drawData(elements = definitions, allowUpdate = false) {
           : range10(findCent(earliest), findCent(latest) + 100).length)
       : containerWidth /
         (range(findCent(earliest), findCent(latest) + 100).includes(0)
-          ? range(findCent(earliest), findCent(latest) + 100).length // - 1
+          ? range(findCent(earliest), findCent(latest) + 100).length - 1
           : range(findCent(earliest), findCent(latest) + 100).length);
 
   let tip = d3
@@ -455,7 +462,11 @@ function addElems(elements, cW, cP, tip) {
   elements
     .append('path')
     .attr('d', (d) => {
-      const width = cW - d.emergence * cP;
+      let width = cW - d.emergence * cP;
+      if (d.disparition != -1) {
+        const end = cW - d.disparition * cP;
+        width = width - end;
+      }
       return lineGenerator([
         [0, 0],
         [0 + width, 0],
@@ -494,6 +505,8 @@ function addElems(elements, cW, cP, tip) {
           } else {
             return (
               r[d.emergence] +
+              (data.dataFormat === 'dec' ? 's - ' : '-') +
+              (d.disparition != -1 ? r[d.disparition] : 'present') +
               (data.dataFormat === 'dec' ? 's: ' : ': ') +
               d.attestation
             );
@@ -912,6 +925,7 @@ function findCent(dec) {
         dec += 1;
       }
     }
+    dec = dec < 0 ? dec + 99 : dec - 99;
   }
 
   return dec;
