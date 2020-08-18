@@ -65,7 +65,7 @@ const margin = {
   bottom: 0,
 };
 const width = '100%';
-const height = margin.top * 2 - 5 + definitions.length * 37;
+const height = margin.top * 2.5 - 5 + definitions.length * 37;
 
 const svg = d3
   .select('#map')
@@ -106,31 +106,31 @@ svg
 const legend = svg
   .append('g')
   .attr('class', 'legend')
-  .attr('transform', `translate(${margin.left * 3}, ${margin.top / 4})`);
+  .attr('transform', `translate(${margin.left}, 0)`);
 
 const etymology = svg
   .append('g')
   .attr('class', 'etymology')
-  .attr('transform', `translate(${margin.left}, ${margin.top / 4})`);
+  .attr('transform', `translate(${margin.left}, ${margin.top + 5})`);
 
 const relationshipGroup = svg
   .append('g')
   .attr('class', 'relationship')
-  .attr('transform', `translate(${margin.left}, ${margin.top * 2 + 15})`);
+  .attr('transform', `translate(${margin.left}, ${margin.top * 2.5 + 15})`);
 
 const constructsAndGroups = svg
   .append('g')
   .attr('class', 'relationship')
-  .attr('transform', `translate(${margin.left}, ${margin.top * 2})`);
+  .attr('transform', `translate(${margin.left}, ${margin.top * 2.5})`);
 
 const meaningsGroup = svg
   .append('g')
   .attr('class', 'meanings')
-  .attr('transform', `translate(${margin.left}, ${margin.top * 2})`);
+  .attr('transform', `translate(${margin.left}, ${margin.top * 2.5})`);
 
 const scale = svg
   .append('g')
-  .attr('transform', `translate(${margin.left}, ${margin.top * 1.5})`);
+  .attr('transform', `translate(${margin.left}, ${margin.top * 2})`);
 
 function basicDisplay() {
   const options = [
@@ -182,6 +182,50 @@ function basicDisplay() {
     .attr('y', 2 * 25)
     .attr('dx', 15)
     .attr('dy', 10);
+
+  legend
+    .append('path')
+    .attr(
+      'd',
+      lineGenerator([
+        [420, 45],
+        [440, 45],
+      ])
+    )
+    .style('fill', 'none')
+    .style('stroke', 'black')
+    .style('stroke-width', 2)
+    .style('stroke-dasharray', 0);
+
+  legend
+    .append('text')
+    .text('Semantic relation')
+    .attr('x', 420)
+    .attr('y', 45)
+    .attr('dx', 25)
+    .attr('dy', 3.5);
+
+  legend
+    .append('path')
+    .attr(
+      'd',
+      lineGenerator([
+        [420, 65],
+        [440, 65],
+      ])
+    )
+    .style('fill', 'none')
+    .style('stroke', 'black')
+    .style('stroke-width', 2)
+    .style('stroke-dasharray', 4);
+
+  legend
+    .append('text')
+    .text('Hypothetical relation')
+    .attr('x', 420)
+    .attr('y', 65)
+    .attr('dx', 25)
+    .attr('dy', 3.5);
 
   drawEtymology();
   drawData();
@@ -833,7 +877,7 @@ function getLines(elements, cW, cP) {
 
   let total = 0;
   lines.forEach((l) => (total += (l + 1) * 37));
-  const newHeight = margin.top * 2 - 5 + total;
+  const newHeight = margin.top * 2.5 - 5 + total;
 
   svg.transition().duration(250).attr('height', newHeight);
 
