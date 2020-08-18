@@ -462,12 +462,9 @@ function drawConstructsOrGroups(elements, cW, cP, lines) {
 }
 
 function addElems(elements, cW, cP, tip) {
-  const r = range10(findCent(earliest), findCent(latest) + 100);
-  console.log(r);
   elements
     .append('path')
     .attr('d', (d) => {
-      console.log(d.emergence);
       let width = cW - d.emergence * cP;
       if (d.disparition != -1) {
         const end = cW - d.disparition * cP;
@@ -518,7 +515,11 @@ function addElems(elements, cW, cP, tip) {
               r[d.emergence] +
               (data.dataFormat === 'dec' ? 's to ' : ' to ') +
               (d.disparition != -1 ? r[d.disparition] : 'present') +
-              (data.dataFormat === 'dec' ? 's: ' : ': ') +
+              (data.dataFormat === 'dec'
+                ? d.disparition != -1
+                  ? 's: '
+                  : ': '
+                : ': ') +
               d.attestation
             );
           }
