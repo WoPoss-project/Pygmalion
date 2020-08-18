@@ -15,9 +15,11 @@ if (data.dataFormat === 'cent') {
   definitions.forEach((def) => {
     if (def.emergence > 0) {
       def.emergence -= 1;
+      def.disparition -= 1;
     }
     if (earliest < 0) {
       def.emergence += Math.abs(earliest);
+      def.disparition += Math.abs(earliest);
     }
   });
 } else if (data.dataFormat === 'dec') {
@@ -480,7 +482,7 @@ function addElems(elements, cW, cP, tip) {
     .append('path')
     .attr('d', (d) => {
       let width = cW - d.emergence * cP;
-      if (d.disparition != -1) {
+      if (d.disparition != -1 && !isNaN(d.disparition)) {
         const end = cW - d.disparition * cP;
         width = width - end;
       }
