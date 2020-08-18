@@ -512,7 +512,7 @@ function addElems(elements, cW, cP, tip) {
           } else {
             return (
               r[d.emergence] +
-              (data.dataFormat === 'dec' ? 's - ' : '-') +
+              (data.dataFormat === 'dec' ? 's to ' : ' to ') +
               (d.disparition != -1 ? r[d.disparition] : 'present') +
               (data.dataFormat === 'dec' ? 's: ' : ': ') +
               d.attestation
