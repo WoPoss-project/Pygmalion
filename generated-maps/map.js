@@ -1,5 +1,18 @@
 const data = JSON.parse(localStorage.getItem('card'));
 const definitions = prepareDefinitions();
+const select = document.getElementById('mode');
+let selectMode = select.value;
+
+select.addEventListener('change', (event) => {
+  const value = event.target.value;
+  selectMode = value;
+  const elements = meaningsGroup.selectAll('g').data();
+  drawData(
+    elements,
+    elements.length < definitions.length ? true : false,
+    value
+  );
+});
 
 const earliest = d3.min(definitions, (d) => d.emergence);
 const emergenceMax = d3.max(definitions, (d) => d.emergence);
@@ -295,40 +308,26 @@ function drawEtymology() {
   }
 }
 
-function drawData(elements = definitions, allowUpdate = false) {
-  meaningsGroup.style('width', (w / 100) * 80);
-  let containerWidth = meaningsGroup.style('width');
-  containerWidth = Math.floor(
-    Number(containerWidth.substring(0, containerWidth.length - 2)) -
-      margin.right
-  );
+function sortElements(elements, mode) {
+  elements.sort((a, b) => {
+    const compareConstruct = (a, b) => (a < b ? -1 : b < a ? 1 : 0);
+    const compareDate = (a, b) => Math.sign(a - b);
 
-  let containerPortion =
-    data.dataFormat === 'cent'
-      ? containerWidth /
-        (range(earliest, latest).includes(0)
-          ? range(earliest, latest + 1).length - 1
-          : range(earliest, latest + (earliest > 0 && latest > 0 ? 1 : 0))
-              .length)
-      : data.dataFormat === 'dec'
-      ? containerWidth /
-        (range10(findCent(earliest), findCent(latest) + 100).includes(0)
-          ? range10(findCent(earliest), findCent(latest) + 100).length - 1
-          : range10(
-              earliest > 0 && latest > 0
-                ? findCent(earliest) - 100
-                : findCent(earliest),
-              findCent(latest) + 100
-            ).length)
-      : containerWidth /
-        (range(findCent(earliest), findCent(latest) + 100).includes(0)
-          ? range(findCent(earliest), findCent(latest) + 100).length - 1
-          : range(
-              earliest > 0 && latest > 0
-                ? findCent(earliest) - 99
-                : findCent(earliest),
-              findCent(latest) + 100
-            ).length);
+    return (
+      compareConstruct(a[mode], b[mode]) ||
+      compareDate(a.emergence, b.emergence)
+    );
+  });
+  return elements;
+}
+
+function drawData(
+  elements = definitions,
+  allowUpdate = false,
+  mode = selectMode
+) {
+  meaningsGroup.style('width', (w / 100) * 80);
+  const container = getContainerData();
 
   let tip = d3
     .select('body')
@@ -336,38 +335,17 @@ function drawData(elements = definitions, allowUpdate = false) {
     .attr('class', 'tooltip-donut')
     .style('opacity', 0);
 
-  elements.sort((a, b) => {
-    const compareConstruct = (a, b) => (a < b ? -1 : b < a ? 1 : 0);
-    const compareDate = (a, b) => Math.sign(a - b);
+  elements = sortElements(elements, mode);
 
-    return (
-      compareConstruct(a.construct, b.construct) ||
-      compareDate(a.emergence, b.emergence)
-    );
-  });
+  const lines = getLines(elements, container.width, container.portion);
 
-  const lines = elements.map((elem) =>
-    wrap(elem.meaning, containerWidth, containerPortion, elem)
+  drawConstructsOrGroups(
+    elements,
+    container.width,
+    container.portion,
+    lines,
+    mode
   );
-
-  let total = 0;
-  lines.forEach((l) => (total += (l + 1) * 37));
-  const newHeight = margin.top * 2 - 5 + total;
-
-  svg.transition().duration(250).attr('height', newHeight);
-
-  const linesOriginal = [...lines];
-  for (let i = 0; i < lines.length; i++) {
-    const l = linesOriginal[i];
-    const index = i;
-    if (l > 0) {
-      range(index + 1, lines.length - 1).forEach((n) => (lines[n] += l));
-      lines[index] -= l;
-      control = l;
-    }
-  }
-
-  drawConstructsOrGroups(elements, containerWidth, containerPortion, lines);
 
   meaningsGroup
     .selectAll('g')
@@ -381,12 +359,12 @@ function drawData(elements = definitions, allowUpdate = false) {
           .attr(
             'transform',
             (d, i) =>
-              `translate(${d.emergence * containerPortion}, ${
+              `translate(${d.emergence * container.portion}, ${
                 i * 37 + lines[i] * 30
               })`
           )
           .style('opacity', 0)
-          .call(addElems, containerWidth, containerPortion, tip)
+          .call(addElems, container.width, container.portion, tip)
           .call((enter) =>
             enter.transition().duration(250).style('opacity', 1)
           ),
@@ -394,8 +372,8 @@ function drawData(elements = definitions, allowUpdate = false) {
         update
           .call(
             updateElems,
-            containerWidth,
-            containerPortion,
+            container.width,
+            container.portion,
             elements,
             allowUpdate,
             lines
@@ -405,25 +383,25 @@ function drawData(elements = definitions, allowUpdate = false) {
           .attr(
             'transform',
             (d, i) =>
-              `translate(${d.emergence * containerPortion}, ${
+              `translate(${d.emergence * container.portion}, ${
                 i * 37 + lines[i] * 30
               })`
           ),
       (exit) => exit.transition().duration(250).style('opacity', 0).remove()
     );
 
-  drawScale(earliest, latest, containerWidth);
+  drawScale(earliest, latest, container.width);
 }
 
-function drawConstructsOrGroups(elements, cW, cP, lines) {
+function drawConstructsOrGroups(elements, cW, cP, lines, mode) {
   constructsAndGroups.selectAll('path').remove();
   constructsAndGroups.selectAll('text').remove();
-  const dataList = [...new Set(elements.map((el) => el.construct))];
+  const dataList = [...new Set(elements.map((el) => el[mode]))];
   dataList.forEach((group) => {
     if (group != 'None') {
       const indexes = [];
       elements.forEach((el) =>
-        el.construct == group ? indexes.push(elements.indexOf(el)) : false
+        el[mode] == group ? indexes.push(elements.indexOf(el)) : false
       );
       const max = Math.max(...indexes);
       const min = Math.min(...indexes);
@@ -597,7 +575,9 @@ function updateElems(elements, cW, cP, elementsData, displayRels, lines) {
     const offset =
       lines[elementIndex] * 30 + wrap(element.meaning, cW, cP, element) * 15;
     const x0 =
-      element.disparition != -1 ? element.disparition * cP + 10 : cW + 10;
+      element.disparition != -1 && !isNaN(element.disparition)
+        ? element.disparition * cP + 10
+        : cW + 10;
     const y0 = elementIndex * 37 + offset;
 
     relationshipGroup.selectAll('.rel').remove();
@@ -624,8 +604,11 @@ function updateElems(elements, cW, cP, elementsData, displayRels, lines) {
         const lineHeight = wrap(d.meaning, cW, cP, d);
         const off = lines[i] * 30 + lineHeight * 15;
         const x1 =
-          cW + 10 + (Math.abs(modifier) * margin.right) / indexes.length;
-        const x2 = d.disparition != -1 ? d.disparition * cP + 10 : cW + 10;
+          cW + 10 + (Math.abs(modifier) * margin.right) / 1.5 / indexes.length;
+        const x2 =
+          element.disparition != -1 && !isNaN(element.disparition)
+            ? d.disparition * cP + 10
+            : cW + 10;
         const y1 = y0 - offset + modifier * 37 + off;
         const points =
           i != elementIndex
@@ -661,7 +644,11 @@ function newDisplay(event) {
       });
     });
     console.log(keptElements);
-    drawData(addRelationshipInfo(event.relationships, keptElements), true);
+    drawData(
+      addRelationshipInfo(event.relationships, keptElements),
+      true,
+      selectMode
+    );
   } else {
     Swal.fire({
       icon: 'error',
@@ -803,6 +790,64 @@ function prepareDefinitions() {
     }
   });
   return definitions;
+}
+
+function getContainerData() {
+  let containerWidth = meaningsGroup.style('width');
+  containerWidth = Math.floor(
+    Number(containerWidth.substring(0, containerWidth.length - 2)) -
+      margin.right
+  );
+
+  let containerPortion =
+    data.dataFormat === 'cent'
+      ? containerWidth /
+        (range(earliest, latest).includes(0)
+          ? range(earliest, latest + 1).length - 1
+          : range(earliest, latest + (earliest > 0 && latest > 0 ? 1 : 0))
+              .length)
+      : data.dataFormat === 'dec'
+      ? containerWidth /
+        (range10(findCent(earliest), findCent(latest) + 100).includes(0)
+          ? range10(findCent(earliest), findCent(latest) + 100).length - 1
+          : range10(
+              earliest > 0 && latest > 0
+                ? findCent(earliest) - 100
+                : findCent(earliest),
+              findCent(latest) + 100
+            ).length)
+      : containerWidth /
+        (range(findCent(earliest), findCent(latest) + 100).includes(0)
+          ? range(findCent(earliest), findCent(latest) + 100).length - 1
+          : range(
+              earliest > 0 && latest > 0
+                ? findCent(earliest) - 99
+                : findCent(earliest),
+              findCent(latest) + 100
+            ).length);
+  return { width: containerWidth, portion: containerPortion };
+}
+
+function getLines(elements, cW, cP) {
+  const lines = elements.map((elem) => wrap(elem.meaning, cW, cP, elem));
+
+  let total = 0;
+  lines.forEach((l) => (total += (l + 1) * 37));
+  const newHeight = margin.top * 2 - 5 + total;
+
+  svg.transition().duration(250).attr('height', newHeight);
+
+  const linesOriginal = [...lines];
+  for (let i = 0; i < lines.length; i++) {
+    const l = linesOriginal[i];
+    const index = i;
+    if (l > 0) {
+      range(index + 1, lines.length - 1).forEach((n) => (lines[n] += l));
+      lines[index] -= l;
+      control = l;
+    }
+  }
+  return lines;
 }
 
 function wrap(text, cW, cP, r = 'add') {

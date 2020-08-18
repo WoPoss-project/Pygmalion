@@ -142,6 +142,13 @@ div.tooltip-donut {
   display: inline-block;
 }
 
+/* Floating column for inputs: 50% width */
+.col-33 {
+  width: 50%;
+  float: left;
+  margin-top: 6px;
+}
+
 /* Floating column for inputs: 75% width */
 .col-75 {
   float: left;
