@@ -300,12 +300,14 @@ function drawData(elements = definitions, allowUpdate = false) {
     Number(containerWidth.substring(0, containerWidth.length - 2)) -
       margin.right
   );
+
   let containerPortion =
     data.dataFormat === 'cent'
       ? containerWidth /
         (range(earliest, latest).includes(0)
           ? range(earliest, latest + 1).length - 1
-          : range(earliest, latest + 1).length)
+          : range(earliest, latest + (earliest > 0 && latest > 0 ? 1 : 0))
+              .length)
       : data.dataFormat === 'dec'
       ? containerWidth /
         (range10(findCent(earliest), findCent(latest) + 100).includes(0)
