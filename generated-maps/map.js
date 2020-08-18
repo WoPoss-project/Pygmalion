@@ -308,7 +308,12 @@ function drawData(elements = definitions, allowUpdate = false) {
       : containerWidth /
         (range(findCent(earliest), findCent(latest) + 100).includes(0)
           ? range(findCent(earliest), findCent(latest) + 100).length - 1
-          : range(findCent(earliest) - 99, findCent(latest) + 100).length);
+          : range(
+              earliest > 0 && latest > 0
+                ? findCent(earliest) - 99
+                : findCent(earliest),
+              findCent(latest) + 100
+            ).length);
 
   let tip = d3
     .select('body')
