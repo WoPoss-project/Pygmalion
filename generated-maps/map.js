@@ -400,13 +400,11 @@ function drawData(
         enter
           .append('g')
           .attr('class', 'data')
-          .attr(
-            'transform',
-            (d, i) =>
-              `translate(${d.emergence * container.portion}, ${
-                i * 37 + lines[i] * 30
-              })`
-          )
+          .attr('transform', (d, i) => {
+            return `translate(${d.emergence * container.portion}, ${
+              i * 37 + lines[i] * 30
+            })`;
+          })
           .style('opacity', 0)
           .call(addElems, container.width, container.portion, tip)
           .call((enter) =>
@@ -837,11 +835,12 @@ function prepareDefinitions() {
 }
 
 function getContainerData() {
-  let containerWidth = meaningsGroup.style('width');
-  containerWidth = Math.floor(
-    Number(containerWidth.substring(0, containerWidth.length - 2)) -
-      margin.right
-  );
+  let containerWidth = svg.style('width');
+  containerWidth =
+    Math.floor(
+      Number(containerWidth.substring(0, containerWidth.length - 2)) -
+        margin.right
+    ) - margin.left;
 
   let containerPortion =
     data.dataFormat === 'cent'
