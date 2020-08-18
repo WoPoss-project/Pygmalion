@@ -6,7 +6,9 @@ const emergenceMax = d3.max(definitions, (d) => d.emergence);
 definitions.forEach((d) => (d.disparition = +d.disparition));
 const disparitionMax = d3.max(definitions, (d) => d.disparition);
 const latest = d3.max(definitions, (d) =>
-  emergenceMax > disparitionMax ? d.emergence : d.disparition
+  typeof disparitionMax == 'undefined' || emergenceMax > disparitionMax
+    ? d.emergence
+    : d.disparition
 );
 
 const lineGenerator = d3.line();
@@ -460,6 +462,7 @@ function drawConstructsOrGroups(elements, cW, cP, lines) {
           .duration(500)
           .style('opacity', 1);
       }
+
       constructsAndGroups
         .append('text')
         .text(group)
@@ -467,7 +470,7 @@ function drawConstructsOrGroups(elements, cW, cP, lines) {
           if (min < max) {
             return xMiddle - getTextWidth(group) - 5;
           } else {
-            return x0 - getTextWidth(group);
+            return x0 - getTextWidth(group) - 5;
           }
         })
         .attr('y', yMiddle + 4)
