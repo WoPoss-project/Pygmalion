@@ -668,6 +668,11 @@ function confirmForm(event) {
       if (!missingField) {
         localStorage.setItem('card', JSON.stringify(data));
         console.log(JSON.parse(localStorage.getItem('card')));
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'The form was submitted without errors!',
+        });
       } else {
         swal.fire({
           icon: 'error',

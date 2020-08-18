@@ -606,7 +606,7 @@ function updateElems(elements, cW, cP, elementsData, displayRels, lines) {
         const x1 =
           cW + 10 + (Math.abs(modifier) * margin.right) / 1.5 / indexes.length;
         const x2 =
-          element.disparition != -1 && !isNaN(element.disparition)
+          d.disparition != -1 && !isNaN(d.disparition)
             ? d.disparition * cP + 10
             : cW + 10;
         const y1 = y0 - offset + modifier * 37 + off;
@@ -893,11 +893,9 @@ function wrap(text, cW, cP, r = 'add') {
             'd',
             lineGenerator([
               [0, 0],
-              [10, 0],
-              [10 + width, 0],
-              [10 + width + 10, 15 * yModifier],
-              [10 + width, 30 * yModifier],
-              [10, 30 * yModifier],
+              [width, 0],
+              [width + 10, 15 * yModifier],
+              [width, 30 * yModifier],
               [0, 30 * yModifier],
               [0, 0],
             ])
@@ -1048,7 +1046,6 @@ function findCent(dec) {
         dec += 1;
       }
     }
-    //dec = dec < 0 ? dec : dec;
   }
   return dec;
 }
