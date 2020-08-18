@@ -24,6 +24,7 @@ if (data.dataFormat === 'cent') {
 
   definitions.forEach((def) => {
     def.emergence = r.indexOf(def.emergence);
+    def.disparition = r.indexOf(def.disparition);
   });
 } else {
   const r = range(
@@ -302,7 +303,7 @@ function drawData(elements = definitions, allowUpdate = false) {
       : data.dataFormat === 'dec'
       ? containerWidth /
         (range10(findCent(earliest), findCent(latest) + 100).includes(0)
-          ? range10(findCent(earliest), findCent(latest) + 100).length // - 1
+          ? range10(findCent(earliest), findCent(latest) + 100).length - 1
           : range10(findCent(earliest), findCent(latest) + 100).length)
       : containerWidth /
         (range(findCent(earliest), findCent(latest) + 100).includes(0)
@@ -461,9 +462,12 @@ function drawConstructsOrGroups(elements, cW, cP, lines) {
 }
 
 function addElems(elements, cW, cP, tip) {
+  const r = range10(findCent(earliest), findCent(latest) + 100);
+  console.log(r);
   elements
     .append('path')
     .attr('d', (d) => {
+      console.log(d.emergence);
       let width = cW - d.emergence * cP;
       if (d.disparition != -1) {
         const end = cW - d.disparition * cP;
@@ -923,11 +927,19 @@ function centuryFromYear(year) {
 
 function findCent(dec) {
   if (dec % 10 == 0) {
-    while (dec % 100 != 0) {
+    if (dec % 100 != 0) {
+      while (dec % 100 != 0) {
+        if (dec < 0) {
+          dec -= 10;
+        } else {
+          dec += 10;
+        }
+      }
+    } else {
       if (dec < 0) {
-        dec -= 10;
+        dec -= 100;
       } else {
-        dec += 10;
+        dec += 100;
       }
     }
   } else {
@@ -940,7 +952,6 @@ function findCent(dec) {
     }
     //dec = dec < 0 ? dec : dec;
   }
-
   return dec;
 }
 
