@@ -1045,7 +1045,7 @@ function exportToCanvas(event) {
   var DOMURL = window.URL || window.webkitURL || window;
 
   var img = new Image();
-  var svgBlob = new Blob([data], { type: 'image/svg+xml;charset=utf-8' });
+  var svgBlob = new Blob([data], { type: 'image/svg+xml' });
   var url = DOMURL.createObjectURL(svgBlob);
 
   img.onload = function () {
