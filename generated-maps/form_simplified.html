@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./form.css" />
+    <title>Form</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+  </head>
+  <body>
+    <form id="cardForm">
+      <div class="row">
+        <div class="col-100">
+          <h3>Semantic informations</h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label for="headwordInput">Headword</label>
+        </div>
+        <div class="col-75">
+          <input type="text" name="headwordInput" id="headwordInput" placeholder="Please enter the word you want to draw a map of..."/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label>Etymology</label>
+        </div>
+        <div class="col-75">
+          <div id="etymology"></div>
+          <div>
+            <div class='col-33' style='margin-right: -2px'><button id="noEtymology" style="width: 100%;">Proceed without etymology</button></div>
+            <div class='col-33' style='margin-right: -2px'><button id="etymologyUnknown" class='etymologyUnknown' style="width: 100%;">Flag etymology as unknow</button></div>
+            <div class='col-33' style='margin-right: -2px'><button id="etymologicalStep" style="width: 100%;">Add etymological step</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label for="dateSpec">Date format</label>
+        </div>
+        <div class="col-75">
+          <select name="dateSpec" id="dateSpec">
+            <option value="cent">Centuries</option>
+            <option value="dec">Decades</option>
+            <option value="y">Specific years</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label>Meanings</h3>
+        </div>
+        <div class="col-75">
+          <div id="newSenses"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-100">
+          <button id="addSense">Add new meaning</button>
+          <button id="submitForm" class="submit">Submit form</button>
+        </div>
+      </div>
+    </form>
+    <script src="./form_simplified.js"></script>
+  </body>
+</html>
