@@ -1,4 +1,4 @@
-const data = JSON.parse(localStorage.getItem('card'));
+const data = JSON.parse(localStorage.getItem('map'));
 const definitions = prepareDefinitions();
 
 // DOM selections

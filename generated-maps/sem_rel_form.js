@@ -3,13 +3,13 @@ const newRelationship = document.getElementById('newRelationship');
 const submitForm = document.getElementById('submitForm');
 let data;
 
-if (localStorage.getItem('card')) {
-  data = JSON.parse(localStorage.getItem('card'));
+if (localStorage.getItem('map')) {
+  data = JSON.parse(localStorage.getItem('map'));
   addRelationship();
   newRelationship.addEventListener('click', addRelationship);
   submitForm.addEventListener('click', submit);
 } else {
-  window.location.replace('http://127.0.0.1:5500/generated-maps/index.html');
+  // redirect user to 1st form or home page
 }
 
 function addRelationship(event) {
@@ -85,17 +85,24 @@ function addRelationship(event) {
 function createSelect(meanings) {
   const select = document.createElement('select');
   for (let i = 0; i < meanings.length; i++) {
-    if (meanings[i].modalities.length > 1) {
-      for (let j = 0; j < meanings[i].modalities.length; j++) {
+    if (data.normalForm) {
+      if (meanings[i].modalities.length > 1) {
+        for (let j = 0; j < meanings[i].modalities.length; j++) {
+          const option = document.createElement('option');
+          option.innerHTML = `${meanings[i].definition} - ${meanings[i].modalities[j].modal}`;
+          option.value = meanings[i].modalities[j].id;
+          select.appendChild(option);
+        }
+      } else {
         const option = document.createElement('option');
-        option.innerHTML = `${meanings[i].definition} - ${meanings[i].modalities[j].modal}`;
-        option.value = meanings[i].modalities[j].id;
+        option.innerHTML = meanings[i].definition;
+        option.value = meanings[i].modalities[0].id;
         select.appendChild(option);
       }
     } else {
       const option = document.createElement('option');
       option.innerHTML = meanings[i].definition;
-      option.value = meanings[i].modalities[0].id;
+      option.value = meanings[i].id;
       select.appendChild(option);
     }
   }
@@ -170,28 +177,42 @@ function submit(event) {
 
     for (let i = 0; i < final.length; i++) {
       data.meanings.forEach((meaning) => {
-        if (meaning.modalities.length > 1) {
-          meaning.modalities.forEach((modality) => {
+        if (data.normalForm) {
+          if (meaning.modalities.length > 1) {
+            meaning.modalities.forEach((modality) => {
+              modality = addRelationships(modality);
+              if (modality.id === final[i].origin) {
+                modality = editModality(modality, final[i], 'og');
+              } else if (modality.id === final[i].destination) {
+                modality = editModality(modality, final[i], 'de');
+              }
+            });
+          } else {
+            let modality = meaning.modalities[0];
             modality = addRelationships(modality);
             if (modality.id === final[i].origin) {
               modality = editModality(modality, final[i], 'og');
             } else if (modality.id === final[i].destination) {
               modality = editModality(modality, final[i], 'de');
             }
-          });
+          }
         } else {
-          let modality = meaning.modalities[0];
-          modality = addRelationships(modality);
-          if (modality.id === final[i].origin) {
-            modality = editModality(modality, final[i], 'og');
-          } else if (modality.id === final[i].destination) {
-            modality = editModality(modality, final[i], 'de');
+          meaning = addRelationships(meaning);
+          if (meaning.id === final[i].origin) {
+            meaning = editModality(meaning, final[i], 'og');
+          } else if (meaning.id === final[i].destination) {
+            meaning = editModality(meaning, final[i], 'de');
           }
         }
       });
     }
-    localStorage.setItem('card', JSON.stringify(data));
-    console.log(JSON.parse(localStorage.getItem('card')));
+    localStorage.setItem('map', JSON.stringify(data));
+    Swal.fire({
+      icon: 'success',
+      title: 'Success!',
+      text: 'The form was successfully submitted.',
+    });
+    console.log(JSON.parse(localStorage.getItem('map')));
   }
 }
 

@@ -712,8 +712,8 @@ function confirmForm(event) {
         meanings: definitions,
       };
       if (!missingField) {
-        localStorage.setItem('card', JSON.stringify(data));
-        console.log(JSON.parse(localStorage.getItem('card')));
+        localStorage.setItem('map', JSON.stringify(data));
+        console.log(JSON.parse(localStorage.getItem('map')));
         Swal.fire({
           icon: 'success',
           title: 'Success!',
