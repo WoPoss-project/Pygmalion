@@ -1,12 +1,14 @@
 const data = JSON.parse(localStorage.getItem('card'));
 const definitions = prepareDefinitions();
 
+// DOM selections
 const saveToPNG = document.getElementById('saveToPNG');
 saveToPNG.addEventListener('click', exportToCanvas);
 
 const select = document.getElementById('mode');
 let selectMode = select.value;
 
+// event handler for the select element
 select.addEventListener('change', (event) => {
   const value = event.target.value;
   selectMode = value;
@@ -18,6 +20,11 @@ select.addEventListener('change', (event) => {
   );
 });
 
+/* --------------------------------
+definition of the earliest as well
+as latest date in the dataset.
+-------------------------------- */
+
 const earliest = d3.min(definitions, (d) => d.emergence);
 const emergenceMax = d3.max(definitions, (d) => d.emergence);
 definitions.forEach((d) => (d.disparition = +d.disparition));
@@ -28,7 +35,14 @@ const latest = d3.max(definitions, (d) =>
     : d.disparition
 );
 
+// line generator
 const lineGenerator = d3.line();
+
+/* --------------------------------
+data recoding: prepares emergence
+and disparition data for display
+calculations
+-------------------------------- */
 
 if (data.dataFormat === 'cent') {
   definitions.forEach((def) => {
@@ -62,6 +76,7 @@ if (data.dataFormat === 'cent') {
   });
 }
 
+// sizing consts
 const margin = {
   top: 100,
   left: 100,
@@ -71,6 +86,7 @@ const margin = {
 const width = '100%';
 const height = margin.top * 2.5 - 5 + definitions.length * 37;
 
+// Definition of SVG
 const svg = d3
   .select('#map')
   .append('svg')
@@ -81,6 +97,11 @@ const svg = d3
 
 const w = Number(svg.style('width').split('px')[0]);
 const h = Number(svg.style('height').split('px')[0]);
+
+/* --------------------------------
+definition of the D3 markers for
+the relationship arrows
+-------------------------------- */
 
 svg
   .append('svg:defs')
@@ -107,6 +128,10 @@ svg
   .append('path')
   .attr('d', 'M 0 0 4 2 0 4 0.25 2')
   .style('fill', 'black');
+
+/* --------------------------------
+definition of the various D3 groups
+-------------------------------- */
 
 const legend = svg
   .append('g')
@@ -136,6 +161,12 @@ const meaningsGroup = svg
 const scale = svg
   .append('g')
   .attr('transform', `translate(${margin.left}, ${margin.top * 2})`);
+
+/* ----------------------------------------
+"basicDisplay" function:
+handles the drawing of the entire page as
+well as the legend.
+---------------------------------------- */
 
 function basicDisplay() {
   const options = [
@@ -236,20 +267,11 @@ function basicDisplay() {
   drawData();
 }
 
-function modalityFormatting(meaning, modalitiy) {
-  return {
-    id: modalitiy.id,
-    meaning: meaning.definition,
-    construct: meaning.construct,
-    group: meaning.group,
-    modal: modalitiy.modal,
-    emergence: modalitiy.emergence,
-    certainty: modalitiy.certainty,
-    attestation: modalitiy.attestation,
-    relationships: modalitiy.relationships,
-    disparition: modalitiy.disparition,
-  };
-}
+/* ----------------------------------------
+"drawEtymology" function:
+draws path and text elements according to
+the etymology data.
+---------------------------------------- */
 
 function drawEtymology() {
   const ety = data.etymology;
@@ -400,18 +422,12 @@ function drawEtymology() {
   }
 }
 
-function sortElements(elements, mode) {
-  elements.sort((a, b) => {
-    const compareConstruct = (a, b) => (a < b ? -1 : b < a ? 1 : 0);
-    const compareDate = (a, b) => Math.sign(a - b);
-
-    return (
-      compareConstruct(a[mode], b[mode]) ||
-      compareDate(a.emergence, b.emergence)
-    );
-  });
-  return elements;
-}
+/* ----------------------------------------
+"drawData" function:
+handles the drawing of the data according
+to the parameters.
+handles the enter, update and exit calls.
+---------------------------------------- */
 
 function drawData(
   elements = definitions,
@@ -483,6 +499,13 @@ function drawData(
   drawScale(earliest, latest, container.width);
 }
 
+/* ----------------------------------------
+"drawConstructsOrGroups" function:
+draws the path and text elements according
+to the passed data corresponding to either
+the group or construct datapoints.
+---------------------------------------- */
+
 function drawConstructsOrGroups(elements, cW, cP, lines, mode) {
   constructsAndGroups.selectAll('path').remove();
   constructsAndGroups.selectAll('text').remove();
@@ -549,6 +572,12 @@ function drawConstructsOrGroups(elements, cW, cP, lines, mode) {
     }
   });
 }
+
+/* ----------------------------------------
+"addElems" function:
+draws the path and text elements according
+to the passed data.
+---------------------------------------- */
 
 function addElems(elements, cW, cP, tip) {
   elements
@@ -649,6 +678,12 @@ function addElems(elements, cW, cP, tip) {
     .call(wrap, cW, cP);
 }
 
+/* ----------------------------------------
+"updateElems" function:
+draws the relationship arrows on the right-
+hand side of the data elements.
+---------------------------------------- */
+
 function updateElems(elements, cW, cP, elementsData, displayRels, lines) {
   //elements.selectAll('text').call(wrap, cW, cP, 'update');
 
@@ -717,59 +752,11 @@ function updateElems(elements, cW, cP, elementsData, displayRels, lines) {
   }
 }
 
-function newDisplay(event) {
-  if (event.relationships) {
-    const keptIds = [
-      event.id,
-      ...Object.values(event.relationships)
-        .reduce((a, b) => a.concat(b))
-        .map((r) => r.rel),
-    ];
-    const keptElements = [];
-    keptIds.forEach((id) => {
-      definitions.forEach((def) => {
-        if (Object.values(def).includes(id)) {
-          keptElements.push(def);
-        }
-      });
-    });
-    console.log(keptElements);
-    drawData(
-      addRelationshipInfo(event.relationships, keptElements),
-      true,
-      selectMode
-    );
-  } else {
-    Swal.fire({
-      icon: 'error',
-      title: 'No relationship data',
-      text:
-        'Please make sure you have specified relationships between the meanings.',
-    });
-  }
-}
-
-function addRelationshipInfo(relationships, elements) {
-  definitions.forEach((def) => {
-    delete def.rel;
-    delete def.relCert;
-  });
-  for (const direction in relationships) {
-    relationships[direction].forEach((rel) => {
-      elements.forEach((el) => {
-        if (!('rel' in el) && !('relCert' in el)) {
-          el['rel'] = 'origin';
-          el['relCert'] = true;
-        }
-        if (rel.rel === el.id) {
-          el['rel'] = direction;
-          el['relCert'] = rel.cert;
-        }
-      });
-    });
-  }
-  return elements;
-}
+/* ----------------------------------------
+"drawScale" function:
+draws the scale displayed on top of the 
+data elements.
+---------------------------------------- */
 
 function drawScale(earliest, latest, cW) {
   const dates = [];
@@ -867,6 +854,79 @@ function drawScale(earliest, latest, cW) {
     .style('fill', 'white');
 }
 
+/* ----------------------------------------
+"newDisplay" function:
+selects elements to be kept depending on 
+the relationship data.
+call the "drawData" function with the kept
+elements.
+---------------------------------------- */
+
+function newDisplay(event) {
+  if (event.relationships) {
+    const keptIds = [
+      event.id,
+      ...Object.values(event.relationships)
+        .reduce((a, b) => a.concat(b))
+        .map((r) => r.rel),
+    ];
+    const keptElements = [];
+    keptIds.forEach((id) => {
+      definitions.forEach((def) => {
+        if (Object.values(def).includes(id)) {
+          keptElements.push(def);
+        }
+      });
+    });
+    console.log(keptElements);
+    drawData(
+      addRelationshipInfo(event.relationships, keptElements),
+      true,
+      selectMode
+    );
+  } else {
+    Swal.fire({
+      icon: 'error',
+      title: 'No relationship data',
+      text:
+        'Please make sure you have specified relationships between the meanings.',
+    });
+  }
+}
+
+/* ----------------------------------------
+"addRelationshipInfo" function:
+returns the kept elements with the 
+relationship data inculded into them
+---------------------------------------- */
+
+function addRelationshipInfo(relationships, elements) {
+  definitions.forEach((def) => {
+    delete def.rel;
+    delete def.relCert;
+  });
+  for (const direction in relationships) {
+    relationships[direction].forEach((rel) => {
+      elements.forEach((el) => {
+        if (!('rel' in el) && !('relCert' in el)) {
+          el['rel'] = 'origin';
+          el['relCert'] = true;
+        }
+        if (rel.rel === el.id) {
+          el['rel'] = direction;
+          el['relCert'] = rel.cert;
+        }
+      });
+    });
+  }
+  return elements;
+}
+
+/* ----------------------------------------
+"prepareDefinitions" function:
+returns the data for display
+---------------------------------------- */
+
 function prepareDefinitions() {
   const meanings = data.meanings;
   const definitions = [];
@@ -881,6 +941,52 @@ function prepareDefinitions() {
   });
   return definitions;
 }
+
+/* ----------------------------------------
+"modalityFormatting" function:
+returns the formatted data
+---------------------------------------- */
+
+function modalityFormatting(meaning, modalitiy) {
+  return {
+    id: modalitiy.id,
+    meaning: meaning.definition,
+    construct: meaning.construct,
+    group: meaning.group,
+    modal: modalitiy.modal,
+    emergence: modalitiy.emergence,
+    certainty: modalitiy.certainty,
+    attestation: modalitiy.attestation,
+    relationships: modalitiy.relationships,
+    disparition: modalitiy.disparition,
+  };
+}
+
+/* ----------------------------------------
+"sortElements" function:
+returns a sorted array depending on the
+sorting parameter
+---------------------------------------- */
+
+function sortElements(elements, mode) {
+  elements.sort((a, b) => {
+    const compareConstruct = (a, b) => (a < b ? -1 : b < a ? 1 : 0);
+    const compareDate = (a, b) => Math.sign(a - b);
+
+    return (
+      compareConstruct(a[mode], b[mode]) ||
+      compareDate(a.emergence, b.emergence)
+    );
+  });
+  return elements;
+}
+
+/* ----------------------------------------
+"getContainerData" function:
+returns an array containing the width of
+the drawing area and the result of this
+width divided by the scale.
+---------------------------------------- */
 
 function getContainerData() {
   let containerWidth = svg.style('width');
@@ -919,6 +1025,13 @@ function getContainerData() {
   return { width: containerWidth, portion: containerPortion };
 }
 
+/* ----------------------------------------
+"getLines" function:
+returns an array containing the numbers of 
+lines each text needs to be displayed
+inside a path element
+---------------------------------------- */
+
 function getLines(elements, cW, cP) {
   const lines = elements.map((elem) => wrap(elem.meaning, cW, cP, elem));
 
@@ -940,6 +1053,14 @@ function getLines(elements, cW, cP) {
   }
   return lines;
 }
+
+/* ----------------------------------------
+"wrap" function:
+modifies text and path elements if the text
+is longer than the width of the path.
+returns the number of lines a text needs to
+be kept inside a path.
+---------------------------------------- */
 
 function wrap(text, cW, cP, r = 'add') {
   if (typeof text != 'string') {
@@ -1024,6 +1145,11 @@ function wrap(text, cW, cP, r = 'add') {
   }
 }
 
+/* ----------------------------------------
+"exportToCanvas" function:
+exports SVG to canvas element
+---------------------------------------- */
+
 function exportToCanvas(event) {
   event.preventDefault();
 
@@ -1062,6 +1188,11 @@ function exportToCanvas(event) {
   img.src = url;
 }
 
+/* ----------------------------------------
+"triggerDownload" function:
+forces the browser to download the canvas
+---------------------------------------- */
+
 function triggerDownload(imgURI) {
   const evt = new MouseEvent('click', {
     view: window,
@@ -1077,6 +1208,11 @@ function triggerDownload(imgURI) {
   a.dispatchEvent(evt);
 }
 
+/* ----------------------------------------
+"color" function:
+returns a color depending on the modality
+---------------------------------------- */
+
 function color(modal) {
   const conversion = {
     notModal: 'lightgrey',
@@ -1088,6 +1224,11 @@ function color(modal) {
   };
   return conversion[modal];
 }
+
+/* ----------------------------------------
+"romanize" function:
+returns a roman number from an arabic one
+---------------------------------------- */
 
 function romanize(num) {
   if (isNaN(num)) return NaN;
@@ -1130,6 +1271,14 @@ function romanize(num) {
   return Array(+digits.join('') + 1).join('M') + roman;
 }
 
+/* ----------------------------------------
+"range" and "range10" functions:
+return an array of numbers between and
+including the parameter numbers.
+"range" adds 1 to each number. 
+"range10" adds 10 to each number.
+---------------------------------------- */
+
 function range(start, end) {
   return Array(end - start + 1)
     .fill()
@@ -1141,6 +1290,11 @@ function range10(start, end) {
     .fill()
     .map((_, idx) => start + idx * 10);
 }
+
+/* ----------------------------------------
+"getTextWidth" function:
+returns the width of a text
+---------------------------------------- */
 
 function getTextWidth(text) {
   // create a dummy element
@@ -1158,14 +1312,10 @@ function getTextWidth(text) {
   return dummyWidth;
 }
 
-function getCoords(path) {
-  path = d3.select(path);
-  d = path.attr('d').split(/(?=[LMC])/);
-  return d.map((coord) => {
-    coord = coord.substring(1);
-    return coord.split(',');
-  });
-}
+/* ----------------------------------------
+"centuryFromYear" function:
+returns the century based on a given year
+---------------------------------------- */
 
 function centuryFromYear(year) {
   const century = Math.floor((Math.abs(year) - 1) / 100) + 1;
@@ -1175,6 +1325,12 @@ function centuryFromYear(year) {
     return -1 * century;
   }
 }
+
+/* ----------------------------------------
+"findCent" function:
+returns the century based on a given year
+or decade
+---------------------------------------- */
 
 function findCent(dec) {
   if (dec % 10 == 0) {
