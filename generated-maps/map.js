@@ -254,7 +254,7 @@ function drawEtymology() {
   let totalLength = 0;
   const gh = 80;
 
-  if (ety) {
+  if (typeof ety === 'object') {
     ety.forEach((e) => {
       newEty.push(Object.values(e));
     });
@@ -265,7 +265,7 @@ function drawEtymology() {
           ? getTextWidth(newEty[i][2])
           : getTextWidth(newEty[i][1])
         : getTextWidth(data.headword);
-      gw += 50;
+      gw += i === 0 ? 25 : 45;
 
       const g = etymology
         .append('g')
@@ -276,22 +276,18 @@ function drawEtymology() {
           if (i == 0) {
             return lineGenerator([
               [0, 0],
-              [25, 0],
               [gw, 0],
               [gw + 25, gh / 2],
               [gw, gh],
-              [25, gh],
               [0, gh],
               [0, 0],
             ]);
           } else {
             return lineGenerator([
               [0, 0],
-              [25, 0],
               [gw, 0],
               [gw + 25, gh / 2],
               [gw, gh],
-              [25, gh],
               [0, gh],
               [25, gh / 2],
               [0, 0],
@@ -318,11 +314,13 @@ function drawEtymology() {
           .text(data.headword)
           .attr('x', 20)
           .attr('y', gh / 2 + 3)
-          .attr('dx', i == 0 ? 12.5 : 22);
+          .attr('dx', i == 0 ? 0 : 20);
       }
       totalLength += gw;
     }
-  } else {
+  } else if (typeof ety === 'boolean' && ety === false) {
+    gw = getTextWidth(data.headword);
+
     const g = etymology
       .append('g')
       .attr('transform', `translate(${totalLength}, 0)`);
@@ -346,9 +344,54 @@ function drawEtymology() {
       .style('stroke-width', 3);
 
     g.append('text')
-      .text('No etymology')
+      .text(data.headword)
       .attr('x', 20)
       .attr('y', gh / 2 + 3);
+  } else {
+    for (let i = 0; i < 2; i++) {
+      gw =
+        i === 0
+          ? getTextWidth('Etymology unknown')
+          : getTextWidth(data.headword);
+      gw += i === 0 ? 25 : 45;
+      const g = etymology
+        .append('g')
+        .attr('transform', `translate(${totalLength}, 0)`);
+
+      g.append('path')
+        .attr('d', () => {
+          if (i == 0) {
+            return lineGenerator([
+              [0, 0],
+              [gw, 0],
+              [gw + 25, gh / 2],
+              [gw, gh],
+              [0, gh],
+              [0, 0],
+            ]);
+          } else {
+            return lineGenerator([
+              [0, 0],
+              [gw, 0],
+              [gw + 25, gh / 2],
+              [gw, gh],
+              [0, gh],
+              [25, gh / 2],
+              [0, 0],
+            ]);
+          }
+        })
+        .style('fill', 'none')
+        .style('stroke', 'black')
+        .style('stroke-width', 3);
+
+      g.append('text')
+        .text(i === 0 ? 'Etymology unknown' : data.headword)
+        .attr('x', i === 0 ? 20 : 40)
+        .attr('y', gh / 2 + 3);
+
+      totalLength += gw;
+    }
   }
 }
 
