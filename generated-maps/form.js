@@ -6,9 +6,11 @@ const newSenses = document.getElementById('newSenses');
 const etymologyArea = document.getElementById('etymology');
 const etymologicalStep = document.getElementById('etymologicalStep');
 const noEtymology = document.getElementById('noEtymology');
+const etymologyUnknown = document.getElementById('etymologyUnknown');
 const submitForm = document.getElementById('submitForm');
 
 let withEtymology = true;
+let etymologyIsKnown = true;
 
 // Event on the "Add a meaning" button
 addSense.addEventListener('click', createSense);
@@ -30,12 +32,25 @@ dateSpec.addEventListener('change', function () {
 
 etymologicalStep.addEventListener('click', addEtymologicalStep);
 noEtymology.addEventListener('click', proceedWithNoEtymology);
+etymologyUnknown.addEventListener('click', etymologyIsUnknown);
 
 submitForm.addEventListener('click', confirmForm);
 
 // Function to add an etymological step
 function addEtymologicalStep(event) {
   event.preventDefault();
+
+  if (!etymologyIsKnown) {
+    Swal.fire({
+      icon: 'info',
+      title: 'Etymology',
+      text:
+        'We noticed that you flagged etymology as unknown. That flag has been removed. If you change your mind, please flag it again as unknown.',
+    });
+    etymologyUnknown.disabled = false;
+    etymologyUnknown.className = 'etymologyUnknown';
+    etymologyIsKnown = true;
+  }
 
   noEtymology.style.visibility = 'hidden';
 
@@ -135,10 +150,10 @@ function proceedWithNoEtymology(event) {
     icon: 'info',
     title: 'No etymology',
     text:
-      'We have registered your choice to not include an etymology. If you change your mind, simply click "I wish to proceed with etymology"',
+      'We have registered your choice to not include an etymology. If you change your mind, simply click "Proceed with etymology"',
   });
   etymologicalStep.style.visibility = 'hidden';
-  noEtymology.innerHTML = 'I wish to proceed with etymology';
+  noEtymology.innerHTML = 'Proceed with etymology';
   noEtymology.removeEventListener('click', proceedWithNoEtymology);
   noEtymology.addEventListener('click', proceedWithEtymology);
   withEtymology = false;
@@ -147,10 +162,38 @@ function proceedWithNoEtymology(event) {
 function proceedWithEtymology(event) {
   event.preventDefault();
   etymologicalStep.style.visibility = 'visible';
-  noEtymology.innerHTML = 'I wish to proceed without etymology';
+  noEtymology.innerHTML = 'Proceed without etymology';
   noEtymology.removeEventListener('click', proceedWithEtymology);
   noEtymology.addEventListener('click', proceedWithNoEtymology);
   withEtymology = true;
+}
+
+function etymologyIsUnknown(event) {
+  event.preventDefault();
+  Swal.fire({
+    icon: 'info',
+    title: 'Etymology flagged as unknown',
+    text:
+      'We have taken note that the etymology is unkown. If you change your mind, simply click "Add etymological step"',
+  });
+  noEtymology.style.visibility = 'hidden';
+  if (etymologicalStep.style.visibility === 'hidden') {
+    etymologicalStep.style.visibility = 'visible';
+  }
+  etymologyUnknown.disabled = true;
+  etymologyUnknown.className = 'etymologyUnknownDisabled';
+  etymologyIsKnown = false;
+  withEtymology = true;
+  if (etymologyArea.childNodes.length > 0) {
+    deleteAllEtymology();
+  }
+}
+
+function deleteAllEtymology() {
+  const parent = etymologyArea;
+  while (parent.firstChild) {
+    parent.removeChild(parent.firstChild);
+  }
 }
 
 // Add a sense/definition to the form
@@ -535,7 +578,7 @@ function confirmForm(event) {
   if (headwordInput.value != '') {
     if (definitionTexts.length > 0) {
       let etymologicalData;
-      if (withEtymology) {
+      if (withEtymology && etymologyIsKnown) {
         let etymology = [[], [], [], []];
         const etymologyPeriods = document.querySelectorAll('.period');
         const etymologyForms = document.querySelectorAll('.etymologicalForm');
@@ -565,8 +608,10 @@ function confirmForm(event) {
             certitude: data[3],
           });
         }
-      } else {
+      } else if (!withEtymology) {
         etymologicalData = false;
+      } else {
+        etymologicalData = 'unknown';
       }
 
       let missingField = false;
