@@ -548,102 +548,64 @@ function confirmForm(event) {
       let missingField = false;
       const definitions = [];
       definitionTexts.forEach((definition) => {
-        const v = [];
+        const extractedValues = [];
         const rows = definition.childNodes;
         rows.forEach((row) => {
           const cols = row.childNodes;
           cols.forEach((col) => {
             if (col.className == 'col-75') {
               const values = col.childNodes;
-              values.forEach((value) => {
-                if (value.value || value.value === '') {
-                  if (
-                    (value.value === '' && value.nodeName != 'BUTTON') ||
-                    value.value === 'Add a group...' ||
-                    value.value === 'Add a construction...'
-                  ) {
+              values.forEach((value, i) => {
+                if (value.nodeName != 'SMALL') {
+                  if (value.value === '' && i != 2) {
                     mandatory(value);
                     missingField = true;
-                  }
-                  v.push(value.value);
-                } else {
-                  const modalities = value.childNodes;
-                  let modalityValues = [];
-                  modalities.forEach((modality) => {
-                    const modalityElements = modality.childNodes;
-                    modalityElements.forEach((modEl) => {
-                      if (modEl.value || modEl.value === '') {
-                        if (
-                          modEl.value === '' &&
-                          modEl.className != 'disp' &&
-                          modEl.nodeName != 'BUTTON' &&
-                          modEl.className != 'attest'
-                        ) {
-                          mandatory(modEl);
-                          missingField = true;
-                        } else if (modEl.type === 'checkbox') {
-                          modalityValues.push(modEl.checked);
-                        } else if (
-                          modEl.className === 'date' ||
-                          modEl.className === 'disp'
-                        ) {
-                          if (
-                            modEl.className === 'disp' &&
-                            modEl.value === ''
-                          ) {
-                            modalityValues.push('None');
-                          } else {
-                            let conversion = dateConversion(
-                              dateSpec.value,
-                              modEl
-                            );
-                            if (conversion) {
-                              modalityValues.push(conversion);
-                            } else {
-                              missingField = true;
-                            }
-                          }
-                        } else {
-                          modalityValues.push(modEl.value);
-                        }
-                      }
-                    });
-                    const modalityObject = {
-                      id: randomId(),
-                      modal: modalityValues[0],
-                      emergence: modalityValues[1],
-                      disparition: modalityValues[2],
-                      attestation: modalityValues[3],
-                      certainty: modalityValues[4],
-                    };
-                    if (v.length == 4) {
-                      v[3].push(modalityObject);
+                  } else if (value.className === 'date') {
+                    const conversion = dateConversion(dateSpec.value, value);
+                    if (conversion) {
+                      extractedValues.push(conversion);
                     } else {
-                      v.push([modalityObject]);
+                      missingField = true;
                     }
-                    modalityValues = [];
-                  });
+                  } else if (value.className === 'disp') {
+                    if (value.value === '') {
+                      extractedValues.push('None');
+                    } else {
+                      const conversion = dateConversion(dateSpec.value, value);
+                      if (conversion) {
+                        extractedValues.push(conversion);
+                      } else {
+                        missingField = true;
+                      }
+                    }
+                  } else {
+                    extractedValues.push(value.value);
+                  }
                 }
               });
             }
           });
         });
         definitions.push({
-          definition: v[0],
-          construct: v[1],
-          group: v[2],
-          modalities: v[3],
+          id: randomId(),
+          definition: extractedValues[0],
+          construct: extractedValues[1],
+          group: extractedValues[2],
+          emergence: extractedValues[3],
+          disparition: extractedValues[4],
+          attestation: extractedValues[5],
         });
       });
       const data = {
+        normalForm: false,
         headword: headwordInput.value,
         etymology: etymologicalData,
         dataFormat: dateSpec.value,
         meanings: definitions,
       };
       if (!missingField) {
-        localStorage.setItem('card', JSON.stringify(data));
-        console.log(JSON.parse(localStorage.getItem('card')));
+        localStorage.setItem('map', JSON.stringify(data));
+        console.log(JSON.parse(localStorage.getItem('map')));
         Swal.fire({
           icon: 'success',
           title: 'Success!',

@@ -705,6 +705,7 @@ function confirmForm(event) {
         });
       });
       const data = {
+        normalForm: true,
         headword: headwordInput.value,
         etymology: etymologicalData,
         dataFormat: dateSpec.value,

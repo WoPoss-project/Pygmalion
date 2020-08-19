@@ -172,63 +172,72 @@ well as the legend.
 ---------------------------------------- */
 
 function basicDisplay() {
-  const options = [
-    ['Modal: deontic', 'deontic'],
-    ['Modal: dynamic', 'dynamic'],
-    ['Modal: epistemic', 'epistemic'],
-    ['Not modal', 'notModal'],
-    ['Premodal', 'premodal'],
-    ['Postmodal', 'postmodal'],
-  ];
+  if (data.normalForm) {
+    const options = [
+      ['Modal: deontic', 'deontic'],
+      ['Modal: dynamic', 'dynamic'],
+      ['Modal: epistemic', 'epistemic'],
+      ['Not modal', 'notModal'],
+      ['Premodal', 'premodal'],
+      ['Postmodal', 'postmodal'],
+    ];
 
-  for (let i = 0; i < options.length; i++) {
-    const col = i <= 2 ? 1 : 0;
-    const row = i % 3 == 0 ? 1 : i % 3 == 1 ? 2 : 3;
-    const colSpace = 125;
+    for (let i = 0; i < options.length; i++) {
+      const col = i <= 2 ? 1 : 0;
+      const row = i % 3 == 0 ? 1 : i % 3 == 1 ? 2 : 3;
+      const colSpace = 125;
 
-    legend
-      .append('rect')
-      .style('fill', color(options[i][1]))
-      .attr('x', col * colSpace)
-      .attr('y', row * 25)
-      .attr('width', 12)
-      .attr('height', 12);
+      legend
+        .append('rect')
+        .style('fill', color(options[i][1]))
+        .attr('x', col * colSpace)
+        .attr('y', row * 25)
+        .attr('width', 12)
+        .attr('height', 12);
 
-    legend
-      .append('text')
-      .text(options[i][0])
-      .attr('x', col * colSpace)
-      .attr('y', row * 25)
-      .attr('dx', 15)
-      .attr('dy', 10);
+      legend
+        .append('text')
+        .text(options[i][0])
+        .attr('x', col * colSpace)
+        .attr('y', row * 25)
+        .attr('dx', 15)
+        .attr('dy', 10);
+    }
   }
+
+  const boxX = data.normalForm ? 2 * 125 : 0;
+  const boxY = data.normalForm ? 2 * 25 : 25;
 
   legend
     .append('rect')
     .attr('width', 10)
     .attr('height', 10)
-    .attr('x', 2 * 125)
-    .attr('y', 2 * 25)
+    .attr('x', boxX)
+    .attr('y', boxY)
     .style('fill', 'none')
-    .style('stroke', 'black')
+    .style('stroke', () => (data.normalForm ? 'black' : 'lightgrey'))
     .style('stroke-width', 2)
-    .style('stroke-dasharray', 4);
+    .style('stroke-dasharray', () => (data.normalForm ? 4 : 0));
 
   legend
     .append('text')
-    .text('Likely modal (see color)')
-    .attr('x', 250)
-    .attr('y', 2 * 25)
+    .text(() => (data.normalForm ? 'Likely modal (see color)' : 'Meaning'))
+    .attr('x', boxX)
+    .attr('y', boxY)
     .attr('dx', 15)
     .attr('dy', 10);
+
+  const pathX1 = data.normalForm ? 420 : 0;
+  const pathX2 = data.normalForm ? 440 : 20;
+  const pathY = data.normalForm ? 45 : 50;
 
   legend
     .append('path')
     .attr(
       'd',
       lineGenerator([
-        [420, 45],
-        [440, 45],
+        [pathX1, pathY],
+        [pathX2, pathY],
       ])
     )
     .style('fill', 'none')
@@ -239,18 +248,20 @@ function basicDisplay() {
   legend
     .append('text')
     .text('Semantic relation')
-    .attr('x', 420)
-    .attr('y', 45)
+    .attr('x', pathX1)
+    .attr('y', pathY)
     .attr('dx', 25)
     .attr('dy', 3.5);
+
+  const pathY2 = pathY + 20;
 
   legend
     .append('path')
     .attr(
       'd',
       lineGenerator([
-        [420, 65],
-        [440, 65],
+        [pathX1, pathY2],
+        [pathX2, pathY2],
       ])
     )
     .style('fill', 'none')
@@ -261,8 +272,8 @@ function basicDisplay() {
   legend
     .append('text')
     .text('Hypothetical relation')
-    .attr('x', 420)
-    .attr('y', 65)
+    .attr('x', pathX1)
+    .attr('y', pathY2)
     .attr('dx', 25)
     .attr('dy', 3.5);
 
@@ -933,15 +944,22 @@ returns the data for display
 function prepareDefinitions() {
   const meanings = data.meanings;
   const definitions = [];
-  meanings.forEach((meaning) => {
-    if (meaning.modalities.length > 1) {
-      meaning.modalities.forEach((modalitiy) => {
-        definitions.push(modalityFormatting(meaning, modalitiy));
-      });
-    } else {
-      definitions.push(modalityFormatting(meaning, meaning.modalities[0]));
-    }
-  });
+  if (data.normalForm) {
+    meanings.forEach((meaning) => {
+      if (meaning.modalities.length > 1) {
+        meaning.modalities.forEach((modalitiy) => {
+          definitions.push(modalityFormatting(meaning, modalitiy));
+        });
+      } else {
+        definitions.push(modalityFormatting(meaning, meaning.modalities[0]));
+      }
+    });
+  } else {
+    meanings.forEach((meaning) =>
+      definitions.push(simpleModalityFormatting(meaning))
+    );
+  }
+
   return definitions;
 }
 
@@ -962,6 +980,21 @@ function modalityFormatting(meaning, modalitiy) {
     attestation: modalitiy.attestation,
     relationships: modalitiy.relationships,
     disparition: modalitiy.disparition,
+  };
+}
+
+function simpleModalityFormatting(meaning) {
+  return {
+    id: meaning.id,
+    meaning: meaning.definition,
+    construct: meaning.construct,
+    group: meaning.group,
+    modal: 'notModal',
+    emergence: meaning.emergence,
+    certainty: true,
+    attestation: meaning.attestation,
+    relationships: meaning.relationships,
+    disparition: meaning.disparition,
   };
 }
 
