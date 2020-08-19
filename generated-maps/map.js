@@ -5,6 +5,9 @@ const definitions = prepareDefinitions();
 const saveToPNG = document.getElementById('saveToPNG');
 saveToPNG.addEventListener('click', exportToCanvas);
 
+const saveToSVG = document.getElementById('saveToSVG');
+saveToSVG.addEventListener('click', exportToSVG);
+
 const select = document.getElementById('mode');
 let selectMode = select.value;
 
@@ -1206,6 +1209,30 @@ function triggerDownload(imgURI) {
   a.setAttribute('target', '_blank');
 
   a.dispatchEvent(evt);
+}
+
+/* ----------------------------------------
+"exportToCanvas" function:
+exports SVG element to .svg file
+---------------------------------------- */
+
+function exportToSVG(event) {
+  event.preventDefault();
+
+  let svgWidth = svg.style('width');
+  svgWidth = Number(svgWidth.substring(0, svgWidth.length - 2));
+  svg.attr('width', svgWidth);
+
+  const svgNode = svg.node();
+  var data = new XMLSerializer().serializeToString(svgNode);
+
+  var svgBlob = new Blob([data], { type: 'image/svg+xml;' });
+  var svgUrl = URL.createObjectURL(svgBlob);
+  console.log(svgUrl);
+  var downloadLink = document.createElement('a');
+  downloadLink.href = svgUrl;
+  downloadLink.download = 'semantic_map.svg';
+  downloadLink.click();
 }
 
 /* ----------------------------------------
