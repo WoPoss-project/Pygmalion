@@ -1,5 +1,9 @@
 const data = JSON.parse(localStorage.getItem('card'));
 const definitions = prepareDefinitions();
+
+const saveToPNG = document.getElementById('saveToPNG');
+saveToPNG.addEventListener('click', exportToCanvas);
+
 const select = document.getElementById('mode');
 let selectMode = select.value;
 
@@ -72,7 +76,8 @@ const svg = d3
   .append('svg')
   .attr('width', width)
   .attr('height', height)
-  .attr('style', 'font: 12px sans-serif');
+  .attr('style', 'font: 12px sans-serif')
+  .style('background-color', 'white');
 
 const w = Number(svg.style('width').split('px')[0]);
 const h = Number(svg.style('height').split('px')[0]);
@@ -1017,6 +1022,57 @@ function wrap(text, cW, cP, r = 'add') {
     }
     return lineNumber;
   }
+}
+
+function exportToCanvas(event) {
+  event.preventDefault();
+
+  let svgWidth = svg.style('width');
+  svgWidth = Number(svgWidth.substring(0, svgWidth.length - 2));
+  //svg.style('width', svgWidth);
+
+  let svgHeight = svg.style('height');
+  svgHeight = Number(svgHeight.substring(0, svgHeight.length - 2));
+
+  const canvas = document.createElement('canvas');
+  canvas.width = svgWidth;
+  canvas.height = svgHeight;
+  const ctx = canvas.getContext('2d');
+
+  const svgNode = svg.node();
+  const data = new XMLSerializer().serializeToString(svgNode);
+  const DOMURL = window.URL || window.webkitURL || window;
+
+  const img = new Image();
+  const svgBlob = new Blob([data], { type: 'image/svg+xml;charset=utf-8' });
+  const url = DOMURL.createObjectURL(svgBlob);
+
+  img.onload = function () {
+    ctx.drawImage(img, 0, 0);
+    DOMURL.revokeObjectURL(url);
+
+    const imgURI = canvas
+      .toDataURL('image/png')
+      .replace('image/png', 'image/octet-stream');
+
+    triggerDownload(imgURI);
+  };
+  img.src = url;
+}
+
+function triggerDownload(imgURI) {
+  const evt = new MouseEvent('click', {
+    view: window,
+    bubbles: false,
+    cancelable: true,
+  });
+
+  const a = document.createElement('a');
+  a.setAttribute('download', 'MY_COOL_IMAGE.png');
+  a.setAttribute('href', imgURI);
+  a.setAttribute('target', '_blank');
+
+  a.dispatchEvent(evt);
 }
 
 function color(modal) {
