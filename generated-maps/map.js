@@ -64,6 +64,10 @@ if (data.dataFormat === 'cent') {
     findCent(latest) + 100
   );
 
+  if (r.includes(0)) {
+    r.splice(r.indexOf(0), 1);
+  }
+
   definitions.forEach((def) => {
     def.emergence = r.indexOf(def.emergence);
     def.disparition = r.indexOf(def.disparition);

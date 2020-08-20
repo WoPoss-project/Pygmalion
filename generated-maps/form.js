@@ -209,7 +209,7 @@ function createSense(event) {
   const senseLabelDiv = document.createElement('div');
   senseLabelDiv.className = 'col-25';
   const senseLabel = document.createElement('label');
-  senseLabel.innerHTML = 'Meaning';
+  senseLabel.innerHTML = 'Meaning / function / use';
 
   senseLabelDiv.appendChild(senseLabel);
 
@@ -218,7 +218,8 @@ function createSense(event) {
   const senseInput = document.createElement('input');
   senseInput.type = 'text';
   senseInput.className = 'definitionText';
-  senseInput.placeholder = 'Please enter a definition for the headword...';
+  senseInput.placeholder =
+    'Please enter a meaning / function / use for the headword...';
 
   senseInputDiv.appendChild(senseInput);
 
@@ -228,8 +229,8 @@ function createSense(event) {
   groupRow = selectRow('Semantic group', 'group', 'Add a group...');
   constructRow = selectRow(
     'Collocation',
-    'construction',
-    'Add a construction...'
+    'collocation',
+    'Add a collocation...'
   );
 
   const xRow = document.createElement('div');
@@ -520,7 +521,7 @@ function change(event) {
 
   if (
     selectedValue === 'Add a group...' ||
-    selectedValue === 'Add a construction...'
+    selectedValue === 'Add a collocation...'
   ) {
     selectedValue = selectedValue.split(' ');
     const newElement = selectedValue[selectedValue.length - 1].split('.')[0];
@@ -629,7 +630,7 @@ function confirmForm(event) {
                   if (
                     (value.value === '' && value.nodeName != 'BUTTON') ||
                     value.value === 'Add a group...' ||
-                    value.value === 'Add a construction...'
+                    value.value === 'Add a collocation...'
                   ) {
                     mandatory(value);
                     missingField = true;
