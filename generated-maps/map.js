@@ -180,24 +180,22 @@ well as the legend.
 ---------------------------------------- */
 
 function basicDisplay() {
+  let col = 0;
+  let row = 1;
   if (data.normalForm) {
-    const options = [
-      ['Modal: deontic', 'deontic'],
-      ['Modal: dynamic', 'dynamic'],
-      ['Modal: epistemic', 'epistemic'],
-      ['Not modal', 'notModal'],
-      ['Premodal', 'premodal'],
-      ['Postmodal', 'postmodal'],
-    ];
-
-    for (let i = 0; i < options.length; i++) {
-      const col = i <= 2 ? 1 : 0;
-      const row = i % 3 == 0 ? 1 : i % 3 == 1 ? 2 : 3;
-      const colSpace = 125;
+    const modalities = [...new Set(definitions.map((def) => def.modal))];
+    const colSpace = 125;
+    for (let i = 0; i < modalities.length; i++) {
+      if (i % 3 === 0 && i != 0) {
+        col++;
+        row = 1;
+      } else if (i % 3 != 0) {
+        row++;
+      }
 
       legend
         .append('rect')
-        .style('fill', colors[options[i][1]])
+        .style('fill', colors[modalities[i]])
         .attr('x', col * colSpace)
         .attr('y', row * 25)
         .attr('width', 12)
@@ -205,7 +203,7 @@ function basicDisplay() {
 
       legend
         .append('text')
-        .text(options[i][0])
+        .text(modalities[i])
         .attr('x', col * colSpace)
         .attr('y', row * 25)
         .attr('dx', 15)
@@ -213,8 +211,8 @@ function basicDisplay() {
     }
   }
 
-  const boxX = data.normalForm ? 2 * 125 : 0;
-  const boxY = data.normalForm ? 2 * 25 : 25;
+  const boxX = data.normalForm ? (col + 1) * 125 : 0;
+  const boxY = data.normalForm ? (col + 1) * 25 : 25;
 
   legend
     .append('rect')
@@ -1292,16 +1290,16 @@ function createColors() {
     Postmodal: 'gold',
   };
   const modalsColors = {};
-  let color = 28;
   modals.forEach((modal) => {
     if (!(modal in modalsColors)) {
       if (modal in basicColors) {
         modalsColors[modal] = basicColors[modal];
       } else {
-        modalsColors[modal] = `hsl(${color}, ${Math.ceil(
-          Math.random() * 20 + 80
-        )}%, ${Math.ceil(Math.random() * 50 + 25)}%)`;
-        color += 15;
+        modalsColors[modal] = `hsl(${Math.floor(
+          Math.random() * 361
+        )}, ${Math.ceil(Math.random() * 20 + 80)}%, ${Math.ceil(
+          Math.random() * 50 + 25
+        )}%)`;
       }
     }
   });
