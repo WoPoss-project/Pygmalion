@@ -1,6 +1,9 @@
 const data = JSON.parse(localStorage.getItem('map'));
 const definitions = prepareDefinitions();
 
+// Assign colors to modalites
+const colors = createColors();
+
 // DOM selections
 const saveToPNG = document.getElementById('saveToPNG');
 saveToPNG.addEventListener('click', exportToCanvas);
@@ -194,7 +197,7 @@ function basicDisplay() {
 
       legend
         .append('rect')
-        .style('fill', color(options[i][1]))
+        .style('fill', colors[options[i][1]])
         .attr('x', col * colSpace)
         .attr('y', row * 25)
         .attr('width', 12)
@@ -618,7 +621,7 @@ function addElems(elements, cW, cP, tip) {
     })
     .style('stroke-dasharray', (d) => (!d.certainty ? 4 : 0))
     .style('fill', 'white')
-    .style('stroke', (d) => color(d.modal))
+    .style('stroke', (d) => colors[d.modal])
     .style('stroke-width', 3)
     .on('click', (d) => {
       tip.transition().duration(50).style('opacity', 0);
@@ -1278,16 +1281,32 @@ function exportToSVG(event) {
 returns a color depending on the modality
 ---------------------------------------- */
 
-function color(modal) {
-  const conversion = {
-    notModal: 'lightgrey',
-    deontic: 'crimson',
-    dynamic: 'blueviolet',
-    epistemic: 'forestgreen',
-    premodal: 'black',
-    postmodal: 'gold',
+function createColors() {
+  const modals = [...new Set(definitions.map((def) => def.modal))];
+  const basicColors = {
+    'Not modal': 'lightgrey',
+    'Modal: deontic': 'crimson',
+    'Modal: dynamic': 'blueviolet',
+    'Modal: epistemic': 'forestgreen',
+    Premodal: 'black',
+    Postmodal: 'gold',
   };
-  return conversion[modal];
+  const modalsColors = {};
+  let color = 28;
+  modals.forEach((modal) => {
+    if (!(modal in modalsColors)) {
+      if (modal in basicColors) {
+        modalsColors[modal] = basicColors[modal];
+      } else {
+        modalsColors[modal] = `hsl(${color}, ${Math.ceil(
+          Math.random() * 20 + 80
+        )}%, ${Math.ceil(Math.random() * 50 + 25)}%)`;
+        color += 15;
+      }
+    }
+  });
+  console.log(modalsColors);
+  return modalsColors;
 }
 
 /* ----------------------------------------

@@ -558,7 +558,7 @@ function change(event) {
       },
     }).then((result) => {
       if (result.dismiss === Swal.DismissReason.cancel) {
-        event.target.value = 'None';
+        event.target.value = newElement === 'modality' ? 'Not modal' : 'None';
       }
     });
   }
