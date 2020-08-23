@@ -64,6 +64,7 @@ if (data.dataFormat === 'cent') {
     findCent(latest) + 100
   );
 
+  // TODO: test if it works
   if (r.includes(0)) {
     r.splice(r.indexOf(0), 1);
   }

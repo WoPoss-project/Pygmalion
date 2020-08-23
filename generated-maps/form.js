@@ -422,11 +422,7 @@ function selectRow(lab, cla, opt) {
     select.appendChild(option);
   });
 
-  if (cla === 'group') {
-    select.addEventListener('change', change);
-  } else {
-    select.addEventListener('change', change);
-  }
+  select.addEventListener('change', change);
 
   selectDiv.appendChild(select);
 
@@ -439,21 +435,33 @@ function selectRow(lab, cla, opt) {
 // General function to generate a select-type input with the modal types
 function createModalSelect() {
   const modalSelect = document.createElement('select');
-  const options = [
-    ['Not modal', 'notModal'],
-    ['Modal: deontic', 'deontic'],
-    ['Modal: dynamic', 'dynamic'],
-    ['Modal: epistemic', 'epistemic'],
-    ['Premodal', 'premodal'],
-    ['Postmodal', 'postmodal'],
-  ];
+
+  const existingSelects = document.querySelector(`.modality`);
+  const options = [];
+  if (!existingSelects) {
+    options.push(
+      'Not modal',
+      'Modal: deontic',
+      'Modal: dynamic',
+      'Modal: epistemic',
+      'Premodal',
+      'Postmodal',
+      'Add a modality...'
+    );
+  } else {
+    existingSelects.childNodes.forEach((el) => options.push(el.innerHTML));
+  }
 
   for (optionIndex in options) {
     const option = document.createElement('option');
-    option.innerHTML = options[optionIndex][0];
-    option.value = options[optionIndex][1];
+    option.innerHTML = options[optionIndex];
+    option.value = options[optionIndex];
     modalSelect.appendChild(option);
   }
+
+  modalSelect.className = 'modality';
+  modalSelect.addEventListener('change', change);
+
   return modalSelect;
 }
 
@@ -521,7 +529,8 @@ function change(event) {
 
   if (
     selectedValue === 'Add a group...' ||
-    selectedValue === 'Add a collocation...'
+    selectedValue === 'Add a collocation...' ||
+    selectedValue === 'Add a modality...'
   ) {
     selectedValue = selectedValue.split(' ');
     const newElement = selectedValue[selectedValue.length - 1].split('.')[0];
