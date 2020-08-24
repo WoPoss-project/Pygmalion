@@ -721,6 +721,19 @@ function confirmForm(event) {
         dataFormat: dateSpec.value,
         meanings: definitions,
       };
+/*      if (!missingField) {
+        localStorage.setItem('card', JSON.stringify(data));
+        console.log(JSON.parse(localStorage.getItem('card')));
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'The form was submitted without errors!',
+          confirmButtonText: 'Continue',
+        }).then((result) => {
+          if (result.value) {
+            window.location.href = 'http://woposs.unil.ch/relations.php'
+          }
+        });*/
       if (!missingField) {
         localStorage.setItem('map', JSON.stringify(data));
         console.log(JSON.parse(localStorage.getItem('map')));
@@ -729,6 +742,7 @@ function confirmForm(event) {
           title: 'Success!',
           text: 'The form was submitted without errors!',
         });
+
       } else {
         swal.fire({
           icon: 'error',
