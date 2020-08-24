@@ -255,7 +255,6 @@ function basicDisplay() {
     .attr('dx', 15)
     .attr('dy', 10);
 
-  console.log(colsSpace);
   const pathX1 = data.normalForm ? colsSpace : 0;
   const pathX2 = data.normalForm ? colsSpace + 20 : 20;
   const pathY = data.normalForm ? 47 : 50;
@@ -1319,16 +1318,29 @@ function createColors() {
     Postmodal: 'gold',
   };
   const modalsColors = {};
-  modals.forEach((modal) => {
+  const colorChoice = [
+    'purple',
+    'aqua',
+    'burlywood',
+    'cornflowerblue',
+    'aquamarine',
+    'coral',
+    'olivegreen',
+    'darkmagenta',
+    'darksalmon',
+    'darkorange',
+    'darkslateblue',
+    'deepskyblue',
+    'fuchsia',
+    'khaki',
+    'lightcyan',
+  ];
+  modals.forEach((modal, i) => {
     if (!(modal in modalsColors)) {
       if (modal in basicColors) {
         modalsColors[modal] = basicColors[modal];
       } else {
-        modalsColors[modal] = `hsl(${Math.floor(
-          Math.random() * 361
-        )}, ${Math.ceil(Math.random() * 20 + 80)}%, ${Math.ceil(
-          Math.random() * 50 + 25
-        )}%)`;
+        modalsColors[modal] = colorChoice[i];
       }
     }
   });
