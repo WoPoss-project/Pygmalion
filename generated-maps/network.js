@@ -5,7 +5,8 @@ const network = d3
   .append('svg')
   .attr('width', networkWidth)
   .attr('height', networkHeight)
-  .attr('transform', `translate(${margin.left}, 0)`);
+  .attr('transform', `translate(${margin.left}, 0)`)
+  .style('background-color', '#808080');
 
 const visualisationGroup = network.append('g');
 
@@ -63,13 +64,27 @@ const node = visualisationGroup
   .attr('class', 'nodes');
 
 node
+  .append('rect')
+  .attr('width', (d) => getTextWidth(d.name) + 12)
+  .attr('height', 20)
+  .attr('x', 5)
+  .attr('y', -26)
+  .attr('rx', 3)
+  .attr('ry', 3)
+  .style('fill', (d) => colors[d.modal])
+  .style('opacity', 0.5);
+
+node
   .append('circle')
   .attr('r', 10)
+  .style('stroke', (d) => colors[d.modal])
+  .style('stroke-width', 2)
   .style(
     'fill',
     (d) =>
       `rgb(45, ${50 + 10 * (d.emergence * 2)}, ${100 + 11 * (d.emergence * 2)})`
   );
+
 node
   .append('text')
   .text((d) => d.name)
@@ -95,6 +110,7 @@ function extractDefinitionData() {
       id: def.id,
       name: def.meaning,
       emergence: def.emergence,
+      modal: def.modal,
     });
     for (rel in def.relationships) {
       if (rel === 'destinations' || rel === 'unspecified') {
