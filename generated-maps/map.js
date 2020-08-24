@@ -277,7 +277,7 @@ function basicDisplay() {
 
   legend
     .append('text')
-    .text('Hypothetical relation')
+    .text('Hypothetical semantic relation')
     .attr('x', pathX1)
     .attr('y', pathY2)
     .attr('dx', 25)
