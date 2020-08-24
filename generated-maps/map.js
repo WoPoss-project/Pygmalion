@@ -95,7 +95,7 @@ const margin = {
   bottom: 0,
 };
 const width = '100%';
-const height = margin.top * 2.5 - 5 + definitions.length * 37;
+const height = margin.top * 2.5 - 5 + definitions.length * 37 + 37;
 
 // Definition of SVG
 const svg = d3
@@ -1085,7 +1085,7 @@ function getLines(elements, cW, cP) {
 
   let total = 0;
   lines.forEach((l) => (total += (l + 1) * 37));
-  const newHeight = margin.top * 2.5 - 5 + total;
+  const newHeight = margin.top * 2.5 - 5 + total + 37;
 
   svg.transition().duration(250).attr('height', newHeight);
 

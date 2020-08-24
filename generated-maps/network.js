@@ -37,9 +37,8 @@ const simulation = d3
     d3
       .forceLink() // This force provides links between nodes
       .id((d) => d.id) // This sets the node id accessor to the specified function. If not specified, will default to the index of a node.
-      .distance(30)
   )
-  .force('charge', d3.forceManyBody().strength(-150)) // This adds repulsion (if it's negative) between nodes.
+  .force('charge', d3.forceManyBody()) // This adds repulsion (if it's negative) between nodes.
   .force('center', d3.forceCenter(networkWidth / 2, networkHeight / 2)); // This force attracts nodes to the center of the svg area
 
 const dataset = extractDefinitionData();
@@ -105,13 +104,17 @@ simulation.force('link').links(dataset.links);
 
 function extractDefinitionData() {
   const obj = { nodes: [], links: [] };
-  definitions.forEach((def) => {
+  definitions.forEach((def, i) => {
     obj.nodes.push({
       id: def.id,
       name: def.meaning,
       emergence: def.emergence,
       modal: def.modal,
     });
+    /*if (i === 0) {
+      obj.nodes[i]['fx'] = networkWidth / 2;
+      obj.nodes[i]['fy'] = networkHeight / 2;
+    }*/
     for (rel in def.relationships) {
       if (rel === 'destinations' || rel === 'unspecified') {
         def.relationships[rel].forEach((r) => {
