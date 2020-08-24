@@ -1,13 +1,14 @@
 function drawLinks() {
   const networkWidth = getContainerData().width;
-  console.log(networkWidth);
   const networkHeight = 400;
   const network = d3
     .select('#network')
     .append('svg')
     .attr('width', networkWidth)
     .attr('height', networkHeight)
-    .attr('transform', `translate(${margin.left}, 0)`);
+    .attr('transform', `translate(${margin.left}, 0)`)
+    .style('border', '1px black solid')
+    .style('border-radius', '5px');
 
   const visualisationGroup = network
     .append('g')
