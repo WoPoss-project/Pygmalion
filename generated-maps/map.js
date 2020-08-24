@@ -1445,3 +1445,12 @@ function findCent(dec) {
 if (data) {
   basicDisplay();
 }
+
+window.addEventListener('resize', () => {
+  relationshipGroup.selectAll('path').remove();
+  meaningsGroup.selectAll('g').remove();
+  scale.selectAll('path').remove();
+  scale.selectAll('text').remove();
+
+  drawData();
+});
