@@ -529,68 +529,70 @@ the group or construct datapoints.
 function drawConstructsOrGroups(elements, cW, cP, lines, mode) {
   constructsAndGroups.selectAll('path').remove();
   constructsAndGroups.selectAll('text').remove();
-  const dataList = [...new Set(elements.map((el) => el[mode]))];
-  dataList.forEach((group) => {
-    if (group != 'None') {
-      const indexes = [];
-      elements.forEach((el) =>
-        el[mode] == group ? indexes.push(elements.indexOf(el)) : false
-      );
-      const max = Math.max(...indexes);
-      const min = Math.min(...indexes);
-      const x0 = elements[min].emergence * cP;
-      const x1 = elements[max].emergence * cP;
-      const x2 = Math.min(x0, x1) - 15;
-      const xMiddle = x2 - 10;
-      const y0 = min * 37 + lines[min] * 30;
-      const y1 =
-        max * 37 +
-        lines[max] * 30 +
-        (wrap(elements[max].meaning, cW, cP, elements[max]) + 1) * 30;
-      const pathHeight = y1 - y0;
-      const yMiddle = y1 - pathHeight / 2;
+  if (mode != 'chronology') {
+    const dataList = [...new Set(elements.map((el) => el[mode]))];
+    dataList.forEach((group) => {
+      if (group != 'None') {
+        const indexes = [];
+        elements.forEach((el) =>
+          el[mode] == group ? indexes.push(elements.indexOf(el)) : false
+        );
+        const max = Math.max(...indexes);
+        const min = Math.min(...indexes);
+        const x0 = elements[min].emergence * cP;
+        const x1 = elements[max].emergence * cP;
+        const x2 = Math.min(x0, x1) - 15;
+        const xMiddle = x2 - 10;
+        const y0 = min * 37 + lines[min] * 30;
+        const y1 =
+          max * 37 +
+          lines[max] * 30 +
+          (wrap(elements[max].meaning, cW, cP, elements[max]) + 1) * 30;
+        const pathHeight = y1 - y0;
+        const yMiddle = y1 - pathHeight / 2;
 
-      if (min < max) {
+        if (min < max) {
+          constructsAndGroups
+            .append('path')
+            .attr(
+              'd',
+              lineGenerator([
+                [x0, y0],
+                [x2, y0],
+                [x2, yMiddle],
+                [xMiddle, yMiddle],
+                [x2, yMiddle],
+                [x2, y1],
+                [x0, y1],
+              ])
+            )
+            .attr('fill', 'none')
+            .style('stroke', 'black')
+            .style('stroke-width', 1)
+            .style('opacity', 0)
+            .transition()
+            .duration(500)
+            .style('opacity', 1);
+        }
+
         constructsAndGroups
-          .append('path')
-          .attr(
-            'd',
-            lineGenerator([
-              [x0, y0],
-              [x2, y0],
-              [x2, yMiddle],
-              [xMiddle, yMiddle],
-              [x2, yMiddle],
-              [x2, y1],
-              [x0, y1],
-            ])
-          )
-          .attr('fill', 'none')
-          .style('stroke', 'black')
-          .style('stroke-width', 1)
+          .append('text')
+          .text(group)
+          .attr('x', () => {
+            if (min < max) {
+              return xMiddle - getTextWidth(group) - 5;
+            } else {
+              return x0 - getTextWidth(group) - 5;
+            }
+          })
+          .attr('y', yMiddle + 4)
           .style('opacity', 0)
           .transition()
           .duration(500)
           .style('opacity', 1);
       }
-
-      constructsAndGroups
-        .append('text')
-        .text(group)
-        .attr('x', () => {
-          if (min < max) {
-            return xMiddle - getTextWidth(group) - 5;
-          } else {
-            return x0 - getTextWidth(group) - 5;
-          }
-        })
-        .attr('y', yMiddle + 4)
-        .style('opacity', 0)
-        .transition()
-        .duration(500)
-        .style('opacity', 1);
-    }
-  });
+    });
+  }
 }
 
 /* ----------------------------------------
@@ -1015,10 +1017,14 @@ function sortElements(elements, mode) {
     const compareConstruct = (a, b) => (a < b ? -1 : b < a ? 1 : 0);
     const compareDate = (a, b) => Math.sign(a - b);
 
-    return (
-      compareConstruct(a[mode], b[mode]) ||
-      compareDate(a.emergence, b.emergence)
-    );
+    if (mode === 'chronology') {
+      return compareDate(a.emergence, b.emergence);
+    } else {
+      return (
+        compareConstruct(a[mode], b[mode]) ||
+        compareDate(a.emergence, b.emergence)
+      );
+    }
   });
   return elements;
 }
