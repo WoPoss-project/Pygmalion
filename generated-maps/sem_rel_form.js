@@ -9,7 +9,7 @@ if (localStorage.getItem('map')) {
   newRelationship.addEventListener('click', addRelationship);
   submitForm.addEventListener('click', submit);
 } else {
-  // redirect user to 1st form or home page
+  // window.location.replace('http://woposs.unil.ch/pygmalion.php');
 }
 
 function addRelationship(event) {
@@ -207,6 +207,16 @@ function submit(event) {
       });
     }
     localStorage.setItem('map', JSON.stringify(data));
+/*    Swal.fire({
+      icon: 'success',
+      title: 'Success!',
+      text: 'The form was susccessfully submitted',
+      confirmButtonText: 'Continue',
+    }).then((result) => {
+      if (result.value) {
+        window.location.href = 'http://woposs.unil.ch/map.php'
+      }
+    });*/
     Swal.fire({
       icon: 'success',
       title: 'Success!',
