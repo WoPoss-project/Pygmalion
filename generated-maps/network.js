@@ -37,6 +37,7 @@ const simulation = d3
     d3
       .forceLink() // This force provides links between nodes
       .id((d) => d.id) // This sets the node id accessor to the specified function. If not specified, will default to the index of a node.
+      .distance(50)
   )
   .force('charge', d3.forceManyBody()) // This adds repulsion (if it's negative) between nodes.
   .force('center', d3.forceCenter(networkWidth / 2, networkHeight / 2)); // This force attracts nodes to the center of the svg area
@@ -60,7 +61,9 @@ const node = visualisationGroup
   .data(dataset.nodes)
   .enter()
   .append('g')
-  .attr('class', 'nodes');
+  .attr('class', 'nodes')
+  .style('font', 'Arial, Helvetica, sans-serif')
+  .style('font-size', 12);
 
 node
   .append('rect')

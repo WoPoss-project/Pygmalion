@@ -182,12 +182,30 @@ well as the legend.
 function basicDisplay() {
   let col = 0;
   let row = 1;
+  let colsSpace = 0;
+  const colsWidth = [0];
   if (data.normalForm) {
     const modalities = [...new Set(definitions.map((def) => def.modal))];
-    const colSpace = 125;
+    const lengths = modalities.map((mod) => getTextWidth(mod));
+    const container = getContainerData();
+
+    const cols = [];
+    for (let i = 0; i < modalities.length; i += 3) {
+      cols.push(range(i, i + 2));
+    }
+    cols.forEach((c) => {
+      let longest = 0;
+      c.forEach(
+        (i) =>
+          (longest =
+            lengths[i] && lengths[i] > longest ? lengths[i] + 26 : longest)
+      );
+      colsWidth.push(longest);
+    });
     for (let i = 0; i < modalities.length; i++) {
       if (i % 3 === 0 && i != 0) {
         col++;
+        colsSpace += colsWidth[col];
         row = 1;
       } else if (i % 3 != 0) {
         row++;
@@ -196,7 +214,7 @@ function basicDisplay() {
       legend
         .append('rect')
         .style('fill', colors[modalities[i]])
-        .attr('x', col * colSpace)
+        .attr('x', colsSpace)
         .attr('y', row * 25)
         .attr('width', 12)
         .attr('height', 12);
@@ -204,15 +222,19 @@ function basicDisplay() {
       legend
         .append('text')
         .text(modalities[i])
-        .attr('x', col * colSpace)
+        .attr('x', colsSpace)
         .attr('y', row * 25)
         .attr('dx', 15)
         .attr('dy', 10);
     }
   }
 
-  const boxX = data.normalForm ? (col + 1) * 125 : 0;
+  colsSpace = colsWidth.reduce((a, b) => a + b);
+  const boxX = data.normalForm ? colsSpace : 0;
   const boxY = data.normalForm ? (col + 1) * 25 : 25;
+
+  colsSpace +=
+    getTextWidth(data.normalForm ? 'Likely modal (see color)' : 'Meaning') + 26;
 
   legend
     .append('rect')
@@ -233,9 +255,10 @@ function basicDisplay() {
     .attr('dx', 15)
     .attr('dy', 10);
 
-  const pathX1 = data.normalForm ? 420 : 0;
-  const pathX2 = data.normalForm ? 440 : 20;
-  const pathY = data.normalForm ? 45 : 50;
+  console.log(colsSpace);
+  const pathX1 = data.normalForm ? colsSpace : 0;
+  const pathX2 = data.normalForm ? colsSpace + 20 : 20;
+  const pathY = data.normalForm ? 47 : 50;
 
   legend
     .append('path')
