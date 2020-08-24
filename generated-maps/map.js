@@ -1303,7 +1303,6 @@ function createColors() {
       }
     }
   });
-  console.log(modalsColors);
   return modalsColors;
 }
 
