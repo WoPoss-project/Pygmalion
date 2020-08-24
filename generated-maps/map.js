@@ -1319,12 +1319,12 @@ function createColors() {
   };
   const modalsColors = {};
   const colorChoice = [
-    'purple',
-    'aqua',
-    'burlywood',
     'cornflowerblue',
-    'aquamarine',
+    'aqua',
+    'purple',
+    'burlywood',
     'coral',
+    'aquamarine',
     'olivegreen',
     'darkmagenta',
     'darksalmon',
