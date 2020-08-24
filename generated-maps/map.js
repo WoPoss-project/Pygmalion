@@ -366,7 +366,7 @@ function drawEtymology() {
       totalLength += gw;
     }
   } else if (typeof ety === 'boolean' && ety === false) {
-    gw = getTextWidth(data.headword);
+    gw = getTextWidth(data.headword) + 25;
 
     const g = etymology
       .append('g')
@@ -997,7 +997,7 @@ function simpleModalityFormatting(meaning) {
     meaning: meaning.definition,
     construct: meaning.construct,
     group: meaning.group,
-    modal: 'notModal',
+    modal: 'Not modal',
     emergence: meaning.emergence,
     certainty: true,
     attestation: meaning.attestation,

@@ -367,27 +367,6 @@ function selectRow(lab, cla, opt) {
   return row;
 }
 
-// General function to generate a select-type input with the modal types
-function createModalSelect() {
-  const modalSelect = document.createElement('select');
-  const options = [
-    ['Not modal', 'notModal'],
-    ['Modal: deontic', 'deontic'],
-    ['Modal: dynamic', 'dynamic'],
-    ['Modal: epistemic', 'epistemic'],
-    ['Premodal', 'premodal'],
-    ['Postmodal', 'postmodal'],
-  ];
-
-  for (optionIndex in options) {
-    const option = document.createElement('option');
-    option.innerHTML = options[optionIndex][0];
-    option.value = options[optionIndex][1];
-    modalSelect.appendChild(option);
-  }
-  return modalSelect;
-}
-
 // Function to delete a modality
 function deleteEntry(event) {
   let parent = event.target.parentNode;
@@ -608,19 +587,6 @@ function confirmForm(event) {
         dataFormat: dateSpec.value,
         meanings: definitions,
       };
-/*      if (!missingField) {
-        localStorage.setItem('card', JSON.stringify(data));
-        console.log(JSON.parse(localStorage.getItem('card')));
-        Swal.fire({
-          icon: 'success',
-          title: 'Success!',
-          text: 'The form was submitted without errors!',
-          confirmButtonText: 'Continue',
-        }).then((result) => {
-          if (result.value) {
-            window.location.href = 'http://woposs.unil.ch/relations.php'
-          }
-        });*/
       if (!missingField) {
         localStorage.setItem('map', JSON.stringify(data));
         console.log(JSON.parse(localStorage.getItem('map')));
