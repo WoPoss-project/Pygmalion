@@ -446,7 +446,7 @@ function createModalSelect() {
       'Modal: epistemic',
       'Premodal',
       'Postmodal',
-      'Add a modality...'
+      'Add a type of modality...'
     );
   } else {
     existingSelects.childNodes.forEach((el) => options.push(el.innerHTML));
@@ -455,7 +455,10 @@ function createModalSelect() {
   for (optionIndex in options) {
     const option = document.createElement('option');
     option.innerHTML = options[optionIndex];
-    option.value = options[optionIndex];
+    option.value =
+      options[optionIndex] === 'Add a type of modality...'
+        ? 'Add a modality...'
+        : options[optionIndex];
     modalSelect.appendChild(option);
   }
 
@@ -535,7 +538,9 @@ function change(event) {
     selectedValue = selectedValue.split(' ');
     const newElement = selectedValue[selectedValue.length - 1].split('.')[0];
     Swal.fire({
-      title: `Please type a name for the new ${newElement}`,
+      title: `Please specify a name for the new ${
+        newElement === 'modality' ? ' type of ' + newElement : newElement
+      }`,
       input: 'text',
       inputAttributes: {
         autocapitalize: 'off',
@@ -721,7 +726,7 @@ function confirmForm(event) {
         dataFormat: dateSpec.value,
         meanings: definitions,
       };
-/*      if (!missingField) {
+      /*      if (!missingField) {
         localStorage.setItem('card', JSON.stringify(data));
         console.log(JSON.parse(localStorage.getItem('card')));
         Swal.fire({
@@ -742,7 +747,6 @@ function confirmForm(event) {
           title: 'Success!',
           text: 'The form was submitted without errors!',
         });
-
       } else {
         swal.fire({
           icon: 'error',
