@@ -60,7 +60,10 @@ function drawLinks() {
     const singleEmergences = [
       ...new Set(dataset.nodes.map((node) => node.emergence)),
     ];
+    datasetEmergences.sort((a, b) => a - b);
+    singleEmergences.sort((a, b) => a - b);
     const indices = datasetEmergences.map((d) => singleEmergences.indexOf(d));
+    dataset.nodes.sort((a, b) => a.emergence - b.emergence);
     dataset.nodes.forEach((node, i) => {
       node.emergence = indices[i];
     });

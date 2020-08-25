@@ -1067,15 +1067,14 @@ sorting parameter
 
 function sortElements(elements, mode) {
   elements.sort((a, b) => {
-    const compareConstruct = (a, b) => (a < b ? -1 : b < a ? 1 : 0);
+    const compareMode = (a, b) => (a < b ? -1 : b < a ? 1 : 0);
     const compareDate = (a, b) => Math.sign(a - b);
 
     if (mode === 'chronology') {
       return compareDate(a.emergence, b.emergence);
     } else {
       return (
-        compareConstruct(a[mode], b[mode]) ||
-        compareDate(a.emergence, b.emergence)
+        compareMode(a[mode], b[mode]) || compareDate(a.emergence, b.emergence)
       );
     }
   });
