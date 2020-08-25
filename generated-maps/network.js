@@ -1,6 +1,6 @@
 function drawLinks() {
   const networkWidth = getContainerData().width;
-  const networkHeight = 400;
+  const networkHeight = 500;
   const network = d3
     .select('#network')
     .append('svg')
@@ -10,9 +10,9 @@ function drawLinks() {
     .style('border', '1px black solid')
     .style('border-radius', '5px');
 
-  const visualisationGroup = network
-    .append('g')
-    .style('background-color', '#808080');
+  drawLegend(network);
+
+  const visualisationGroup = network.append('g');
 
   visualisationGroup.append('rect');
 
@@ -202,6 +202,22 @@ function extractDefinitionData() {
     }
   });
   return obj;
+}
+
+function drawLegend(network) {
+  const text = network
+    .append('text')
+    .attr('x', 6)
+    .attr('y', 18)
+    .style('font-family', 'Arial, Helvetica, sans-serif')
+    .style('font-size', 12);
+  text.append('tspan').text('Use mousewheel to zoom in and out');
+
+  text
+    .append('tspan')
+    .text('Click and drag to explore the network graph')
+    .attr('dx', -getTextWidth('Use mousewheel to zoom in and out'))
+    .attr('dy', 15);
 }
 
 if (data) {
