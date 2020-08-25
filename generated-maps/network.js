@@ -117,7 +117,10 @@ function drawLinks() {
 
   node
     .append('text')
-    .text((d) => d.name)
+    .text((d) => {
+      const w = d.name.split(' ');
+      return w[0] + (w[1] ? ' ' + w[1] : '') + (w[3] ? '...' : '');
+    })
     .attr('dx', 10)
     .attr('dy', -10);
 

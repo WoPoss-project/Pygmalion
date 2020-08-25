@@ -598,9 +598,10 @@ function drawConstructsOrGroups(elements, cW, cP, lines, mode) {
             .style('opacity', 1);
         }
 
+        group = formatText(group);
         constructsAndGroups
           .append('text')
-          .text(group)
+          .text(() => group)
           .attr('x', () => {
             if (min < max) {
               return xMiddle - getTextWidth(group) - 5;
@@ -1030,6 +1031,21 @@ function simpleModalityFormatting(meaning) {
     relationships: meaning.relationships,
     disparition: meaning.disparition,
   };
+}
+
+/* ----------------------------------------
+"formatText" function:
+returns a string formatted to be used as a
+group or construct element
+---------------------------------------- */
+
+function formatText(text) {
+  let length = getTextWidth(text);
+  while (length > 60) {
+    text = text.substring(1);
+    length = getTextWidth(text);
+  }
+  return '...' + text;
 }
 
 /* ----------------------------------------
