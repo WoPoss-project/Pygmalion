@@ -68,9 +68,9 @@ if (data.dataFormat === 'cent') {
   );
 
   // TODO: test if it works
-  if (r.includes(0)) {
+  /*if (r.includes(0)) {
     r.splice(r.indexOf(0), 1);
-  }
+  }*/
 
   definitions.forEach((def) => {
     def.emergence = r.indexOf(def.emergence);
@@ -657,7 +657,6 @@ function addElems(elements, cW, cP, tip) {
     .on('mouseover', (d) => {
       tip.transition().duration(50).style('opacity', 1);
       tip
-        // TODO: adapt for centuries
         .html(() => {
           const r =
             data.dataFormat != 'cent'
@@ -676,9 +675,9 @@ function addElems(elements, cW, cP, tip) {
                   )
               : 0;
           // TODO: test if it works
-          if (r.includes(0) && data.dataFormat === 'dec') {
+          /*if (r.includes(0) && data.dataFormat === 'dec') {
             r.splice(r.indexOf(0), 1);
-          }
+          }*/
           if (data.dataFormat === 'cent') {
             const em = d.emergence - Math.abs(earliest);
             const dis = d.disparition - Math.abs(earliest);

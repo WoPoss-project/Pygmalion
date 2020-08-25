@@ -211,12 +211,19 @@ function drawLegend(network) {
     .attr('y', 18)
     .style('font-family', 'Arial, Helvetica, sans-serif')
     .style('font-size', 12);
+
   text.append('tspan').text('Use mousewheel to zoom in and out');
 
   text
     .append('tspan')
     .text('Click and drag to explore the network graph')
     .attr('dx', -getTextWidth('Use mousewheel to zoom in and out'))
+    .attr('dy', 15);
+
+  text
+    .append('tspan')
+    .text('Click and drag any node to move it')
+    .attr('dx', -getTextWidth('Click and drag to explore the network graph'))
     .attr('dy', 15);
 }
 
