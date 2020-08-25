@@ -6,10 +6,10 @@ const colors = createColors();
 
 // DOM selections
 const saveToPNG = document.getElementById('saveToPNG');
-saveToPNG.addEventListener('click', exportToCanvas);
+saveToPNG.addEventListener('click', (event) => exportToCanvas(event, svg));
 
 const saveToSVG = document.getElementById('saveToSVG');
-saveToSVG.addEventListener('click', exportToSVG);
+saveToSVG.addEventListener('click', (event) => exportToSVG(event, svg));
 
 const select = document.getElementById('mode');
 let selectMode = select.value;
@@ -101,6 +101,7 @@ const height = margin.top * 2.5 - 5 + definitions.length * 37 + 37;
 const svg = d3
   .select('#map')
   .append('svg')
+  .attr('id', 'map')
   .attr('width', width)
   .attr('height', height)
   .attr('style', 'font: 12px sans-serif')
@@ -1223,24 +1224,37 @@ function wrap(text, cW, cP, r = 'add') {
 exports SVG to canvas element
 ---------------------------------------- */
 
-function exportToCanvas(event) {
+function exportToCanvas(event, SVG) {
   event.preventDefault();
 
-  let svgWidth = svg.style('width');
+  let svgWidth = SVG.style('width');
   svgWidth = Number(svgWidth.substring(0, svgWidth.length - 2));
 
-  let svgHeight = svg.style('height');
+  let svgHeight = SVG.style('height');
   svgHeight = Number(svgHeight.substring(0, svgHeight.length - 2));
 
-  svg.attr('width', svgWidth);
-  const svgNode = svg.node();
+  if (SVG.attr('id') === 'map') {
+    SVG.attr('width', svgWidth);
+  }
+
+  const svgNode = SVG.node();
 
   const canvas = document.createElement('canvas');
   canvas.width = svgWidth;
   canvas.height = svgHeight;
 
+  if (SVG.attr('id') === 'network') {
+    SVG.attr('transform', 'translate(0,0)');
+  }
+
   var ctx = canvas.getContext('2d');
+
   var data = new XMLSerializer().serializeToString(svgNode);
+
+  if (SVG.attr('id') === 'network') {
+    SVG.attr('transform', `translate(${margin.left},0)`);
+  }
+
   var DOMURL = window.URL || window.webkitURL || window;
 
   var img = new Image();
@@ -1255,7 +1269,7 @@ function exportToCanvas(event) {
       .toDataURL('image/png')
       .replace('image/png', 'image/octet-stream');
 
-    triggerDownload(imgURI);
+    triggerDownload(imgURI, SVG);
   };
 
   img.src = url;
@@ -1266,7 +1280,7 @@ function exportToCanvas(event) {
 forces the browser to download the canvas
 ---------------------------------------- */
 
-function triggerDownload(imgURI) {
+function triggerDownload(imgURI, SVG) {
   const evt = new MouseEvent('click', {
     view: window,
     bubbles: false,
@@ -1274,7 +1288,10 @@ function triggerDownload(imgURI) {
   });
 
   const a = document.createElement('a');
-  a.setAttribute('download', 'semantic_map.png');
+  a.setAttribute(
+    'download',
+    SVG.attr('id') === 'map' ? 'semantic_map.png' : 'relationships_graph.png'
+  );
   a.setAttribute('href', imgURI);
   a.setAttribute('target', '_blank');
 
@@ -1286,22 +1303,23 @@ function triggerDownload(imgURI) {
 exports SVG element to .svg file
 ---------------------------------------- */
 
-function exportToSVG(event) {
+function exportToSVG(event, SVG) {
   event.preventDefault();
 
-  let svgWidth = svg.style('width');
+  let svgWidth = SVG.style('width');
   svgWidth = Number(svgWidth.substring(0, svgWidth.length - 2));
-  svg.attr('width', svgWidth);
+  SVG.attr('width', svgWidth);
 
-  const svgNode = svg.node();
+  const svgNode = SVG.node();
   var data = new XMLSerializer().serializeToString(svgNode);
 
   var svgBlob = new Blob([data], { type: 'image/svg+xml;' });
   var svgUrl = URL.createObjectURL(svgBlob);
-  console.log(svgUrl);
+
   var downloadLink = document.createElement('a');
   downloadLink.href = svgUrl;
-  downloadLink.download = 'semantic_map.svg';
+  downloadLink.download =
+    SVG.attr('id') === 'map' ? 'semantic_map.svg' : 'relationships_graph.svg';
   downloadLink.click();
 }
 
@@ -1490,11 +1508,20 @@ if (data) {
   basicDisplay();
 }
 
-window.addEventListener('resize', () => {
-  relationshipGroup.selectAll('path').remove();
-  meaningsGroup.selectAll('g').remove();
-  scale.selectAll('path').remove();
-  scale.selectAll('text').remove();
+let windowWidth = $(window).width();
+$(window).on('resize', function () {
+  if ($(this).width() !== windowWidth) {
+    windowWidth = $(this).width();
 
-  drawData();
+    relationshipGroup.selectAll('path').remove();
+    meaningsGroup.selectAll('g').remove();
+    scale.selectAll('path').remove();
+    scale.selectAll('text').remove();
+
+    drawData();
+
+    d3.selectAll('#network').select('svg').remove();
+
+    drawLinks();
+  }
 });

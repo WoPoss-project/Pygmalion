@@ -1,18 +1,29 @@
+let network;
+const saveGraphToPNG = document.getElementById('saveGraphToPNG');
+const saveGraphToSVG = document.getElementById('saveGraphToSVG');
+
+saveGraphToPNG.addEventListener('click', (event) =>
+  exportToCanvas(event, network)
+);
+saveGraphToSVG.addEventListener('click', (event) =>
+  exportToSVG(event, network)
+);
+
 function drawLinks() {
   const networkWidth = getContainerData().width;
   const networkHeight = 500;
-  const network = d3
+  network = d3
     .select('#network')
     .append('svg')
+    .attr('id', 'network')
     .attr('width', networkWidth)
     .attr('height', networkHeight)
     .attr('transform', `translate(${margin.left}, 0)`)
     .style('border', '1px black solid')
-    .style('border-radius', '5px');
+    .style('border-radius', '5px')
+    .style('background-color', 'white');
 
   const visualisationGroup = network.append('g');
-
-  visualisationGroup.append('rect');
 
   network
     .append('defs')
@@ -242,9 +253,3 @@ function drawLegend(network) {
 if (data) {
   drawLinks();
 }
-
-window.addEventListener('resize', () => {
-  d3.selectAll('#network').select('svg').remove();
-
-  drawLinks();
-});
