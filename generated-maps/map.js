@@ -598,7 +598,12 @@ function drawConstructsOrGroups(elements, cW, cP, lines, mode) {
             .style('opacity', 1);
         }
 
-        group = formatText(group);
+        group = formatText(
+          group,
+          min < max
+            ? xMiddle - getTextWidth(group) - 5
+            : x0 - getTextWidth(group) - 5
+        );
         constructsAndGroups
           .append('text')
           .text(() => group)
@@ -1039,13 +1044,19 @@ returns a string formatted to be used as a
 group or construct element
 ---------------------------------------- */
 
-function formatText(text) {
+function formatText(text, x) {
+  const offset = x + getTextWidth(text);
+  const to100 = 100 + offset - 27;
   let length = getTextWidth(text);
-  while (length > 60) {
-    text = text.substring(1);
-    length = getTextWidth(text);
+  if (length > to100) {
+    while (length > to100) {
+      text = text.substring(1);
+      length = getTextWidth(text);
+    }
+    return '...' + text;
+  } else {
+    return text;
   }
-  return '...' + text;
 }
 
 /* ----------------------------------------
