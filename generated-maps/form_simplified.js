@@ -674,12 +674,6 @@ function dateConversion(format, element) {
     ) {
       date = century;
     } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Date encoding error!',
-        text:
-          'Dates are not encoded correctly. Century format is as follows: "II BC", "IX BC", "VI BC" for the centuries before Christ and "II", "XX", "IV" for the centuries after Christ. Specific years should be typed as follows: "1700", "100", "-50", "-500". Centuries will be inferred from the years.',
-      });
       mandatory(element);
       return false;
     }
@@ -698,22 +692,10 @@ function dateConversion(format, element) {
         ) {
           input.length == 2 ? (decade = '-' + input[0]) : (decade = input[0]);
         } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Date encoding error!',
-            text:
-              'Dates are not encoded correctly. Please make sure you format decades as follows: "200s BC", "50s BC", "10s", "1920s".',
-          });
           mandatory(element);
           return false;
         }
       } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Date encoding error!',
-          text:
-            'Dates are not encoded correctly. Please make sure you format decades as follows: "200s BC", "50s BC", "10s", "1920s".',
-        });
         mandatory(element);
         return false;
       }
@@ -727,12 +709,6 @@ function dateConversion(format, element) {
     ) {
       date = decade;
     } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Date encoding error!',
-        text:
-          'Dates are not encoded correctly. Please make sure you format decades as follows: "200s BC", "50s BC", "10s", "1920s", or that you entered a valid year (-202, -19, 1414, 1932)',
-      });
       mandatory(element);
       return false;
     }
@@ -743,12 +719,6 @@ function dateConversion(format, element) {
   ) {
     date = Number(element.value);
   } else {
-    Swal.fire({
-      icon: 'error',
-      title: 'Error!',
-      text:
-        'Dates are not encoded correctly. Please make sure the years you entered are correct',
-    });
     mandatory(element);
     return false;
   }

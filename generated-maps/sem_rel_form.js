@@ -180,7 +180,6 @@ function submit(event) {
         if (data.normalForm) {
           if (meaning.modalities.length > 1) {
             meaning.modalities.forEach((modality) => {
-              modality = addRelationships(modality);
               if (modality.id === final[i].origin) {
                 modality = editModality(modality, final[i], 'og');
               } else if (modality.id === final[i].destination) {
@@ -189,7 +188,6 @@ function submit(event) {
             });
           } else {
             let modality = meaning.modalities[0];
-            modality = addRelationships(modality);
             if (modality.id === final[i].origin) {
               modality = editModality(modality, final[i], 'og');
             } else if (modality.id === final[i].destination) {
@@ -207,7 +205,7 @@ function submit(event) {
       });
     }
     localStorage.setItem('map', JSON.stringify(data));
-/*    Swal.fire({
+    /*    Swal.fire({
       icon: 'success',
       title: 'Success!',
       text: 'The form was susccessfully submitted',
@@ -224,17 +222,6 @@ function submit(event) {
     });
     console.log(JSON.parse(localStorage.getItem('map')));
   }
-}
-
-function addRelationships(modality) {
-  if (!('relationships' in modality)) {
-    modality['relationships'] = {
-      origins: [],
-      destinations: [],
-      unspecified: [],
-    };
-  }
-  return modality;
 }
 
 function editModality(modality, final, type) {

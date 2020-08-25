@@ -10,8 +10,6 @@ function drawLinks() {
     .style('border', '1px black solid')
     .style('border-radius', '5px');
 
-  drawLegend(network);
-
   const visualisationGroup = network.append('g');
 
   visualisationGroup.append('rect');
@@ -147,6 +145,8 @@ function drawLinks() {
   function zoom_actions() {
     visualisationGroup.attr('transform', d3.event.transform);
   }
+
+  drawLegend(network);
 }
 
 function extractDefinitionData() {

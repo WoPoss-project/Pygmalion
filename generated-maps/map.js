@@ -675,6 +675,10 @@ function addElems(elements, cW, cP, tip) {
                     findCent(latest) + 100
                   )
               : 0;
+          // TODO: test if it works
+          if (r.includes(0) && data.dataFormat === 'dec') {
+            r.splice(r.indexOf(0), 1);
+          }
           if (data.dataFormat === 'cent') {
             const em = d.emergence - Math.abs(earliest);
             const dis = d.disparition - Math.abs(earliest);
