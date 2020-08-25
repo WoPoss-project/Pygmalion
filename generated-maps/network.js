@@ -43,6 +43,18 @@ function drawLinks() {
     .force('center', d3.forceCenter(networkWidth / 2, networkHeight / 2)); // This force attracts nodes to the center of the svg area
 
   const dataset = extractDefinitionData();
+
+  if (data.dataForm != 'cent') {
+    const datasetEmergences = dataset.nodes.map((node) => node.emergence);
+    const singleEmergences = [
+      ...new Set(dataset.nodes.map((node) => node.emergence)),
+    ];
+    const indices = datasetEmergences.map((d) => singleEmergences.indexOf(d));
+    dataset.nodes.forEach((node, i) => {
+      node.emergence = indices[i];
+    });
+  }
+
   //add zoom capabilities
   var zoom_handler = d3.zoom().on('zoom', zoom_actions);
   zoom_handler(network);
