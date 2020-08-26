@@ -31,9 +31,20 @@ function importJSONData(event) {
         });
         return;
       }
-      const fr = new FileReader();
-      fr.onload = recievedText;
-      fr.readAsText(file);
+      if (file) {
+        const fr = new FileReader();
+        fr.onload = recievedText;
+        fr.readAsText(file);
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'File error',
+          text: 'Please ensure that you have selected a file.',
+          preConfirm: () => {
+            importJSONData(event);
+          },
+        });
+      }
 
       function recievedText(e) {
         let lines = e.target.result;
