@@ -11,6 +11,31 @@ saveToPNG.addEventListener('click', (event) => exportToCanvas(event, svg));
 const saveToSVG = document.getElementById('saveToSVG');
 saveToSVG.addEventListener('click', (event) => exportToSVG(event, svg));
 
+const importData = document.getElementById('importData');
+importData.addEventListener('click', importJSONData);
+
+const exportData = document.getElementById('exportData');
+exportData.addEventListener('click', exportJSONData);
+
+function importJSONData(event) {
+  event.preventDefault();
+}
+
+function exportJSONData(event) {
+  event.preventDefault();
+  const dataString = JSON.stringify(data);
+  console.log(dataString);
+  const dataURI =
+    'data:text/json;charset=utf-8,' + encodeURIComponent(dataString);
+  console.log(dataURI);
+  const exportFileName = 'semantic_map.json';
+
+  const linkElement = document.createElement('a');
+  linkElement.setAttribute('href', dataURI);
+  linkElement.setAttribute('download', exportFileName);
+  linkElement.click();
+}
+
 const select = document.getElementById('mode');
 let selectMode = select.value;
 
