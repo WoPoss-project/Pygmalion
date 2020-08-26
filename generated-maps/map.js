@@ -1,4 +1,4 @@
-const data = JSON.parse(localStorage.getItem('map'));
+let data = JSON.parse(localStorage.getItem('map'));
 const definitions = prepareDefinitions();
 
 // Assign colors to modalites
@@ -19,15 +19,39 @@ exportData.addEventListener('click', exportJSONData);
 
 function importJSONData(event) {
   event.preventDefault();
+  Swal.fire({
+    title: 'Please select a file',
+    input: 'file',
+    showCancelButton: true,
+    confirmButtonText: 'Import',
+    showLoaderOnConfirm: true,
+    preConfirm: (file) => {
+      if (typeof window.FileReader !== 'function') {
+        Swal.fire({
+          icon: 'error',
+          title: 'API error',
+          text: 'Your browser does not support the file API yet.',
+        });
+        return;
+      }
+      const fr = new FileReader();
+      fr.onload = recievedText;
+      fr.readAsText(file);
+
+      function recievedText(e) {
+        let lines = e.target.result;
+        localStorage.setItem('map', lines);
+        location.reload();
+      }
+    },
+  });
 }
 
 function exportJSONData(event) {
   event.preventDefault();
   const dataString = JSON.stringify(data);
-  console.log(dataString);
   const dataURI =
     'data:text/json;charset=utf-8,' + encodeURIComponent(dataString);
-  console.log(dataURI);
   const exportFileName = 'semantic_map.json';
 
   const linkElement = document.createElement('a');
