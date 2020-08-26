@@ -14,6 +14,13 @@ importData.addEventListener('click', importJSONData);
 const exportData = document.getElementById('exportData');
 exportData.addEventListener('click', exportJSONData);
 
+/* ------------------------------------
+"importJSONData" function: prompts the
+user for a JSON file, reads it, loads
+it into the localStorage and reloads
+the page
+------------------------------------ */
+
 function importJSONData(event) {
   event.preventDefault();
   Swal.fire({
@@ -54,6 +61,12 @@ function importJSONData(event) {
     },
   });
 }
+
+/* ------------------------------------
+"exportJSONData" function: allows the 
+user to export the JSON data and 
+download it
+------------------------------------ */
 
 function exportJSONData(event) {
   event.preventDefault();
@@ -739,9 +752,7 @@ draws the relationship arrows on the right-
 hand side of the data elements.
 ---------------------------------------- */
 
-function updateElems(elements, cW, cP, elementsData, displayRels, lines) {
-  //elements.selectAll('text').call(wrap, cW, cP, 'update');
-
+function updateElems(_, cW, cP, elementsData, displayRels, lines) {
   if (displayRels) {
     const element = elementsData.reduce((acc, curr) =>
       curr.rel === 'origin' ? (acc = curr) : acc
@@ -1529,6 +1540,7 @@ function findCent(dec) {
   return dec;
 }
 
+// If there is data present in the localStorage
 if (data) {
   // Reformat data
   definitions = prepareDefinitions();
