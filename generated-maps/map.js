@@ -847,7 +847,6 @@ function drawScale(earliest, latest, cW) {
         : findCent(earliest),
       findCent(latest) + 100
     );
-    // decadesForScale.splice(decadesForScale.indexOf(0), 1);
     centuries = [
       ...new Set(decadesForScale.map((dec) => centuryFromYear(dec))),
     ];
@@ -856,7 +855,6 @@ function drawScale(earliest, latest, cW) {
       earliest > 0 && latest > 0 ? findCent(earliest) - 99 : findCent(earliest),
       findCent(latest) + 100
     );
-    // decadesForScale.splice(decadesForScale.indexOf(0), 1);
     centuries = [...new Set(yearsForScale.map((dec) => centuryFromYear(dec)))];
   }
 
@@ -1608,6 +1606,10 @@ if (data) {
       def.disparition = r.indexOf(def.disparition);
     });
   }
+
+  definitions.forEach((def) => {
+    def.meaning = def.meaning.charAt(0).toUpperCase() + def.meaning.slice(1);
+  });
 
   document
     .querySelectorAll('.invisibleWhenNoData')
