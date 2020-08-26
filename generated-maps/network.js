@@ -238,8 +238,10 @@ function drawLegend(network) {
     .append('text')
     .attr('x', 6)
     .attr('y', 18)
-    .style('font-family', 'Arial, Helvetica, sans-serif')
-    .style('font-size', 12);
+    .attr(
+      'style',
+      `font-family: Arial, Helvetica, sans-serif; font-size: 12px`
+    );
 
   text.append('tspan').text('Use mousewheel to zoom in and out');
 
