@@ -1630,6 +1630,6 @@ $(window).on('resize', function () {
 
     d3.selectAll('#network').select('svg').remove();
 
-    drawLinks();
+    drawGraph();
   }
 });
