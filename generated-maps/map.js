@@ -1,8 +1,5 @@
 let data = JSON.parse(localStorage.getItem('map'));
-const definitions = prepareDefinitions();
-
-// Assign colors to modalites
-const colors = createColors();
+let definitions, colors, earliest, latest;
 
 // DOM selections
 const saveToPNG = document.getElementById('saveToPNG');
@@ -75,66 +72,8 @@ select.addEventListener('change', (event) => {
   );
 });
 
-/* --------------------------------
-definition of the earliest as well
-as latest date in the dataset.
--------------------------------- */
-
-const earliest = d3.min(definitions, (d) => d.emergence);
-const emergenceMax = d3.max(definitions, (d) => d.emergence);
-definitions.forEach((d) => (d.disparition = +d.disparition));
-const disparitionMax = d3.max(definitions, (d) => d.disparition);
-const latest = d3.max(definitions, (d) =>
-  typeof disparitionMax == 'undefined' || emergenceMax > disparitionMax
-    ? d.emergence
-    : d.disparition
-);
-
 // line generator
 const lineGenerator = d3.line();
-
-/* --------------------------------
-data recoding: prepares emergence
-and disparition data for display
-calculations
--------------------------------- */
-
-if (data.dataFormat === 'cent') {
-  definitions.forEach((def) => {
-    if (def.emergence > 0) {
-      def.emergence -= 1;
-      def.disparition -= 1;
-    }
-    if (earliest < 0) {
-      def.emergence += Math.abs(earliest);
-      def.disparition += Math.abs(earliest);
-    }
-  });
-} else if (data.dataFormat === 'dec') {
-  const r = range10(
-    earliest > 0 && latest > 0 ? findCent(earliest) - 100 : findCent(earliest),
-    findCent(latest) + 100
-  );
-
-  // TODO: test if it works
-  /*if (r.includes(0)) {
-    r.splice(r.indexOf(0), 1);
-  }*/
-
-  definitions.forEach((def) => {
-    def.emergence = r.indexOf(def.emergence);
-    def.disparition = r.indexOf(def.disparition);
-  });
-} else {
-  const r = range(
-    earliest > 0 && latest > 0 ? findCent(earliest) - 99 : findCent(earliest),
-    findCent(latest) + 100
-  );
-  definitions.forEach((def) => {
-    def.emergence = r.indexOf(def.emergence);
-    def.disparition = r.indexOf(def.disparition);
-  });
-}
 
 // sizing consts
 const margin = {
@@ -144,7 +83,9 @@ const margin = {
   bottom: 0,
 };
 const width = '100%';
-const height = margin.top * 2.5 - 5 + definitions.length * 37 + 37;
+const height = definitions
+  ? margin.top * 2.5 - 5 + definitions.length * 37 + 37
+  : 0;
 
 // Definition of SVG
 const svg = d3
@@ -1580,6 +1521,65 @@ function findCent(dec) {
 }
 
 if (data) {
+  // Reformat data
+  definitions = prepareDefinitions();
+
+  // Assign colors to modalites
+  colors = createColors();
+
+  /* --------------------------------
+  definition of the earliest as well
+  as latest date in the dataset.
+  -------------------------------- */
+  earliest = d3.min(definitions, (d) => d.emergence);
+  const emergenceMax = d3.max(definitions, (d) => d.emergence);
+  definitions.forEach((d) => (d.disparition = +d.disparition));
+  const disparitionMax = d3.max(definitions, (d) => d.disparition);
+  latest = d3.max(definitions, (d) =>
+    typeof disparitionMax == 'undefined' || emergenceMax > disparitionMax
+      ? d.emergence
+      : d.disparition
+  );
+
+  /* --------------------------------
+  data recoding: prepares emergence
+  and disparition data for display
+  calculations
+  -------------------------------- */
+  if (data.dataFormat === 'cent') {
+    definitions.forEach((def) => {
+      if (def.emergence > 0) {
+        def.emergence -= 1;
+        def.disparition -= 1;
+      }
+      if (earliest < 0) {
+        def.emergence += Math.abs(earliest);
+        def.disparition += Math.abs(earliest);
+      }
+    });
+  } else if (data.dataFormat === 'dec') {
+    const r = range10(
+      earliest > 0 && latest > 0
+        ? findCent(earliest) - 100
+        : findCent(earliest),
+      findCent(latest) + 100
+    );
+
+    definitions.forEach((def) => {
+      def.emergence = r.indexOf(def.emergence);
+      def.disparition = r.indexOf(def.disparition);
+    });
+  } else {
+    const r = range(
+      earliest > 0 && latest > 0 ? findCent(earliest) - 99 : findCent(earliest),
+      findCent(latest) + 100
+    );
+    definitions.forEach((def) => {
+      def.emergence = r.indexOf(def.emergence);
+      def.disparition = r.indexOf(def.disparition);
+    });
+  }
+
   basicDisplay();
 }
 
