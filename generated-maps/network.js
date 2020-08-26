@@ -108,7 +108,11 @@ function drawGraph() {
   // Rects
   node
     .append('rect')
-    .attr('width', (d) => getTextWidth(d.name) + 12)
+    .attr('width', (d) => {
+      const w = d.name.split(' ');
+      const text = w[0] + (w[1] ? ' ' + w[1] : '') + (w[3] ? '...' : '')
+      return getTextWidth(text) + 12;
+    })
     .attr('height', 20)
     .attr('x', 5)
     .attr('y', -26)
