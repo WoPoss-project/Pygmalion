@@ -574,6 +574,7 @@ function drawConstructsOrGroups(elements, cW, cP, lines, mode) {
         elements.forEach((el) =>
           el[mode] == group ? indexes.push(elements.indexOf(el)) : false
         );
+        // Coordinates calculations
         const max = Math.max(...indexes);
         const min = Math.min(...indexes);
         const x0 = elements[min].emergence * cP;
@@ -588,6 +589,7 @@ function drawConstructsOrGroups(elements, cW, cP, lines, mode) {
         const pathHeight = y1 - y0;
         const yMiddle = y1 - pathHeight / 2;
 
+        // Add paths and texts to 'constructsAndGroups' group
         if (min < max) {
           constructsAndGroups
             .append('path')
@@ -618,6 +620,7 @@ function drawConstructsOrGroups(elements, cW, cP, lines, mode) {
             ? xMiddle - getTextWidth(group) - 5
             : x0 - getTextWidth(group) - 5
         );
+
         constructsAndGroups
           .append('text')
           .text(() => group)
@@ -679,6 +682,7 @@ function addElems(elements, cW, cP, tip) {
       tip.transition().duration(50).style('opacity', 1);
       tip
         .html(() => {
+          // Display year depending on date format
           const r =
             data.dataFormat != 'cent'
               ? data.dataFormat === 'dec'
@@ -695,10 +699,7 @@ function addElems(elements, cW, cP, tip) {
                     findCent(latest) + 100
                   )
               : 0;
-          // TODO: test if it works
-          /*if (r.includes(0) && data.dataFormat === 'dec') {
-            r.splice(r.indexOf(0), 1);
-          }*/
+          // Text formatting depending on date format and 'r'
           if (data.dataFormat === 'cent') {
             const em = d.emergence - Math.abs(earliest);
             const dis = d.disparition - Math.abs(earliest);
@@ -763,6 +764,12 @@ function updateElems(_, cW, cP, elementsData, displayRels, lines) {
       elementsData.length - 1 - elementIndex
     );
 
+    // Calculations for relationships arrows' coordinates:
+
+    /* offset: 'lines' is an array of offsets used for elements' translations.
+    Since each element is 30 tall, 'lines' * 30 places the point at the top
+    of the element. 'wrap' returns the number of lines for each elements,
+    which is then multiplied by 15, thus giving the middle of the element's height */
     const offset =
       lines[elementIndex] * 30 + wrap(element.meaning, cW, cP, element) * 15;
     const x0 =
@@ -793,6 +800,7 @@ function updateElems(_, cW, cP, elementsData, displayRels, lines) {
       .attr('d', (d, i) => {
         const modifier = indexes[i];
         const lineHeight = wrap(d.meaning, cW, cP, d);
+        // Same calculation as 'offset'
         const off = lines[i] * 30 + lineHeight * 15;
         const x1 =
           cW + 10 + (Math.abs(modifier) * margin.right) / 1.5 / indexes.length;
