@@ -1580,6 +1580,10 @@ if (data) {
     });
   }
 
+  document
+    .querySelectorAll('.invisibleWhenNoData')
+    .forEach((elem) => (elem.style.visibility = 'visible'));
+
   basicDisplay();
 }
 

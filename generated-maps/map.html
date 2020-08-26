@@ -25,14 +25,27 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.min.js"></script>
   </head>
   <body>
-    <div id="map"></div>
+    <div class="invisibleWhenNoData" id="map" style="visibility: hidden"></div>
     <div>
-      <select id="mode" style="margin-right: 100px; width: auto; float: right">
+      <select
+        class="invisibleWhenNoData"
+        id="mode"
+        style="
+          margin-right: 100px;
+          width: auto;
+          float: right;
+          visibility: hidden;
+        "
+      >
         <option value="construct">Collocations</option>
         <option value="group">Groups</option>
         <option value="chronology">Chronological</option>
       </select>
-      <label style="float: right">Select sort method: </label>
+      <label
+        class="invisibleWhenNoData"
+        style="float: right; visibility: hidden"
+        >Select sort method:
+      </label>
       <br />
       <br />
       <br />
@@ -43,38 +56,82 @@
         Import map data
       </button>
       <button
+        class="invisibleWhenNoData"
         id="exportData"
-        style="width: 175px; float: left; color: white; margin-left: 5px"
+        style="
+          width: 175px;
+          float: left;
+          color: white;
+          margin-left: 5px;
+          visibility: hidden;
+        "
       >
         Export map data
       </button>
       <button
+        class="invisibleWhenNoData"
         id="saveToPNG"
-        style="margin-right: 100px; width: 175px; float: right; color: white"
+        style="
+          margin-right: 100px;
+          width: 175px;
+          float: right;
+          color: white;
+          visibility: hidden;
+        "
       >
         Save map as PNG
       </button>
       <button
+        class="invisibleWhenNoData"
         id="saveToSVG"
-        style="width: 175px; float: right; color: white; margin-right: 5px"
+        style="
+          width: 175px;
+          float: right;
+          color: white;
+          margin-right: 5px;
+          visibility: hidden;
+        "
       >
         Save map as SVG
       </button>
     </div>
     <br />
     <br />
-    <h3 style="margin-left: 100px">Network graph</h3>
-    <div id="network"></div>
+    <h3
+      class="invisibleWhenNoData"
+      style="margin-left: 100px; visibility: hidden"
+    >
+      Network graph
+    </h3>
+    <div
+      class="invisibleWhenNoData"
+      id="network"
+      style="visibility: hidden"
+    ></div>
     <div>
       <button
+        class="invisibleWhenNoData"
         id="saveGraphToPNG"
-        style="margin-left: 100px; width: 200px; float: left; color: white"
+        style="
+          margin-left: 100px;
+          width: 175px;
+          float: left;
+          color: white;
+          visibility: hidden;
+        "
       >
         Save graph as PNG
       </button>
       <button
+        class="invisibleWhenNoData"
         id="saveGraphToSVG"
-        style="width: 200px; float: left; color: white; margin-left: 5px"
+        style="
+          width: 175px;
+          float: left;
+          color: white;
+          margin-left: 5px;
+          visibility: hidden;
+        "
       >
         Save graph as SVG
       </button>
