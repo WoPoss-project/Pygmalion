@@ -1,25 +1,32 @@
+// General DOM selections
 const relationships = document.getElementById('relationships');
 const newRelationship = document.getElementById('newRelationship');
 const submitForm = document.getElementById('submitForm');
 let data;
 
+// Ensures data exists into the localStorage
 if (localStorage.getItem('map')) {
   data = JSON.parse(localStorage.getItem('map'));
   addRelationship();
   newRelationship.addEventListener('click', addRelationship);
   submitForm.addEventListener('click', submit);
 } else {
-  // redirect user to 1st form or home page
+  // TODO: redirect user to 1st form or home page
 }
 
+// Adds a relationship block to the form
 function addRelationship(event) {
+  // Verify if it has been called by an event or not
   if (event) {
     event.preventDefault();
   }
 
+  // Main elements for relationship block
+  // 1. Main div
   const relationship = document.createElement('div');
   relationship.className = 'relationship';
 
+  // 1. x row: holds the 'x' button to delete the entry
   const xRow = document.createElement('div');
   xRow.className = 'row';
   const xDiv = document.createElement('div');
@@ -32,17 +39,21 @@ function addRelationship(event) {
   xRow.appendChild(xDiv);
   relationship.appendChild(xRow);
 
+  // 2. inputs row: holds all of the inputs
   const inputsRow = document.createElement('div');
   inputsRow.className = 'row';
 
+  // 2.1. Creation of small elements
   const smalls = createSmalls();
 
+  // 2.2 Origin div: contains text input and corresponding small element
   const selectOriginDiv = createColDiv();
   const selectOrigin = createSelect(data.meanings);
   selectOrigin.className = 'origin';
   selectOriginDiv.appendChild(selectOrigin);
   selectOriginDiv.appendChild(smalls[0]);
 
+  // 2.3 Direction div: contains text input and corresponding small element
   const selectDirectionDiv = createColDiv();
   const selectDirection = document.createElement('select');
   selectDirection.className = 'direction';
@@ -56,12 +67,14 @@ function addRelationship(event) {
   selectDirectionDiv.appendChild(selectDirection);
   selectDirectionDiv.appendChild(smalls[1]);
 
+  // 2.3 Destination div: contains text input and corresponding small element
   const selectDestDiv = createColDiv();
   const selectDest = createSelect(data.meanings);
   selectDest.className = 'dest';
   selectDestDiv.appendChild(selectDest);
   selectDestDiv.appendChild(smalls[2]);
 
+  // 2.3 Checkbox div: contains checkbox input and label
   const checkBoxDiv = createColDiv();
   const checkBox = document.createElement('input');
   checkBox.type = 'checkbox';
@@ -82,11 +95,16 @@ function addRelationship(event) {
   relationships.appendChild(relationship);
 }
 
+// Function handling the creation of select elements
 function createSelect(meanings) {
   const select = document.createElement('select');
+  // Create as many options as there are meanings
   for (let i = 0; i < meanings.length; i++) {
+    // Checks which form was used for the main data gathering
     if (data.normalForm) {
+      // Handles creation for complex form (with modalities)
       if (meanings[i].modalities.length > 1) {
+        // Handles meanings which hold more than 1 modality
         for (let j = 0; j < meanings[i].modalities.length; j++) {
           const option = document.createElement('option');
           option.innerHTML = `${meanings[i].definition} - ${
@@ -98,6 +116,7 @@ function createSelect(meanings) {
           select.appendChild(option);
         }
       } else {
+        // Handles meanings which hold only 1 modality
         const option = document.createElement('option');
         option.innerHTML = `${meanings[i].definition} ${
           meanings[i].group != 'None' ? '(' + meanings[i].group + ')' : ''
@@ -106,6 +125,7 @@ function createSelect(meanings) {
         select.appendChild(option);
       }
     } else {
+      // Handles creation for simple form (without modalities)
       const option = document.createElement('option');
       option.innerHTML = `${meanings[i].definition} ${
         meanings[i].group != 'None' ? '(' + meanings[i].group + ')' : ''
@@ -117,12 +137,14 @@ function createSelect(meanings) {
   return select;
 }
 
+// Function to create a div with class 'col-25'
 function createColDiv() {
   const div = document.createElement('div');
   div.className = 'col-25';
   return div;
 }
 
+// Function handling event for the 'x' button
 function deleteRelationship(event) {
   event.preventDefault();
 
@@ -142,10 +164,10 @@ function deleteRelationship(event) {
     }
     relationship.removeChild(rows);
   }
-
   relationship.parentNode.removeChild(relationship);
 }
 
+// Function that creates small elements
 function createSmalls() {
   const smalls = ['First definition', 'Direction', 'Second definition'];
   const smallsToReturn = [];
@@ -157,6 +179,7 @@ function createSmalls() {
   return smallsToReturn;
 }
 
+// Function handling form submit
 function submit(event) {
   event.preventDefault();
 
@@ -183,10 +206,13 @@ function submit(event) {
       });
     }
 
+    // Adds relationship info to either modalities (complex form) or meanings (simple form)
     for (let i = 0; i < final.length; i++) {
       data.meanings.forEach((meaning) => {
         if (data.normalForm) {
+          // Complex form
           if (meaning.modalities.length > 1) {
+            // More than 1 modality
             meaning.modalities.forEach((modality) => {
               modality = addRelationships(modality);
               if (modality.id === final[i].origin) {
@@ -196,6 +222,7 @@ function submit(event) {
               }
             });
           } else {
+            // Only 1 modality
             let modality = meaning.modalities[0];
             modality = addRelationships(modality);
             if (modality.id === final[i].origin) {
@@ -205,6 +232,7 @@ function submit(event) {
             }
           }
         } else {
+          // Simple form
           meaning = addRelationships(meaning);
           if (meaning.id === final[i].origin) {
             meaning = editModality(meaning, final[i], 'og');
@@ -214,6 +242,8 @@ function submit(event) {
         }
       });
     }
+
+    // Pass data to localStorage
     localStorage.setItem('map', JSON.stringify(data));
     Swal.fire({
       icon: 'success',
@@ -221,9 +251,19 @@ function submit(event) {
       text: 'The form was successfully submitted',
     });
     console.log(JSON.parse(localStorage.getItem('map')));
+  } else {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Proceed with no data',
+      text: 'You are about to preceed without relationship data',
+      preConfirm: () => {
+        // TODO: redirect to map
+      },
+    });
   }
 }
 
+// Function adding 'relationships' key to data
 function addRelationships(modality) {
   if (!('relationships' in modality)) {
     modality['relationships'] = {
@@ -235,6 +275,7 @@ function addRelationships(modality) {
   return modality;
 }
 
+// Function adding the correct realtionship data to the correct elements
 function editModality(modality, final, type) {
   let direction;
   type === 'de'
