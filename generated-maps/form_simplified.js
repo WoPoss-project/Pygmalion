@@ -226,7 +226,11 @@ function createSense(event) {
   definitionRow.appendChild(senseLabelDiv);
   definitionRow.appendChild(senseInputDiv);
 
-  groupRow = selectRow('Semantic group', 'group', 'Add a group...');
+  groupRow = selectRow(
+    'Semantic group (or other kind of groups)',
+    'group',
+    'Add a group...'
+  );
   constructRow = selectRow(
     'Collocation',
     'collocation',

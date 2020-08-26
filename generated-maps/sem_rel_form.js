@@ -89,19 +89,27 @@ function createSelect(meanings) {
       if (meanings[i].modalities.length > 1) {
         for (let j = 0; j < meanings[i].modalities.length; j++) {
           const option = document.createElement('option');
-          option.innerHTML = `${meanings[i].definition} - ${meanings[i].modalities[j].modal}`;
+          option.innerHTML = `${meanings[i].definition} - ${
+            meanings[i].modalities[j].modal
+          } ${
+            meanings[i].group != 'None' ? '(' + meanings[i].group + ')' : ''
+          }`;
           option.value = meanings[i].modalities[j].id;
           select.appendChild(option);
         }
       } else {
         const option = document.createElement('option');
-        option.innerHTML = meanings[i].definition;
+        option.innerHTML = `${meanings[i].definition} ${
+          meanings[i].group != 'None' ? '(' + meanings[i].group + ')' : ''
+        }`;
         option.value = meanings[i].modalities[0].id;
         select.appendChild(option);
       }
     } else {
       const option = document.createElement('option');
-      option.innerHTML = meanings[i].definition;
+      option.innerHTML = `${meanings[i].definition} ${
+        meanings[i].group != 'None' ? '(' + meanings[i].group + ')' : ''
+      }`;
       option.value = meanings[i].id;
       select.appendChild(option);
     }
