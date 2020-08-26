@@ -20,26 +20,32 @@ dateSpec.addEventListener('change', function () {
   const dates = [...document.querySelectorAll('.date')];
   [...document.querySelectorAll('.disp')].forEach((e) => dates.push(e));
   const change = event.target;
+  // For each .date element...
   dates.forEach((el) => {
+    // ...create a new select that matches the picked date format...
     const value = el.value;
     const parent = el.parentNode;
     const newChild = modalDatePicker(change.value);
     newChild.value = value;
     newChild.className = el.className;
+    // ...and replace each .date element with it
     parent.replaceChild(newChild, el);
   });
 });
 
+// Events on etymology buttons
 etymologicalStep.addEventListener('click', addEtymologicalStep);
 noEtymology.addEventListener('click', proceedWithNoEtymology);
 etymologyUnknown.addEventListener('click', etymologyIsUnknown);
 
+// Events on the "Submit form" button
 submitForm.addEventListener('click', confirmForm);
 
 // Function to add an etymological step
 function addEtymologicalStep(event) {
   event.preventDefault();
 
+  // Flag etymology as known if it had been flagged as unknown
   if (!etymologyIsKnown) {
     Swal.fire({
       icon: 'info',
@@ -51,9 +57,10 @@ function addEtymologicalStep(event) {
     etymologyUnknown.className = 'etymologyUnknown';
     etymologyIsKnown = true;
   }
-
   noEtymology.style.visibility = 'hidden';
 
+  // Create the necessary elements for the etymological step
+  // 1. Top row: 'Etymological step' and 'Delete entry' labels
   const div = document.createElement('div');
   div.className = 'etymologyStep';
 
@@ -71,6 +78,7 @@ function addEtymologicalStep(event) {
 
   const br = document.createElement('br');
 
+  // 2. Bottom row: all the required inputs
   const dataRow = document.createElement('div');
   dataRow.className = 'row';
 
@@ -117,6 +125,7 @@ function addEtymologicalStep(event) {
     smalls[smalls.indexOf(el)] = small;
   });
 
+  // Append children to parent
   labelRow.appendChild(label);
   labelRow.appendChild(etymologyDelete);
   labelRow.appendChild(br);
@@ -144,14 +153,18 @@ function addEtymologicalStep(event) {
   etymologyArea.appendChild(div);
 }
 
+// Function handling the 'no etymology' behavior
 function proceedWithNoEtymology(event) {
   event.preventDefault();
+
+  // Alert user that they will proceed without etymology
   Swal.fire({
     icon: 'info',
     title: 'No etymology',
     text:
       'We have registered your choice to not include an etymology. If you change your mind, simply click "Proceed with etymology"',
   });
+  // Modify the necessary elements
   etymologicalStep.style.visibility = 'hidden';
   noEtymology.innerHTML = 'Proceed with etymology';
   noEtymology.removeEventListener('click', proceedWithNoEtymology);
@@ -159,8 +172,10 @@ function proceedWithNoEtymology(event) {
   withEtymology = false;
 }
 
+// Function handling a press on 'Proceed with etymology' button
 function proceedWithEtymology(event) {
   event.preventDefault();
+  // Revert changes made with 'proceedWithNoEtymology' function
   etymologicalStep.style.visibility = 'visible';
   noEtymology.innerHTML = 'Proceed without etymology';
   noEtymology.removeEventListener('click', proceedWithEtymology);
@@ -168,14 +183,18 @@ function proceedWithEtymology(event) {
   withEtymology = true;
 }
 
+// Function to flag etymology as unknown
 function etymologyIsUnknown(event) {
   event.preventDefault();
+
+  // Alert the user that they will proceed with an unknown etymology
   Swal.fire({
     icon: 'info',
     title: 'Etymology flagged as unknown',
     text:
       'We have taken note that the etymology is unkown. If you change your mind, simply click "Add etymological step"',
   });
+  // Modify display accordingly
   noEtymology.style.visibility = 'hidden';
   if (etymologicalStep.style.visibility === 'hidden') {
     etymologicalStep.style.visibility = 'visible';
@@ -184,11 +203,14 @@ function etymologyIsUnknown(event) {
   etymologyUnknown.className = 'etymologyUnknownDisabled';
   etymologyIsKnown = false;
   withEtymology = true;
+  // If the use specified etymological steps already...
   if (etymologyArea.childNodes.length > 0) {
+    // ...delete all of them
     deleteAllEtymology();
   }
 }
 
+// Function deleting all etymology entries
 function deleteAllEtymology() {
   const parent = etymologyArea;
   while (parent.firstChild) {
@@ -196,10 +218,25 @@ function deleteAllEtymology() {
   }
 }
 
-// Add a sense/definition to the form
+// Add a sense/definition/meaning to the form
 function createSense(event) {
   event.preventDefault();
 
+  // Create the necessary elements for the sense/definition/meaning
+  // 1. X row: span containing 'x' allowing the user to delete the sense/definition/meaning
+  const xRow = document.createElement('div');
+  xRow.className = 'row';
+  const xDiv = document.createElement('div');
+  xDiv.className = 'col-100';
+  const x = document.createElement('span');
+  x.innerHTML = 'x';
+  x.className = 'deleteDefinition';
+  x.addEventListener('click', deleteDefinition);
+
+  xDiv.appendChild(x);
+  xRow.appendChild(xDiv);
+
+  // 2. Definition row: 'Meaning / function / use' label and text input
   const definition = document.createElement('div');
   definition.className = 'definition';
 
@@ -226,28 +263,19 @@ function createSense(event) {
   definitionRow.appendChild(senseLabelDiv);
   definitionRow.appendChild(senseInputDiv);
 
+  // 3. Group row: select element for groups
   groupRow = selectRow(
     'Semantic group (or other kind of groups)',
     'group',
     'Add a group...'
   );
+
+  // 4. Construct/Collocation row: select element for collocations
   constructRow = selectRow(
     'Collocation',
     'collocation',
     'Add a collocation...'
   );
-
-  const xRow = document.createElement('div');
-  xRow.className = 'row';
-  const xDiv = document.createElement('div');
-  xDiv.className = 'col-100';
-  const x = document.createElement('span');
-  x.innerHTML = 'x';
-  x.className = 'deleteDefinition';
-  x.addEventListener('click', deleteDefinition);
-
-  xDiv.appendChild(x);
-  xRow.appendChild(xDiv);
 
   definition.appendChild(xRow);
   definition.appendChild(definitionRow);
@@ -258,7 +286,7 @@ function createSense(event) {
   newSenses.appendChild(definition);
 }
 
-// Takes in the value of the select-type input for the date format
+// Takes in the value of the select element for the date format
 // Creates and returns an input element with the correct values
 function modalDatePicker(spec) {
   const dateElement = document.createElement('input');
@@ -275,12 +303,14 @@ function modalDatePicker(spec) {
   return dateElement;
 }
 
-// Allows us to create the modality part of the form
+// Allows to create the modality part of the form
 function createModality(event) {
-  // Definition of the global elements
+  // Create the necessary elements for the modalities
+  // 1. Main div: will contain all of the following elements
   let div = document.createElement('div');
   div.className = 'modal';
 
+  // 2. First row: contains 'Description' label and 'delete' button
   const modalityLabel = document.createElement('label');
   modalityLabel.innerHTML = 'Description';
 
@@ -289,11 +319,23 @@ function createModality(event) {
   deleteModalLabel.className = 'delete';
   deleteModalLabel.addEventListener('click', deleteEntry);
 
+  // 3. Second-to-last row: text input for first attestation(s)
   const modalAttestation = document.createElement('input');
   modalAttestation.type = 'text';
   modalAttestation.className = 'attest';
   modalAttestation.placeholder = 'First attestation(s)';
 
+  // 4. Last row: confidence checkbox
+  const confidenceCheckbox = document.createElement('input');
+  confidenceCheckbox.type = 'checkbox';
+  confidenceCheckbox.name = 'certitude';
+  confidenceCheckbox.className = 'certitude';
+  confidenceCheckbox.checked = true;
+
+  const confidenceLabel = document.createElement('label');
+  confidenceLabel.innerHTML = '(Modal) meaning is certain';
+
+  // 5. List used to create small elements
   const smalls = [
     'Modality type',
     'Date of meaning emergence',
@@ -307,18 +349,10 @@ function createModality(event) {
     smalls[smalls.indexOf(el)] = small;
   });
 
-  const confidenceCheckbox = document.createElement('input');
-  confidenceCheckbox.type = 'checkbox';
-  confidenceCheckbox.name = 'certitude';
-  confidenceCheckbox.className = 'certitude';
-  confidenceCheckbox.checked = true;
-
-  const confidenceLabel = document.createElement('label');
-  confidenceLabel.innerHTML = '(Modal) meaning is certain';
-
   // If the function was called by an event...
   if (event) {
-    // ... this means that we need to add a modality to the modality list
+    // ...this means that the function was called by the user's use of the
+    // 'Add new (modal) description' button
     event.preventDefault();
 
     const newModalArea = event.target.parentNode.querySelector('.modals');
@@ -335,10 +369,12 @@ function createModality(event) {
 
     newModalArea.appendChild(div);
   } else {
-    // ... or else we need to create a new modality list as well as a modality
+    // ... or else the function was called by the addition of a new
+    // sense/definition/meaning, and thus needs to be a whole new row
     const row = document.createElement('div');
     row.className = 'row';
 
+    // Empty div to create a space on left-hand side of the form
     const modalLabelDiv = document.createElement('div');
     modalLabelDiv.className = 'col-25';
     const modalLabel = document.createElement('label');
@@ -346,6 +382,7 @@ function createModality(event) {
     modalLabel.className = 'modalLabel';
     modalLabelDiv.appendChild(modalLabel);
 
+    // Div the will host all the modalities added to that sense/definition/meaning
     const modalitiesRowDiv = document.createElement('div');
     modalitiesRowDiv.className = 'col-75';
     const modalitiesDiv = document.createElement('div');
@@ -364,6 +401,7 @@ function createModality(event) {
     modalitiesDiv.appendChild(div);
     modalitiesRowDiv.appendChild(modalitiesDiv);
 
+    // Button to add a new modality to the list
     const newModalButton = document.createElement('button');
     newModalButton.innerHTML = 'Add new (modal) description';
     newModalButton.style.width = '100%';
@@ -397,6 +435,7 @@ function mainModal(div, lab, del, smalls, test, check, conf) {
   return div;
 }
 
+// Function to create select elements for groups and collocations
 function selectRow(lab, cla, opt) {
   const row = document.createElement('div');
   row.className = 'row';
@@ -412,6 +451,9 @@ function selectRow(lab, cla, opt) {
   selectDiv.className = 'col-75';
   const select = document.createElement('select');
   select.className = cla;
+
+  // Ensures to copy all the pre-existing options if previous
+  // selects of the same class exist
   const existingSelects = document.querySelector(`.${cla}`);
   const groups = [];
   if (!existingSelects) {
@@ -436,10 +478,11 @@ function selectRow(lab, cla, opt) {
   return row;
 }
 
-// General function to generate a select-type input with the modal types
+// General function to generate a select element with the modal types
 function createModalSelect() {
   const modalSelect = document.createElement('select');
 
+  // Creates a new select if none exist before...
   const existingSelects = document.querySelector(`.modality`);
   const options = [];
   if (!existingSelects) {
@@ -453,6 +496,7 @@ function createModalSelect() {
       'Add a type of modality...'
     );
   } else {
+    // ...else copy the previous options
     existingSelects.childNodes.forEach((el) => options.push(el.innerHTML));
   }
 
@@ -505,11 +549,12 @@ function deleteEntry(event) {
   }
 }
 
+// Function handling event on the 'x' button
 function deleteDefinition(event) {
   event.preventDefault();
 
-  const col100 = event.target.parentNode;
-  const row = col100.parentNode;
+  const eventCol = event.target.parentNode;
+  const row = eventCol.parentNode;
   const definition = row.parentNode;
 
   while (definition.firstChild) {
@@ -528,12 +573,14 @@ function deleteDefinition(event) {
   definition.parentNode.removeChild(definition);
 }
 
-// Function to handle the changes of the selects elements for group selection
+// Function to handle the changes of the select elements for
+// group/collocation/modal selections
 function change(event) {
   let selectedValue;
   event.preventDefault();
   selectedValue = event.target.value;
 
+  // Checks the selected option
   if (
     selectedValue === 'Add a group...' ||
     selectedValue === 'Add a collocation...' ||
@@ -541,6 +588,7 @@ function change(event) {
   ) {
     selectedValue = selectedValue.split(' ');
     const newElement = selectedValue[selectedValue.length - 1].split('.')[0];
+    // Alerts handling the user interaction
     Swal.fire({
       title: `Please specify a name for the new ${
         newElement === 'modality' ? ' type of ' + newElement : newElement
@@ -573,7 +621,7 @@ function change(event) {
   }
 }
 
-// Adds the new group to every select element for group selection
+// Adds the new element to every select element for group/collocation/modal selections
 function addGroup(opt, elem, select) {
   const selects = document.getElementsByClassName(elem);
 
@@ -587,15 +635,22 @@ function addGroup(opt, elem, select) {
   select.value = opt;
 }
 
+// Submit function that ensures that every mandatory elements are filled,
+// that ensures the conversion of all the data to fit the needs of the visualization,
+// and that data is correctly formatted overall
 function confirmForm(event) {
   event.preventDefault();
 
+  // Simpler data
   const headwordInput = document.getElementById('headwordInput');
   const dateSpec = document.getElementById('dateSpec');
   const definitionTexts = document.querySelectorAll('.definition');
 
+  // The form will not submit without a headword
   if (headwordInput.value != '') {
+    // The form will not submit if there are no definitions
     if (definitionTexts.length > 0) {
+      // Starting with the etymological data
       let etymologicalData;
       if (withEtymology && etymologyIsKnown) {
         let etymology = [[], [], [], []];
@@ -610,6 +665,8 @@ function confirmForm(event) {
         etymologyDefinitions.forEach((el) => etymology[2].push(el.value));
         etymologyConfidence.forEach((el) => etymology[3].push(el.checked));
 
+        // Convert the [[...periods], [...forms], [...definitions], [...certitudes]]
+        // data structure into a [period, form, definition, certitude] one
         etymologicalData = [];
         for (let c = 0; c < etymology[0].length; c++) {
           const data = [];
@@ -633,10 +690,11 @@ function confirmForm(event) {
         etymologicalData = 'unknown';
       }
 
+      // Handles the definitions
       let missingField = false;
       const definitions = [];
       definitionTexts.forEach((definition) => {
-        const v = [];
+        const definitionData = [];
         const rows = definition.childNodes;
         rows.forEach((row) => {
           const cols = row.childNodes;
@@ -653,7 +711,7 @@ function confirmForm(event) {
                     mandatory(value);
                     missingField = true;
                   }
-                  v.push(value.value);
+                  definitionData.push(value.value);
                 } else {
                   const modalities = value.childNodes;
                   let modalityValues = [];
@@ -704,10 +762,14 @@ function confirmForm(event) {
                       attestation: modalityValues[3],
                       certainty: modalityValues[4],
                     };
-                    if (v.length == 4) {
-                      v[3].push(modalityObject);
+                    // definitionData having a length of 4 means that it already
+                    // has a modality in index 3. This means that the meaning has more
+                    // than 1 modality and thus need to push the new modality in the modality
+                    // list rather than into a new index
+                    if (definitionData.length == 4) {
+                      definitionData[3].push(modalityObject);
                     } else {
-                      v.push([modalityObject]);
+                      definitionData.push([modalityObject]);
                     }
                     modalityValues = [];
                   });
@@ -717,10 +779,10 @@ function confirmForm(event) {
           });
         });
         definitions.push({
-          definition: v[0],
-          construct: v[1],
-          group: v[2],
-          modalities: v[3],
+          definition: definitionData[0],
+          construct: definitionData[1],
+          group: definitionData[2],
+          modalities: definitionData[3],
         });
       });
       const data = {
@@ -743,6 +805,7 @@ function confirmForm(event) {
             window.location.href = 'http://woposs.unil.ch/relations.php'
           }
         });*/
+      // If no fields are missing, the submit can go through
       if (!missingField) {
         localStorage.setItem('map', JSON.stringify(data));
         console.log(JSON.parse(localStorage.getItem('map')));
@@ -777,6 +840,7 @@ function confirmForm(event) {
   }
 }
 
+// Function handling styling of mandatroy fields
 function mandatory(element) {
   element.style.border = '1px solid rgb(226, 70, 70)';
   element.addEventListener('change', function (event) {
@@ -784,6 +848,7 @@ function mandatory(element) {
   });
 }
 
+// Function handling date conversion
 function dateConversion(format, element) {
   let date;
   if (format === 'cent') {
@@ -836,7 +901,7 @@ function dateConversion(format, element) {
   } else if (format === 'dec') {
     let decade;
     if (Number(element.value)) {
-      decade = decadeFromYear(element.value) + 's';
+      decade = decadeFromYear(element.value);
     } else {
       const input = element.value.split(' ');
       if (input.length == 1 || input.length == 2) {
@@ -855,8 +920,8 @@ function dateConversion(format, element) {
         mandatory(element);
         return false;
       }
+      decade = Number(decade.slice(0, -1));
     }
-    decade = Number(decade.slice(0, -1));
     if (
       decade >= -5000 &&
       decade <= 2020 &&
@@ -881,6 +946,7 @@ function dateConversion(format, element) {
   return date;
 }
 
+// Function returning century for a given year
 function centuryFromYear(year) {
   const century = Math.floor((Math.abs(year) - 1) / 100) + 1;
   if (year > 0) {
@@ -890,6 +956,7 @@ function centuryFromYear(year) {
   }
 }
 
+// Function returning decade for a given year
 function decadeFromYear(year) {
   let decade = Number(year);
   while (decade % 10 != 0) {
@@ -902,6 +969,7 @@ function decadeFromYear(year) {
   return decade;
 }
 
+// Function returning a random ID
 function randomId() {
   return Math.random()
     .toString(36)
