@@ -290,10 +290,13 @@ function editModality(modality, final, type) {
     ? (direction = 'origins')
     : (direction = 'unspecified');
 
-  const arr = modality.relationships[direction];
-  const check = arr.some(
-    (el) => el.rel === (type === 'og' ? final.destination : final.origin)
-  );
+  const arr = modality.relationships;
+  let check = false;
+  for (rel in arr) {
+    check = arr[rel].some(
+      (el) => el.rel === (type === 'og' ? final.destination : final.origin)
+    );
+  }
   !check
     ? modality.relationships[direction].push({
         rel: type === 'og' ? final.destination : final.origin,
