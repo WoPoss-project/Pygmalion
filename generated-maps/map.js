@@ -692,7 +692,7 @@ function addElems(elements, cW, cP, tip) {
               (em < 0 ? `${romanize(em)} BC` : romanize(em)) +
               ' to ' +
               (isNaN(d.disparition)
-                ? 'present'
+                ? 'undefined date'
                 : dis < 0
                 ? `${romanize(dis)} BC`
                 : romanize(dis)) +
@@ -703,7 +703,7 @@ function addElems(elements, cW, cP, tip) {
             return (
               r[d.emergence] +
               (data.dataFormat === 'dec' ? 's to ' : ' to ') +
-              (d.disparition != -1 ? r[d.disparition] : 'present') +
+              (d.disparition != -1 ? r[d.disparition] : 'undefined date') +
               (data.dataFormat === 'dec'
                 ? d.disparition != -1
                   ? 's: '
