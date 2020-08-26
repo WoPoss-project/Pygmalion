@@ -1256,7 +1256,6 @@ function exportToCanvas(event, SVG) {
 
   let svgWidth = SVG.style('width');
   svgWidth = Number(svgWidth.substring(0, svgWidth.length - 2));
-
   let svgHeight = SVG.style('height');
   svgHeight = Number(svgHeight.substring(0, svgHeight.length - 2));
 
@@ -1275,7 +1274,6 @@ function exportToCanvas(event, SVG) {
   }
 
   var ctx = canvas.getContext('2d');
-
   var data = new XMLSerializer().serializeToString(svgNode);
 
   if (SVG.attr('id') === 'network') {

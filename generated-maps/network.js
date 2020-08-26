@@ -1,7 +1,9 @@
-let network;
+// DOM selections
 const saveGraphToPNG = document.getElementById('saveGraphToPNG');
 const saveGraphToSVG = document.getElementById('saveGraphToSVG');
+let network;
 
+// Event listeners on the buttons
 saveGraphToPNG.addEventListener('click', (event) =>
   exportToCanvas(event, network)
 );
@@ -9,9 +11,12 @@ saveGraphToSVG.addEventListener('click', (event) =>
   exportToSVG(event, network)
 );
 
-function drawLinks() {
+// Function drawing the network graph
+function drawGraph() {
   const networkWidth = getContainerData().width;
   const networkHeight = 500;
+
+  // Add SVG
   network = d3
     .select('#network')
     .append('svg')
@@ -23,14 +28,16 @@ function drawLinks() {
     .style('border-radius', '5px')
     .style('background-color', 'white');
 
+  // Add group
   const visualisationGroup = network.append('g');
 
+  // Add marker
   network
     .append('defs')
     .append('marker')
     .attr('id', 'arrowhead')
-    .attr('viewBox', '-0 -5 10 10') //the bound of the SVG viewport for the current SVG fragment. defines a coordinate system 10 wide and 10 high starting on (0,-5)
-    .attr('refX', 15) // x coordinate for the reference point of the marker. If circle is bigger, this need to be bigger.
+    .attr('viewBox', '-0 -5 10 10')
+    .attr('refX', 15)
     .attr('refY', 0)
     .attr('orient', 'auto')
     .attr('markerWidth', 13)
@@ -41,20 +48,23 @@ function drawLinks() {
     .attr('fill', 'black')
     .style('stroke', 'none');
 
+  // Declare simulation
   const simulation = d3
     .forceSimulation()
     .force(
       'link',
       d3
         .forceLink() // This force provides links between nodes
-        .id((d) => d.id) // This sets the node id accessor to the specified function. If not specified, will default to the index of a node.
+        .id((d) => d.id)
         .distance(75)
     )
-    .force('charge', d3.forceManyBody().strength(-100)) // This adds repulsion (if it's negative) between nodes.
-    .force('center', d3.forceCenter(networkWidth / 2, networkHeight / 2)); // This force attracts nodes to the center of the svg area
+    .force('charge', d3.forceManyBody().strength(-100))
+    .force('center', d3.forceCenter(networkWidth / 2, networkHeight / 2));
 
+  // Create dataset
   const dataset = extractDefinitionData();
 
+  // Recode dataset's emergence data for circle colors
   if (data.dataForm != 'cent') {
     const datasetEmergences = dataset.nodes.map((node) => node.emergence);
     const singleEmergences = [
@@ -69,11 +79,11 @@ function drawLinks() {
     });
   }
 
-  //add zoom capabilities
+  // Add zoom capabilities
   var zoom_handler = d3.zoom().on('zoom', zoom_actions);
   zoom_handler(network);
 
-  // Initialiser les liens
+  // Initialize the links
   const link = visualisationGroup
     .selectAll('.links')
     .data(dataset.links)
@@ -94,6 +104,8 @@ function drawLinks() {
     .style('font', 'Arial, Helvetica, sans-serif')
     .style('font-size', 12);
 
+  // Add elements to nodes
+  // Rects
   node
     .append('rect')
     .attr('width', (d) => getTextWidth(d.name) + 12)
@@ -105,6 +117,7 @@ function drawLinks() {
     .style('fill', (d) => colors[d.modal])
     .style('opacity', 0.5);
 
+  // Circles
   node
     .append('circle')
     .attr('r', 10)
@@ -113,11 +126,10 @@ function drawLinks() {
     .style(
       'fill',
       (d) =>
-        `rgb(45, ${50 + 10 * (d.emergence * 2)}, ${
-          100 + 11 * (d.emergence * 2)
-        })`
+        `rgb(45, ${50 + 8 * (d.emergence * 2)}, ${100 + 9 * (d.emergence * 2)})`
     );
 
+  // Text
   node
     .append('text')
     .text((d) => {
@@ -127,7 +139,7 @@ function drawLinks() {
     .attr('dx', 10)
     .attr('dy', -10);
 
-  //add drag capabilities
+  // Add drag capabilities
   var drag_handler = d3
     .drag()
     .on('start', drag_start)
@@ -136,6 +148,7 @@ function drawLinks() {
 
   drag_handler(node);
 
+  // Add nodes and links to simulation
   simulation.nodes(dataset.nodes).on('tick', ticked);
   simulation.force('link').links(dataset.links);
 
@@ -150,47 +163,47 @@ function drawLinks() {
     node.attr('transform', (d) => `translate(${d.x},${d.y})`);
   }
 
-  //Drag functions
-  //d is the node
+  // Drag functions
+  // d is the node
   function drag_start(d) {
     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
     d.fx = d.x;
     d.fy = d.y;
   }
 
-  //make sure you can't drag the circle outside the box
+  // Should prevent drag outside the box
   function drag_drag(d) {
     d.fx = d3.event.x;
     d.fy = d3.event.y;
   }
 
+  // Handles release of the node
   function drag_end(d) {
     if (!d3.event.active) simulation.alphaTarget(0);
     d.fx = null;
     d.fy = null;
   }
 
-  //Zoom function
+  // Zoom function
   function zoom_actions() {
     visualisationGroup.attr('transform', d3.event.transform);
   }
 
+  // Draws legend
   drawLegend(network);
 }
 
 function extractDefinitionData() {
   const obj = { nodes: [], links: [] };
   definitions.forEach((def, i) => {
+    // Created nodes data
     obj.nodes.push({
       id: def.id,
       name: def.meaning,
       emergence: def.emergence,
       modal: def.modal,
     });
-    /*if (i === 0) {
-      obj.nodes[i]['fx'] = networkWidth / 2;
-      obj.nodes[i]['fy'] = networkHeight / 2;
-    }*/
+    // Create links data
     for (rel in def.relationships) {
       if (rel === 'destinations' || rel === 'unspecified') {
         def.relationships[rel].forEach((r) => {
@@ -233,7 +246,9 @@ function extractDefinitionData() {
   return obj;
 }
 
+// Function drawing legend
 function drawLegend(network) {
+  // Main text element
   const text = network
     .append('text')
     .attr('x', 6)
@@ -243,6 +258,7 @@ function drawLegend(network) {
       `font-family: Arial, Helvetica, sans-serif; font-size: 12px`
     );
 
+  // Various tspans
   text.append('tspan').text('Use mousewheel to zoom in and out');
 
   text
@@ -258,6 +274,7 @@ function drawLegend(network) {
     .attr('dy', 15);
 }
 
+// Draws graph only if there is data in the localStorage
 if (data) {
-  drawLinks();
+  drawGraph();
 }
