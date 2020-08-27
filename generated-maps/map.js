@@ -345,11 +345,15 @@ function drawEtymology() {
 
     for (let i = 0; i < newEty.length + 1; i++) {
       gw = newEty[i]
-        ? getTextWidth(newEty[i][2]) > getTextWidth(newEty[i][1])
+        ? getTextWidth(newEty[i][2]) > getTextWidth(newEty[i][1]) &&
+          getTextWidth(newEty[i][2]) > getTextWidth(newEty[i][0])
           ? getTextWidth(newEty[i][2])
-          : getTextWidth(newEty[i][1])
+          : getTextWidth(newEty[i][1]) > getTextWidth(newEty[i][2]) &&
+            getTextWidth(newEty[i][1]) > getTextWidth(newEty[i][0])
+          ? getTextWidth(newEty[i][1])
+          : getTextWidth(newEty[i][0])
         : getTextWidth(data.headword);
-      gw += i === 0 ? 25 : 45;
+      gw += 50;
 
       const g = etymology
         .append('g')

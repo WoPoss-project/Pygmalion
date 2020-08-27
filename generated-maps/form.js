@@ -43,7 +43,7 @@ submitForm.addEventListener('click', confirmForm);
 
 // Function to add an etymological step
 function addEtymologicalStep(event) {
-  event.preventDefault();
+  if (event) event.preventDefault();
 
   // Flag etymology as known if it had been flagged as unknown
   if (!etymologyIsKnown) {
@@ -220,7 +220,7 @@ function deleteAllEtymology() {
 
 // Add a sense/definition/meaning to the form
 function createSense(event) {
-  event.preventDefault();
+  if (event) event.preventDefault();
 
   // Create the necessary elements for the sense/definition/meaning
   // 1. X row: span containing 'x' allowing the user to delete the sense/definition/meaning
@@ -304,7 +304,7 @@ function modalDatePicker(spec) {
 }
 
 // Allows to create the modality part of the form
-function createModality(event) {
+function createModality(event, reconstruction = false) {
   // Create the necessary elements for the modalities
   // 1. Main div: will contain all of the following elements
   let div = document.createElement('div');
@@ -350,12 +350,14 @@ function createModality(event) {
   });
 
   // If the function was called by an event...
-  if (event) {
+  if (event || reconstruction) {
     // ...this means that the function was called by the user's use of the
     // 'Add new (modal) description' button
-    event.preventDefault();
+    if (event) event.preventDefault();
 
-    const newModalArea = event.target.parentNode.querySelector('.modals');
+    const newModalArea = event
+      ? event.target.parentNode.querySelector('.modals')
+      : reconstruction;
 
     div = mainModal(
       div,
@@ -975,4 +977,197 @@ function randomId() {
     .toString(36)
     .replace(/[^a-z]+/g, '')
     .substr(2, 10);
+}
+
+const localData = JSON.parse(localStorage.getItem('map'));
+if (localData && localData.normalForm) {
+  // Simpler data
+  document.getElementById('headwordInput').value = localData.headword;
+  document.getElementById('dateSpec').value = localData.dataFormat;
+
+  // Add etymology
+  if (localData.etymology === false) {
+    etymologicalStep.style.visibility = 'hidden';
+    noEtymology.innerHTML = 'Proceed with etymology';
+    noEtymology.removeEventListener('click', proceedWithNoEtymology);
+    noEtymology.addEventListener('click', proceedWithEtymology);
+    withEtymology = false;
+  } else if (localData.etymology === 'unknown') {
+    noEtymology.style.visibility = 'hidden';
+    if (etymologicalStep.style.visibility === 'hidden') {
+      etymologicalStep.style.visibility = 'visible';
+    }
+    etymologyUnknown.disabled = true;
+    etymologyUnknown.className = 'etymologyUnknownDisabled';
+    etymologyIsKnown = false;
+    withEtymology = true;
+  } else {
+    localData.etymology.forEach((ety) => {
+      addEtymologicalStep();
+      const etymologies = [...document.querySelectorAll('.etymologyStep')];
+      const etymology = etymologies[etymologies.length - 1];
+      const rows = etymology.childNodes;
+      rows.forEach((row) => {
+        const cols = row.childNodes;
+        if (cols.length > 3) {
+          cols.forEach((col) => {
+            const element = [...col.childNodes][0];
+            if (element.className === 'period') {
+              element.value = ety.period;
+            } else if (element.className === 'etymologicalForm') {
+              element.value = ety.form;
+            } else if (element.className === 'shortDefinition') {
+              element.value = ety.def;
+            } else {
+              element.checked = ety.certitude;
+            }
+          });
+        }
+      });
+    });
+  }
+
+  // Add meanings elements
+  localData.meanings.forEach((meaning) => {
+    createSense();
+    const definitions = [...document.querySelectorAll('.definition')];
+    const definition = definitions[definitions.length - 1];
+    const rows = definition.childNodes;
+    rows.forEach((row) => {
+      const cols = row.childNodes;
+      if (cols.length > 1) {
+        const col = cols[1];
+        const elements = col.childNodes;
+        if (elements.length > 1) {
+          const modals = elements[0];
+          if (meaning.modalities.length > 1) {
+            meaning.modalities.forEach((modality, i) => {
+              if (i > 0) {
+                createModality((event = null), (reconstruction = modals));
+              }
+              const modal = modals.childNodes[modals.childNodes.length - 1];
+              addModalInfo(modal, modality);
+            });
+          } else {
+            const modality = meaning.modalities[0];
+            const modal = modals.childNodes[0];
+            addModalInfo(modal, modality);
+          }
+        } else {
+          const element = elements[0];
+          if (element.className === 'definitionText') {
+            element.value = meaning.definition;
+          } else if (element.className === 'collocation') {
+            const options = [...element.childNodes];
+            const optionsValues = options.map((opt) => opt.innerHTML);
+            if (!optionsValues.includes(meaning.construct)) {
+              addGroup(meaning.construct, 'collocation', element);
+            }
+            element.value = meaning.construct;
+          } else if (element.className === 'group') {
+            const options = [...element.childNodes];
+            const optionsValues = options.map((opt) => opt.innerHTML);
+            if (!optionsValues.includes(meaning.group)) {
+              addGroup(meaning.group, 'group', element);
+            }
+            element.value = meaning.group;
+          }
+        }
+      }
+    });
+  });
+}
+
+function addModalInfo(modal, modality) {
+  modal.childNodes.forEach((element) => {
+    if (element.nodeName === 'INPUT' || element.nodeName === 'SELECT') {
+      if (element.className === 'date') {
+        if (localData.dataFormat === 'cent') {
+          if (modality.emergence < 0) {
+            element.value = romanize(modality.emergence) + ' BC';
+          } else {
+            element.value = romanize(modality.emergence);
+          }
+        } else if (localData.dataFormat === 'dec') {
+          if (modality.emergence < 0) {
+            element.value = Math.abs(modality.emergence) + 's BC';
+          } else {
+            element.value = modality.emergence + 's';
+          }
+        } else {
+          element.value = modality.emergence;
+        }
+      } else if (element.className === 'disp') {
+        if (modality.disparition != 'None') {
+          if (localData.dataFormat === 'cent') {
+            if (modality.disparition < 0) {
+              element.value = romanize(modality.disparition) + ' BC';
+            } else {
+              element.value = romanize(modality.disparition);
+            }
+          } else if (localData.dataFormat === 'dec') {
+            if (modality.disparition < 0) {
+              element.value = Math.abs(modality.disparition) + 's BC';
+            } else {
+              element.value = modality.disparition + 's';
+            }
+          } else {
+            element.value = modality.disparition;
+          }
+        }
+      } else if (element.className === 'attest') {
+        element.value = modality.attestation;
+      } else if (element.className === 'modality') {
+        const options = [...element.childNodes];
+        const optionsValues = options.map((opt) => opt.innerHTML);
+        if (!optionsValues.includes(modality.modal)) {
+          addGroup(modality.modal, 'modality', element);
+        }
+        element.value = modality.modal;
+      } else if (element.className === 'certitude') {
+        element.checked = modality.certainty;
+      }
+    }
+  });
+}
+
+function romanize(num) {
+  if (isNaN(num)) return NaN;
+  let digits = String(+num).split(''),
+    key = [
+      '',
+      'C',
+      'CC',
+      'CCC',
+      'CD',
+      'D',
+      'DC',
+      'DCC',
+      'DCCC',
+      'CM',
+      '',
+      'X',
+      'XX',
+      'XXX',
+      'XL',
+      'L',
+      'LX',
+      'LXX',
+      'LXXX',
+      'XC',
+      '',
+      'I',
+      'II',
+      'III',
+      'IV',
+      'V',
+      'VI',
+      'VII',
+      'VIII',
+      'IX',
+    ],
+    roman = '',
+    i = 3;
+  while (i--) roman = (key[+digits.pop() + i * 10] || '') + roman;
+  return Array(+digits.join('') + 1).join('M') + roman;
 }

@@ -43,7 +43,7 @@ submitForm.addEventListener('click', confirmForm);
 
 // Function to add an etymological step
 function addEtymologicalStep(event) {
-  event.preventDefault();
+  if (event) event.preventDefault();
 
   // Flag etymology as known if it had been flagged as unknown
   if (!etymologyIsKnown) {
@@ -220,7 +220,7 @@ function deleteAllEtymology() {
 
 // Add a sense/definition/meaning to the form
 function createSense(event) {
-  event.preventDefault();
+  if (event) event.preventDefault();
 
   // Create the necessary elements for the sense/definition/meaning
   // 1. Main div: holds all the following elements
@@ -804,4 +804,171 @@ function randomId() {
     .toString(36)
     .replace(/[^a-z]+/g, '')
     .substr(2, 10);
+}
+
+const localData = JSON.parse(localStorage.getItem('map'));
+if (localData && !localData.normalForm) {
+  // Simpler data
+  document.getElementById('headwordInput').value = localData.headword;
+  document.getElementById('dateSpec').value = localData.dataFormat;
+
+  // Add etymology
+  if (localData.etymology === false) {
+    etymologicalStep.style.visibility = 'hidden';
+    noEtymology.innerHTML = 'Proceed with etymology';
+    noEtymology.removeEventListener('click', proceedWithNoEtymology);
+    noEtymology.addEventListener('click', proceedWithEtymology);
+    withEtymology = false;
+  } else if (localData.etymology === 'unknown') {
+    noEtymology.style.visibility = 'hidden';
+    if (etymologicalStep.style.visibility === 'hidden') {
+      etymologicalStep.style.visibility = 'visible';
+    }
+    etymologyUnknown.disabled = true;
+    etymologyUnknown.className = 'etymologyUnknownDisabled';
+    etymologyIsKnown = false;
+    withEtymology = true;
+  } else {
+    localData.etymology.forEach((ety) => {
+      addEtymologicalStep();
+      const etymologies = [...document.querySelectorAll('.etymologyStep')];
+      const etymology = etymologies[etymologies.length - 1];
+      const rows = etymology.childNodes;
+      rows.forEach((row) => {
+        const cols = row.childNodes;
+        if (cols.length > 3) {
+          cols.forEach((col) => {
+            const element = [...col.childNodes][0];
+            if (element.className === 'period') {
+              element.value = ety.period;
+            } else if (element.className === 'etymologicalForm') {
+              element.value = ety.form;
+            } else if (element.className === 'shortDefinition') {
+              element.value = ety.def;
+            } else {
+              element.checked = ety.certitude;
+            }
+          });
+        }
+      });
+    });
+  }
+
+  // Add meanings elements
+  localData.meanings.forEach((meaning) => {
+    createSense();
+    const definitions = [...document.querySelectorAll('.definition')];
+    const definition = definitions[definitions.length - 1];
+    const rows = definition.childNodes;
+    rows.forEach((row) => {
+      const cols = row.childNodes;
+      if (cols.length > 1) {
+        const col = cols[1];
+        const elements = col.childNodes;
+        if (elements.length > 1) {
+          elements.forEach((element) => {
+            if (element.nodeName === 'INPUT') {
+              if (element.className === 'date') {
+                if (localData.dataFormat === 'cent') {
+                  if (meaning.emergence < 0) {
+                    element.value = romanize(meaning.emergence) + ' BC';
+                  } else {
+                    element.value = romanize(meaning.emergence);
+                  }
+                } else if (localData.dataFormat === 'dec') {
+                  if (meaning.emergence < 0) {
+                    element.value = Math.abs(meaning.emergence) + 's BC';
+                  } else {
+                    element.value = meaning.emergence + 's';
+                  }
+                } else {
+                  element.value = meaning.emergence;
+                }
+              } else if (element.className === 'disp') {
+                if (meaning.disparition != 'None') {
+                  if (localData.dataFormat === 'cent') {
+                    if (meaning.disparition < 0) {
+                      element.value = romanize(meaning.disparition) + ' BC';
+                    } else {
+                      element.value = romanize(meaning.disparition);
+                    }
+                  } else if (localData.dataFormat === 'dec') {
+                    if (meaning.disparition < 0) {
+                      element.value = Math.abs(meaning.disparition) + 's BC';
+                    } else {
+                      element.value = meaning.disparition + 's';
+                    }
+                  } else {
+                    element.value = meaning.disparition;
+                  }
+                }
+              } else if (element.className === 'attest') {
+                element.value = meaning.attestation;
+              }
+            }
+          });
+        } else {
+          const element = elements[0];
+          if (element.className === 'definitionText') {
+            element.value = meaning.definition;
+          } else if (element.className === 'collocation') {
+            const options = [...element.childNodes];
+            const optionsValues = options.map((opt) => opt.innerHTML);
+            if (!optionsValues.includes(meaning.construct)) {
+              addGroup(meaning.construct, 'collocation', element);
+            }
+            element.value = meaning.construct;
+          } else if (element.className === 'group') {
+            const options = [...element.childNodes];
+            const optionsValues = options.map((opt) => opt.innerHTML);
+            if (!optionsValues.includes(meaning.group)) {
+              addGroup(meaning.group, 'group', element);
+            }
+            element.value = meaning.group;
+          }
+        }
+      }
+    });
+  });
+}
+
+function romanize(num) {
+  if (isNaN(num)) return NaN;
+  let digits = String(+num).split(''),
+    key = [
+      '',
+      'C',
+      'CC',
+      'CCC',
+      'CD',
+      'D',
+      'DC',
+      'DCC',
+      'DCCC',
+      'CM',
+      '',
+      'X',
+      'XX',
+      'XXX',
+      'XL',
+      'L',
+      'LX',
+      'LXX',
+      'LXXX',
+      'XC',
+      '',
+      'I',
+      'II',
+      'III',
+      'IV',
+      'V',
+      'VI',
+      'VII',
+      'VIII',
+      'IX',
+    ],
+    roman = '',
+    i = 3;
+  while (i--) roman = (key[+digits.pop() + i * 10] || '') + roman;
+  return Array(+digits.join('') + 1).join('M') + roman;
 }
