@@ -10,6 +10,29 @@ if (localStorage.getItem('map')) {
   addRelationship();
   newRelationship.addEventListener('click', addRelationship);
   submitForm.addEventListener('click', submit);
+
+  if (data.normalForm) {
+    data.meanings.forEach((meaning) => {
+      if (meaning.modalities.length > 1) {
+        meaning.modalities.forEach((modality) => {
+          if ('relationships' in modality) {
+            delete modality['relationships'];
+          }
+        });
+      } else {
+        const modality = meaning.modalities[0];
+        if ('relationships' in modality) {
+          delete modality['relationships'];
+        }
+      }
+    });
+  } else {
+    data.meanings.forEach((meaning) => {
+      if ('relationships' in meaning) {
+        delete meaning['relationships'];
+      }
+    });
+  }
 } else {
   // TODO: redirect user to 1st form or home page
 }
