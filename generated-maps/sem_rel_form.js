@@ -7,21 +7,30 @@ let data;
 // Ensures data exists into the localStorage
 if (localStorage.getItem('map')) {
   data = JSON.parse(localStorage.getItem('map'));
-  addRelationship();
   newRelationship.addEventListener('click', addRelationship);
   submitForm.addEventListener('click', submit);
 
+  let createOriginalRel = true;
+  const existingRelationships = [];
   if (data.normalForm) {
     data.meanings.forEach((meaning) => {
       if (meaning.modalities.length > 1) {
         meaning.modalities.forEach((modality) => {
           if ('relationships' in modality) {
+            existingRelationships.concat(
+              extractValues(modality, existingRelationships)
+            );
+            createOriginalRel = false;
             delete modality['relationships'];
           }
         });
       } else {
         const modality = meaning.modalities[0];
         if ('relationships' in modality) {
+          existingRelationships.concat(
+            extractValues(modality, existingRelationships)
+          );
+          createOriginalRel = false;
           delete modality['relationships'];
         }
       }
@@ -29,10 +38,42 @@ if (localStorage.getItem('map')) {
   } else {
     data.meanings.forEach((meaning) => {
       if ('relationships' in meaning) {
+        existingRelationships.concat(
+          extractValues(meaning, existingRelationships)
+        );
+        createOriginalRel = false;
         delete meaning['relationships'];
       }
     });
+
+    if (createOriginalRel) addRelationship();
+    if (existingRelationships.length > 0) {
+      existingRelationships.forEach((rel) => {
+        addRelationship();
+        const relationships = [...document.querySelectorAll('.relationship')];
+        const relationship = relationships[relationships.length - 1];
+        relationship.childNodes.forEach((row) => {
+          const cols = row.childNodes;
+          if (cols.length > 1) {
+            cols.forEach((col) => {
+              const element = col.childNodes[0];
+              if (element.className === 'origin') {
+                element.value = rel.origin;
+              } else if (element.className === 'direction') {
+                element.value = rel.direction;
+              } else if (element.className === 'dest') {
+                element.value = rel.destination;
+              } else if (element.className === 'certitude') {
+                element.checked = rel.certitude;
+              }
+            });
+          }
+        });
+      });
+    }
   }
+
+  existingRelationships.forEach((rel) => {});
 } else {
   // TODO: redirect user to 1st form or home page
 }
@@ -327,4 +368,42 @@ function editModality(modality, final, type) {
       })
     : modality;
   return modality;
+}
+
+function extractValues(modality, existingRelationships) {
+  for (relationship in modality.relationships) {
+    if (relationship === 'destinations') {
+      modality.relationships[relationship].forEach((rel) =>
+        existingRelationships.push({
+          origin: modality.id,
+          direction: 'to',
+          destination: rel.rel,
+          certitude: rel.cert,
+        })
+      );
+    } else if (relationship === 'unspecified') {
+      modality.relationships[relationship].forEach((rel) => {
+        const found = existingRelationships.some(
+          (el) =>
+            (el.origin === modality.id &&
+              el.direction === 'unspecified' &&
+              el.destination === rel.rel &&
+              el.certitude === rel.cert) ||
+            (el.origin === rel.rel &&
+              el.direction === 'unspecified' &&
+              el.destination === modality.id &&
+              el.certitude === rel.cert)
+        );
+        if (!found) {
+          existingRelationships.push({
+            origin: modality.id,
+            direction: 'unspecified',
+            destination: rel.rel,
+            certitude: rel.cert,
+          });
+        }
+      });
+    }
+  }
+  return existingRelationships;
 }
