@@ -357,9 +357,11 @@ function editModality(modality, final, type) {
   const arr = modality.relationships;
   let check = false;
   for (rel in arr) {
-    check = arr[rel].some(
-      (el) => el.rel === (type === 'og' ? final.destination : final.origin)
-    );
+    if (!check) {
+      check = arr[rel].some((el) => {
+        return el.rel === (type === 'og' ? final.destination : final.origin);
+      });
+    }
   }
   !check
     ? modality.relationships[direction].push({
