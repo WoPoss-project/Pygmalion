@@ -110,7 +110,7 @@ function drawGraph() {
     .append('rect')
     .attr('width', (d) => {
       const w = d.name.split(' ');
-      const text = w[0] + (w[1] ? ' ' + w[1] : '') + (w[3] ? '...' : '')
+      const text = w[0] + (w[1] ? ' ' + w[1] : '') + (w[2] ? '...' : '');
       return getTextWidth(text) + 12;
     })
     .attr('height', 20)
@@ -138,7 +138,8 @@ function drawGraph() {
     .append('text')
     .text((d) => {
       const w = d.name.split(' ');
-      return w[0] + (w[1] ? ' ' + w[1] : '') + (w[3] ? '...' : '');
+      console.log(w);
+      return w[0] + (w[1] ? ' ' + w[1] : '') + (w[2] ? '...' : '');
     })
     .attr('dx', 10)
     .attr('dy', -10);
