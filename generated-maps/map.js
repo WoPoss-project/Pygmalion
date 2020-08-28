@@ -1195,6 +1195,7 @@ function getLines(elements, cW, cP) {
 
   svg.transition().duration(250).attr('height', newHeight);
 
+  watermarkGroup.select('text').remove();
   drawWatermark(newHeight);
 
   const linesOriginal = [...lines];
