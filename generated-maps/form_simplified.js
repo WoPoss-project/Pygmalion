@@ -1,3 +1,16 @@
+/* 
+form_simplified.js:
+This code handles the entire first form in a simplified way. It allows the user to:
+  - Add any number of new definitions/meanings
+  - Add any number of etymological data to the form
+  - Specify and add any number of coloocations/groups
+  - Specify how etymology should be considered in the final data
+  - Delete any number of elements added through interactions
+  - Submit the form and go through to the second form
+
+Code written by Loris Rimaz
+*/
+
 /* DOM constants definition */
 const headwordInput = document.getElementById('headwordInput');
 const dateSpec = document.getElementById('dateSpec');
@@ -806,6 +819,8 @@ function randomId() {
     .substr(2, 10);
 }
 
+// This last section handles the generation of the form according to
+// already present localStorage data
 const localData = JSON.parse(localStorage.getItem('map'));
 if (localData && !localData.normalForm) {
   // Simpler data
@@ -932,6 +947,7 @@ if (localData && !localData.normalForm) {
   });
 }
 
+// Returns roman numbers from arabic numbers
 function romanize(num) {
   if (isNaN(num)) return NaN;
   let digits = String(+num).split(''),

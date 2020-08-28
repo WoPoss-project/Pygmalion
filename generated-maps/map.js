@@ -1,3 +1,16 @@
+/* 
+map.js:
+This code handles the drawing of the semantic map. It allows the user to:
+  - Interact with any meaning and thus display the meanings it has relationships with
+    as well as the relationships themselves (arrows on the right)
+  - Sort the meanings 3 different ways: by collocation, by group, or chronologically
+  - Download the visualization in PNG or SVG format
+  - Import other semantic maps' data
+  - Export this semantic map's data
+
+Code written by Loris Rimaz
+*/
+
 let data = JSON.parse(localStorage.getItem('map'));
 let definitions, colors, earliest, latest;
 

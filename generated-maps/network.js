@@ -1,3 +1,15 @@
+/* 
+network.js:
+This code handles the drawing of network graph displaying all the relationships
+between the meanings. It allows the user to:
+  - Drag any meaning and thus place them where ever they want
+  - Zoom in and out of the graph to isolate specific data
+  - Drag the visualization
+  - Download the visualization in PNG or SVG format
+
+Code written by Loris Rimaz
+*/
+
 // DOM selections
 const saveGraphToPNG = document.getElementById('saveGraphToPNG');
 const saveGraphToSVG = document.getElementById('saveGraphToSVG');

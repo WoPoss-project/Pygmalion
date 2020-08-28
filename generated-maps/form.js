@@ -1,3 +1,17 @@
+/* 
+form.js:
+This code handles the entire first form. It allows the user to:
+  - Add any number of new definitions/meanings
+  - Add any number of modality for each definition/meaning
+  - Add any number of etymological data to the form
+  - Specify and add any number of coloocations/groups/modalities
+  - Specify how etymology should be considered in the final data
+  - Delete any number of elements added through interactions
+  - Submit the form and go through to the second form
+
+Code written by Loris Rimaz
+*/
+
 /* DOM constants definition */
 const headwordInput = document.getElementById('headwordInput');
 const dateSpec = document.getElementById('dateSpec');
@@ -979,6 +993,8 @@ function randomId() {
     .substr(2, 10);
 }
 
+// This last section handles the generation of the form according to
+// already present localStorage data
 const localData = JSON.parse(localStorage.getItem('map'));
 if (localData && localData.normalForm) {
   // Simpler data
@@ -1078,6 +1094,7 @@ if (localData && localData.normalForm) {
   });
 }
 
+// Generates modalities
 function addModalInfo(modal, modality) {
   modal.childNodes.forEach((element) => {
     if (element.nodeName === 'INPUT' || element.nodeName === 'SELECT') {
@@ -1131,6 +1148,7 @@ function addModalInfo(modal, modality) {
   });
 }
 
+// Returns roman numbers from arabic numbers
 function romanize(num) {
   if (isNaN(num)) return NaN;
   let digits = String(+num).split(''),

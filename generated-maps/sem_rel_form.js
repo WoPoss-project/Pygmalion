@@ -1,3 +1,14 @@
+/* 
+sem_rel_form.js:
+This code handles the entry of semantic relationships between meanings. It allows the user to:
+  - Add any number of relationships
+  - Specify the direction of the relationship
+  - Specify the confidence in the relationship
+  - Submit the form and go through to the visualization
+
+Code written by Loris Rimaz
+*/
+
 // General DOM selections
 const relationships = document.getElementById('relationships');
 const newRelationship = document.getElementById('newRelationship');
@@ -276,9 +287,10 @@ function submit(event) {
         if (data.normalForm) {
           // Complex form
           if (meaning.modalities.length > 1) {
-            // More than 1 modality
+            // More than one modality
             meaning.modalities.forEach((modality) => {
               modality = addRelationships(modality);
+              // Save data symetrically
               if (modality.id === final[i].origin) {
                 modality = editModality(modality, final[i], 'og');
               } else if (modality.id === final[i].destination) {
@@ -286,9 +298,10 @@ function submit(event) {
               }
             });
           } else {
-            // Only 1 modality
+            // Only one modality
             let modality = meaning.modalities[0];
             modality = addRelationships(modality);
+            // Save data symetrically
             if (modality.id === final[i].origin) {
               modality = editModality(modality, final[i], 'og');
             } else if (modality.id === final[i].destination) {
@@ -298,6 +311,7 @@ function submit(event) {
         } else {
           // Simple form
           meaning = addRelationships(meaning);
+          // Save data symetrically
           if (meaning.id === final[i].origin) {
             meaning = editModality(meaning, final[i], 'og');
           } else if (meaning.id === final[i].destination) {
@@ -372,6 +386,7 @@ function editModality(modality, final, type) {
   return modality;
 }
 
+// Creates a list of relationships based on pre-existing data in the localStorage
 function extractValues(modality, existingRelationships) {
   for (relationship in modality.relationships) {
     if (relationship === 'destinations') {
