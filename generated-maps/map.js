@@ -1613,6 +1613,9 @@ if (data) {
 
   definitions.forEach((def) => {
     def.meaning = def.meaning.charAt(0).toUpperCase() + def.meaning.slice(1);
+    def.construct =
+      def.construct.charAt(0).toUpperCase() + def.construct.slice(1);
+    def.group = def.group.charAt(0).toUpperCase() + def.group.slice(1);
   });
 
   document

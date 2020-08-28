@@ -138,7 +138,6 @@ function drawGraph() {
     .append('text')
     .text((d) => {
       const w = d.name.split(' ');
-      console.log(w);
       return w[0] + (w[1] ? ' ' + w[1] : '') + (w[2] ? '...' : '');
     })
     .attr('dx', 10)
