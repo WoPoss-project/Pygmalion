@@ -28,8 +28,25 @@ function drawGraph() {
     .style('border-radius', '5px')
     .style('background-color', 'white');
 
-  // Add group
+  // Add groups
   const visualisationGroup = network.append('g');
+  const networkWatermark = network.append('g');
+
+  networkWatermark.attr(
+    'transform',
+    `translate(${networkWidth - margin.left}, ${networkHeight})`
+  );
+  networkWatermark
+    .append('text')
+    .text('by WoPoss')
+    .attr(
+      'style',
+      `font-family: Arial, Helvetica, sans-serif; font-size: 12px; fill: #87aac9; font-style: italic;`
+    )
+    .attr('x', 0)
+    .attr('y', 0)
+    .attr('dx', 28)
+    .attr('dy', -15);
 
   // Add marker
   network

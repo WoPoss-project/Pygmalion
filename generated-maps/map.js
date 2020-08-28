@@ -184,6 +184,8 @@ const meaningsGroup = svg
   .attr('class', 'meanings')
   .attr('transform', `translate(${margin.left}, ${margin.top * 2.5})`);
 
+const watermarkGroup = svg.append('g').attr('class', 'watermark');
+
 const scale = svg
   .append('g')
   .attr('transform', `translate(${margin.left}, ${margin.top * 2})`);
@@ -558,6 +560,23 @@ function drawData(
     );
 
   drawScale(earliest, latest, container.width);
+}
+
+function drawWatermark(wmHeight) {
+  const container = getContainerData();
+  watermarkGroup.attr(
+    'transform',
+    `translate(${container.width}, ${wmHeight})`
+  );
+  watermarkGroup
+    .append('text')
+    .text('by WoPoss')
+    .style('fill', '#87aac9')
+    .style('font-style', 'italic')
+    .attr('x', 0)
+    .attr('y', 0)
+    .attr('dx', 45)
+    .attr('dy', -15);
 }
 
 /* ----------------------------------------
@@ -1163,6 +1182,8 @@ function getLines(elements, cW, cP) {
 
   svg.transition().duration(250).attr('height', newHeight);
 
+  drawWatermark(newHeight);
+
   const linesOriginal = [...lines];
   for (let i = 0; i < lines.length; i++) {
     const l = linesOriginal[i];
@@ -1632,6 +1653,7 @@ $(window).on('resize', function () {
 
     relationshipGroup.selectAll('path').remove();
     meaningsGroup.selectAll('g').remove();
+    watermarkGroup.select('text').remove();
     scale.selectAll('path').remove();
     scale.selectAll('text').remove();
 
