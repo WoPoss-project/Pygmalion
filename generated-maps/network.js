@@ -130,8 +130,10 @@ function drawGraph() {
     .enter()
     .append('g')
     .attr('class', 'nodes')
-    .style('font', 'Arial, Helvetica, sans-serif')
-    .style('font-size', 12);
+    .attr(
+      'style',
+      `font-family: Arial, Helvetica, sans-serif; font-size: 12px`
+    );
 
   // Add elements to nodes
   // Rects
