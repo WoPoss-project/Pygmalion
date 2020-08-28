@@ -210,6 +210,7 @@ well as the legend.
 ---------------------------------------- */
 
 function basicDisplay() {
+  // Draw legend
   let col = 0;
   let row = 1;
   let colsSpace = 0;
@@ -217,7 +218,6 @@ function basicDisplay() {
   if (data.normalForm) {
     const modalities = [...new Set(definitions.map((def) => def.modal))];
     const lengths = modalities.map((mod) => getTextWidth(mod));
-    const container = getContainerData();
 
     const cols = [];
     for (let i = 0; i < modalities.length; i += 3) {
@@ -227,10 +227,9 @@ function basicDisplay() {
       let longest = 0;
       c.forEach(
         (i) =>
-          (longest =
-            lengths[i] && lengths[i] > longest ? lengths[i] + 26 : longest)
+          (longest = lengths[i] && lengths[i] > longest ? lengths[i] : longest)
       );
-      colsWidth.push(longest);
+      colsWidth.push(longest + 30);
     });
     for (let i = 0; i < modalities.length; i++) {
       if (i % 3 === 0 && i != 0) {
