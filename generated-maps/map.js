@@ -1050,7 +1050,6 @@ function prepareDefinitions() {
       definitions.push(simpleModalityFormatting(meaning))
     );
   }
-
   return definitions;
 }
 
