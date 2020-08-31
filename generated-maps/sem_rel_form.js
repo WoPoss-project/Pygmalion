@@ -56,32 +56,31 @@ if (localStorage.getItem('map')) {
         delete meaning['relationships'];
       }
     });
-
-    if (createOriginalRel) addRelationship();
-    if (existingRelationships.length > 0) {
-      existingRelationships.forEach((rel) => {
-        addRelationship();
-        const relationships = [...document.querySelectorAll('.relationship')];
-        const relationship = relationships[relationships.length - 1];
-        relationship.childNodes.forEach((row) => {
-          const cols = row.childNodes;
-          if (cols.length > 1) {
-            cols.forEach((col) => {
-              const element = col.childNodes[0];
-              if (element.className === 'origin') {
-                element.value = rel.origin;
-              } else if (element.className === 'direction') {
-                element.value = rel.direction;
-              } else if (element.className === 'dest') {
-                element.value = rel.destination;
-              } else if (element.className === 'certitude') {
-                element.checked = rel.certitude;
-              }
-            });
-          }
-        });
+  }
+  if (createOriginalRel) addRelationship();
+  if (existingRelationships.length > 0) {
+    existingRelationships.forEach((rel) => {
+      addRelationship();
+      const relationships = [...document.querySelectorAll('.relationship')];
+      const relationship = relationships[relationships.length - 1];
+      relationship.childNodes.forEach((row) => {
+        const cols = row.childNodes;
+        if (cols.length > 1) {
+          cols.forEach((col) => {
+            const element = col.childNodes[0];
+            if (element.className === 'origin') {
+              element.value = rel.origin;
+            } else if (element.className === 'direction') {
+              element.value = rel.direction;
+            } else if (element.className === 'dest') {
+              element.value = rel.destination;
+            } else if (element.className === 'certitude') {
+              element.checked = rel.certitude;
+            }
+          });
+        }
       });
-    }
+    });
   }
 
   existingRelationships.forEach((rel) => {});
