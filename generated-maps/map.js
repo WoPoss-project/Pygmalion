@@ -1613,13 +1613,18 @@ if (data) {
   -------------------------------- */
   if (data.dataFormat === 'cent') {
     definitions.forEach((def) => {
-      if (def.emergence > 0) {
-        def.emergence -= 1;
-        def.disparition -= 1;
-      }
-      if (earliest < 0) {
-        def.emergence += Math.abs(earliest);
-        def.disparition += Math.abs(earliest);
+      if (earliest <= 0) {
+        if (def.emergence > 0) {
+          def.emergence -= 1;
+          def.disparition -= 1;
+        }
+        if (earliest < 0) {
+          def.emergence += Math.abs(earliest);
+          def.disparition += Math.abs(earliest);
+        }
+      } else {
+        def.emergence -= earliest;
+        def.disparition -= earliest;
       }
     });
   } else if (data.dataFormat === 'dec') {
