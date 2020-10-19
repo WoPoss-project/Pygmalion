@@ -1291,7 +1291,7 @@ function wrap(text, cW, cP, r = 'add') {
 
     while ((word = words.pop())) {
       line.push(word);
-      if (line.join(' ').length * 6 > width) {
+      if (getTextWidth(line.join(' ')) >= width) {
         line.pop();
         line = [word];
         ++lineNumber;
