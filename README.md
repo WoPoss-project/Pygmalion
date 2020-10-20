@@ -10,7 +10,7 @@ Each map must include the following contents:
   <li>the different meanings of the headword</li>
   <li>the first attestation of each meaning</li>
   <li>for each meaning, it must be specified whether there is or not a modal reading. Modal readings can belong to three different types: dynamic, deontic or epistemic. If no modal reading is attested, the meaning can be pre-modal (i.e. the meaning belongs to a cross-linguistic group of meanings from which a modal sense developed), post-modal (i.e. the meaning belongs to a cross-linguistic group of meanings into which a modal sense developed). It is possible that a sense is not modal nor pre-/post-modal</li>
-  <li>chronology of the different meanings: when a sense is first attested (century or decade) and, if reliable data is available, when a meaning stops to be attested</li>
+  <li>chronology of the different meanings: when a sense is first attested (century, decade or year) and, if reliable data is available, when a meaning stops to be attested</li>
   <li>the relations between the meanings. It is indicated the degree of certainty with which such relations can be reconstructed</li>
 </ol>
 
@@ -95,7 +95,7 @@ As detailed above, the semantic maps contain a lot of information. Thus, the vis
 
 The current design is relatively efficient to hold all the information, but enhancements are needed (see [Issues](#issues)). Also, the attractiveness of the design could be increased by adding other animation effects like motion.
 
-The possibility to create a “rich” version and a even more synoptic one could be consider.
+The possibility to create a “rich” version and a even more synoptic one could be considered.
 
 
 
