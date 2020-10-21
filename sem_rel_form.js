@@ -184,7 +184,7 @@ function createSelect(meanings) {
           option.innerHTML = `${meanings[i].definition} - ${
             meanings[i].modalities[j].modal
           } ${
-            meanings[i].group != 'None' ? '(' + meanings[i].group + ')' : ''
+            meanings[i].group != '_' ? '(' + meanings[i].group + ')' : ''
           }`;
           option.value = meanings[i].modalities[j].id;
           select.appendChild(option);
@@ -193,7 +193,7 @@ function createSelect(meanings) {
         // Handles meanings which hold only 1 modality
         const option = document.createElement('option');
         option.innerHTML = `${meanings[i].definition} ${
-          meanings[i].group != 'None' ? '(' + meanings[i].group + ')' : ''
+          meanings[i].group != '_' ? '(' + meanings[i].group + ')' : ''
         }`;
         option.value = meanings[i].modalities[0].id;
         select.appendChild(option);
@@ -202,7 +202,7 @@ function createSelect(meanings) {
       // Handles creation for simple form (without modalities)
       const option = document.createElement('option');
       option.innerHTML = `${meanings[i].definition} ${
-        meanings[i].group != 'None' ? '(' + meanings[i].group + ')' : ''
+        meanings[i].group != '_' ? '(' + meanings[i].group + ')' : ''
       }`;
       option.value = meanings[i].id;
       select.appendChild(option);

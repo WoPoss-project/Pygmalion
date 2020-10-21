@@ -604,7 +604,7 @@ function drawConstructsOrGroups(elements, cW, cP, lines, mode) {
   if (mode != 'chronology') {
     const dataList = [...new Set(elements.map((el) => el[mode]))];
     dataList.forEach((group) => {
-      if (group != 'None') {
+      if (group != '_') {
         const indexes = [];
         elements.forEach((el) =>
           el[mode] == group ? indexes.push(elements.indexOf(el)) : false

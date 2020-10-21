@@ -395,7 +395,7 @@ function selectRow(lab, cla, opt) {
   const existingSelects = document.querySelector(`.${cla}`);
   const groups = [];
   if (!existingSelects) {
-    groups.push('None', opt);
+    groups.push('_', opt);
   } else {
     existingSelects.childNodes.forEach((el) => groups.push(el.innerHTML));
   }
