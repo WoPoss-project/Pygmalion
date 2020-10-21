@@ -17,7 +17,7 @@ For more information about the tool, including a tutorial, please visit the [web
 
 ### First form
 
-The first form is one of the most important part of this project. In fact, an unreliable, imperfect, or inadaptive form would lead to an obsolete tool.
+The first form (`index.html`) is one of the most important part of this project. In fact, an unreliable, imperfect, or inadaptive form would lead to an obsolete tool.
 
 The two versions of the form act similarly:
 
@@ -29,7 +29,7 @@ The two versions of the form act similarly:
 
 ### Second form
 
-The second form if fairly straight forward:
+The second form (`sem_rel_form.html`) if fairly straight forward:
 
 - Users can add as many relationships as they want.
 - Each relationship has an origin `<input type="text">`, a direction (unspecified/to/from) `<select>`, a destination `<input type="text">` and a confidence `<input type="checkbox">`.
@@ -111,9 +111,9 @@ The 'simplified' version will generate:
     // any other definition ...
 ```
 
-### Visualizations
+### Visualisations
 
-The visualizations start by preparing the data:
+To see the generated visualizations, open `map.html`. The visualisations start by preparing the data:
 
 ```js
 function prepareDefinitions() {
