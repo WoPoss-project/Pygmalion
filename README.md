@@ -3,6 +3,8 @@
 Pygmalion, a tool to visualise the diachronic description of meaning.
 Copyright (C) 2000 WoPoss. All rights reserved.  Use is subject to license terms.
 
+Pygmalion was created by Francesca Dell’Oro (conceptualisation, general supervision, testing), Loris Rimaz (conceptualisation, main development, testing), Helena Bermúdez Sabel (conceptualisation, development, testing) & Paola Marongiu (testing) in the framework of the WoPoss project. 
+
 ## Quick introduction
 
 [Pygmalion](http://woposs.unil.ch/pygmalion.php) allows users to create a semantic map of any word by simply filling two forms. The first form has two versions, the 'modal' version and the 'simplified' version which drops the notion of modality. The second form allows the user to specify the relationships between the different meanings, which is the biggest feature of this project.
