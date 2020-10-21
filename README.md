@@ -7,9 +7,9 @@ Copyright (C) 2000 WoPoss. All rights reserved.  Use is subject to license terms
 
 [Pygmalion](http://woposs.unil.ch/pygmalion.php) allows users to create a semantic map of any word by simply filling two forms. The first form has two versions, the 'modal' version and the 'simplified' version which drops the notion of modality. The second form allows the user to specify the relationships between the different meanings, which is the biggest feature of this project.
 
-The resulting visualization is also separated in two parts: the semantic map itself and a network graph. The semantic map holds all the information from the first form: it displays all the definitions, it generates colours for the different types of modality, it renders the definition arrows according to the emergence and, if there is any, the disappearance dates, and it can be sorted chronologically, by collocations or by groups. Clicking on a definition arrow will display this definition's relationships with other definitions. That is, relevant definitions _relative to_ the clicked one will be displayed while irrelevant ones will be removed. Then, relationship arrows will be displayed on the right, showing exactly what kind of relationships there are.
+The resulting visualisation is also separated in two parts: the semantic map itself and a network graph. The semantic map holds all the information from the first form: it displays all the definitions, it generates colours for the different types of modality, it renders the definition arrows according to the emergence and, if there is any, the disappearance dates, and it can be sorted chronologically, by collocations or by groups. Clicking on a definition arrow will display this definition's relationships with other definitions. That is, relevant definitions _relative to_ the clicked one will be displayed while irrelevant ones will be removed. Then, relationship arrows will be displayed on the right, showing exactly what kind of relationships there are.
 
-The network graph is a quick and efficient way to visualise all the definitions' relationships with one another. The graph is interactive, in that each node can be dragged around which will in turn rearrange the visualization. Please note that moving nodes around will move the other nodes further away.
+The network graph is a quick and efficient way to visualise all the definitions' relationships with one another. The graph is interactive, in that each node can be dragged around which will in turn rearrange the visualisation. Please note that moving nodes around will move the other nodes further away.
 
 For more information about the tool, including a tutorial, please visit the [website of the project](http://woposs.unil.ch/pygmalion.php).
 
@@ -113,7 +113,7 @@ The 'simplified' version will generate:
 
 ### Visualisations
 
-To see the generated visualizations, open `map.html`. The visualisations start by preparing the data:
+To see the generated visualisations, open `map.html`. The visualisations start by preparing the data:
 
 ```js
 function prepareDefinitions() {
@@ -171,7 +171,7 @@ In order, the following elements are drawn:
 
 - The legend: rendered according to the modalities used and the form's version.
 - The etymology: rendered according to its value (either `false`, `"unknown"`, or `Array`).
-- The collocation/group displays on the left-hand side of the visualization.
+- The collocation/group displays on the left-hand side of the visualisation.
 - The definitions: rendered according to the emergence and disappearance dates, as well as the modalities (color) and confidence in the modal descriptions.
 - The scale: always rendered with centuries. Adapts elements length depending on data.
 - When a definition is clicked, the relationship arrows: generated with a fairly simple calculation for the `[[x0, y0], [x1, y0], [x1, y1], [x2, y1]]` coordinates.
