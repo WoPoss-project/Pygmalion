@@ -1,7 +1,6 @@
 # Semantic Maps
 - [Information requirements](#information-requirements)
-- [Current design](#current-design)
-- [Future work](#future-work)
+- [Drawn design](#drawn-design)
 
 ## Information requirements 
 Each map must include the following contents:
@@ -16,8 +15,8 @@ Each map must include the following contents:
 
 A more detailed list is presented in the subsection [Form](#form).
 
-## Current design
-The existent mock-up (see _CERTUS_ in the [HTML version](https://github.com/WoPoss/semantic_maps/blob/master/drawn-maps/semantic-modal-maps.html) of this repo or the published version available on [our website](http://woposs.unil.ch/certus.php)) has the following functionalities:
+## Drawn design
+The mock-up (see _CERTUS_ in the [HTML version](https://github.com/WoPoss/semantic_maps/blob/master/drawn-maps/semantic-modal-maps.html) available in this folder has the following functionalities:
 - A scrollable timeline provides the chronological information: the time (here expressed through a segmentation in centuries) works as the x axis (requirement _e_ above; see section [Scrollable timeline](#scrollable-timeline)). In the y axis the different meanings are displayed and ordered according to the organization of the description of the headword in the dictionary of reference, i.e. according to semantic groups (requirement _a_). Expressions containing the headword are also registered (they appear on the left outside the arrow).
 - The first attestation is visible when hovering the mouse over a sense (requirement _c_; see section [Tooltips](#tooltips)).
 - Colors indicate the type of modality (requirement _d_).
