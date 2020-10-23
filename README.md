@@ -7,7 +7,7 @@ Pygmalion was created by Francesca Dell’Oro (conceptualisation, general superv
 
 ## Quick introduction
 
-[Pygmalion](http://woposs.unil.ch/pygmalion.php) allows users to create a semantic map of any word by simply filling two forms. The first form has two versions, the 'modal' version and the 'simplified' version which drops the notion of modality. The second form allows the user to specify the relationships between the different meanings, which is the biggest feature of this project.
+[Pygmalion](http://woposs.unil.ch/pygmalion.php) allows users to create a semantic map of any word by simply filling two forms. The first form has two versions, the 'modal' version (Pygmalion-modal) and the 'simplified' version which drops the notion of modality (Pygmalion-simple). The second form allows the user to specify the relationships between the different meanings, which is the biggest feature of this project.
 
 The resulting visualisation is also separated in two parts: the semantic map itself and a network graph. The semantic map holds all the information from the first form: it displays all the definitions, it generates colours for the different types of modality, it renders the definition arrows according to the emergence and, if there is any, the disappearance dates, and it can be sorted chronologically, by collocations or by groups. Clicking on a definition arrow will display this definition's relationships with other definitions. That is, relevant definitions _relative to_ the clicked one will be displayed while irrelevant ones will be removed. Then, relationship arrows will be displayed on the right, showing exactly what kind of relationships there are.
 
