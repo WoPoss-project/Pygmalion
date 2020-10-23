@@ -7,11 +7,11 @@ Pygmalion was created by Francesca Dell’Oro (conceptualisation, general superv
 
 ## Quick introduction
 
-[Pygmalion](http://woposs.unil.ch/pygmalion.php) allows users to create a semantic map of any word by simply filling two forms. The first form has two versions, the 'modal' version (Pygmalion-modal) and the 'simplified' version which drops the notion of modality (Pygmalion-simple). The second form allows the user to specify the relationships between the different meanings, which is the biggest feature of this project.
+[Pygmalion](http://woposs.unil.ch/pygmalion.php) allows users to create a semantic map of any word by simply filling two forms. The first form has two versions, the 'modal' version (Pygmalion-modal) and the 'simplified' version which drops the notion of modality (Pygmalion-simple). The second form allows the user to specify the relationships between the different meanings.
 
-The resulting visualisation is also separated in two parts: the semantic map itself and a network graph. The semantic map holds all the information from the first form: it displays all the definitions, it generates colours for the different types of modality, it renders the definition arrows according to the emergence and, if there is any, the disappearance dates, and it can be sorted chronologically, by collocations or by groups. Clicking on a definition arrow will display this definition's relationships with other definitions. That is, relevant definitions _relative to_ the clicked one will be displayed while irrelevant ones will be removed. Then, relationship arrows will be displayed on the right, showing exactly what kind of relationships there are.
+The resulting visualisation is also separated in two parts: the semantic map itself and a network graph. The semantic map holds all the information from the first form: it displays all the definitions, it generates arrows whose colour corresponds to the different types of modality, it renders meaning arrows according to the emergence and, if there is any, the disappearance dates. The meaning arrows can be sorted by chronology, by collocations or by groups. Clicking on a meaning arrow will display all relationships of that meaning with other meanings. That is, relevant meanings _relative to_ the clicked one will be displayed while irrelevant ones will be removed. Then, relationship arrows will be displayed on the right, showing the directionality of the relationship.
 
-The network graph is a quick and efficient way to visualise all the definitions' relationships with one another. The graph is interactive, in that each node can be dragged around which will in turn rearrange the visualisation. Please note that moving nodes around will move the other nodes further away.
+The network graph is a quick and efficient way to visualise all relationships of each meaning with the other ones. The graph is interactive: each node can be dragged around and this will in turn rearrange the visualisation. Please note that moving nodes around will move the other nodes further away.
 
 For more information about the tool, including a tutorial, please visit the [website of the project](http://woposs.unil.ch/pygmalion.php).
 
@@ -23,19 +23,19 @@ The first form (`index.html`) is one of the most important part of this project.
 
 The two versions of the form act similarly:
 
-- Users can specify a headword and chose a date format (centuries, decades or specific years).
-- The etymology can be flagged as either unwanted (proceed without etymology) or unknown. If none of these options are selected, users are free to add as many etymological steps as they want. Each etymological step is deletable if users wish to correct themselves.
-- Users are then able to add as many definitions as they see fit. They are then invited to fill the definition for the headword inside a `<input type="text">` element. The following `<select>` elements can be completed with the users' own inputs, simply by selecting the 'add new...' option. This will prompt users to specify a new collocation/group. Here lies the main difference between the two versions : the 'modal' version will now invite users to specify the meaning's modal description(s) - which includes choosing (or adding their own) modality through a `<select>` element, then specifying an emergence date, a disappearance date (if any), the modality's first attestation, and finally the confidence in the modal description - where the 'simplified' version will only require the emergence/disappearance dates as well as the first attestation. In the 'modal' version, users can add as many modal descriptions as they want to a definition.
-- Once the form is completed, the form can be submitted. The main operations that happen is a conversion of the emergence/ disappearance dates into easy-to-process formats depending on the users' date format choice. If every mandatory field have been filled, the data is stored into the `localStorage`.
+- Users must specify a headword and choose a date format (centuries, decades or specific years).
+- The etymology field allows the user to add as many etymological steps as needed. Importantly, etymology can also be flagged as either unwanted (proceed without etymology) or unknown. Each etymological step is deletable if users wish to correct themselves.
+- Users are then able to add as many 'meanings/fonctions/uses' (in the following this group of possibilities will be called 'definition') as they see fit. They are then invited to fill the definition for the headword inside a `<input type="text">` element. The following `<select>` elements can be completed with the users' own inputs, simply by selecting the 'add new...' option. Users have then the possibility to specify a  collocation or group of any kind. Here lies the main difference between the two versions : the 'modal' version will now invite users to specify a modal reading - which includes choosing (or adding a new) modal reading through a `<select>` element, then specifying an emergence date, a disappearance date (if any), the first attestation of a modal reading, and finally the confidence in the description of the modal reagding. The 'simplified' version will only require the emergence dates as well as the first attestation, the disappearance date remaining optional in both versions of the tool. In the 'modal' version, users can add as many modal descriptions as they want to a definition.
+- Once the form is completed, the form can be submitted. The main operation that happen is a conversion of the emergence/disappearance dates into easy-to-process formats depending on the users' date format choice. If every mandatory field have been filled, the data is stored into the `localStorage`.
 - The form can be generated automatically if compatible data is found stored in the `localStorage`. This allows users to go back and edit the data.
 
 ### Second form
 
-The second form (`sem_rel_form.html`) if fairly straight forward:
+The second form (`sem_rel_form.html`) if fairly straightforward:
 
 - Users can add as many relationships as they want.
-- Each relationship has an origin `<input type="text">`, a direction (unspecified/to/from) `<select>`, a destination `<input type="text">` and a confidence `<input type="checkbox">`.
-- Submitting the form will add the relationship data to all the specified elements. **Important:** symmetric data - e.g. "definition 1" to "definition 2" and "definition 2" from "definition 1" - will be stored automatically with only one of the two. In other words, **if users fill a relationship as "definition 1" to "definition 2", "definition 2" from "definition 1" will be implied and stored without the users' need to specify add such relationship**. Also, two definitions **can only have _one_ relationship**.
+- Each relationship has an origin `<input type="text">`, a direction (unspecified/to/from) `<select>`, a destination `<input type="text">` and a (binary degree of) confidence `<input type="checkbox">`.
+- Submitting the form will add the relationship data to all the specified elements. **Important:** symmetric data - e.g. "definition 1" to "definition 2" and "definition 2" from "definition 1" - will be stored automatically with only one of the two. In other words, **if users fill a relationship as "definition 1" to "definition 2", "definition 2" from "definition 1" will be implied and stored without any need for the users to specify or add such relationship**. Two definitions **can only have _one_ relationship**.
 - The form can be generated if compatible date is found in the `localStorage`, which allows users to edit the form and submit it again.
 
 ### Data structure
@@ -167,16 +167,16 @@ The resulting standardized data structure looks like:
 ]
 ```
 
-The emergence and disappearance dates have been converted to their index in an `Array` containing all the possible dates between the earliest and latest dates of the data. If the disappearance is `"None"` it will converted to `-1`.
+The emergence and disappearance dates have been converted to their index in an `Array` containing all the possible dates between the earliest and latest dates of the data. If the disappearance is `"None"` it will be converted to `-1`.
 
 In order, the following elements are drawn:
 
-- The legend: rendered according to the modalities used and the form's version.
+- The legend: rendered according to the selected modal reading and the form's version???.
 - The etymology: rendered according to its value (either `false`, `"unknown"`, or `Array`).
 - The collocation/group displays on the left-hand side of the visualisation.
-- The definitions: rendered according to the emergence and disappearance dates, as well as the modalities (color) and confidence in the modal descriptions.
-- The scale: always rendered with centuries. Adapts elements length depending on data.
-- When a definition is clicked, the relationship arrows: generated with a fairly simple calculation for the `[[x0, y0], [x1, y0], [x1, y1], [x2, y1]]` coordinates.
+- The definitions: rendered according to the emergence and disappearance dates, as well as the modal readings (color) and the degree of??? confidence in the modal descriptions.
+- The diachronic line: it is always rendered by using centuries as main divisions. The length of the arrow is adapted depending on dates???.
+- once a definition is clicked, the relationship arrows: they are generated with a fairly simple calculation for the `[[x0, y0], [x1, y0], [x1, y1], [x2, y1]]` coordinates.
 
 For the network graph, the data is converted again:
 
@@ -235,7 +235,7 @@ function extractDefinitionData() {
 }
 ```
 
-The resluting data structure looks like:
+The resulting data structure looks like:
 
 ```JSON
 {
@@ -279,7 +279,7 @@ simulation.nodes(dataset.nodes).on('tick', ticked);
 simulation.force('link').links(dataset.links);
 ```
 
-The result is a network graph showing all the definitions with their relationships. Moreover, each relationship will be displayed the same way as in the relationship arrows:
+The result is a network graph showing all the definitions with their relationships. Moreover, each relationship will be displayed the same way as by the relationship arrows:
 
 - Uncertain relationships will be displayed as dashed lines.
 - "To" relationships will be displayed with an arrow going from the origin node to the target node.
