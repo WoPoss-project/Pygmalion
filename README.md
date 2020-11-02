@@ -5,6 +5,15 @@ Copyright (C) 2000 WoPoss. All rights reserved.  Use is subject to license terms
 
 Pygmalion was created by Francesca Dell’Oro (conceptualisation, general supervision, testing), Loris Rimaz (conceptualisation, main development, testing), Helena Bermúdez Sabel (conceptualisation, development, testing) & Paola Marongiu (testing) in the framework of the WoPoss project. 
 
+## Table of contents
+- [Quick introduction](#quick-introduction)
+- [Step by step development](#step-by-step-development)
+     - [First form](#first-form)
+     - [Second form](#second-form)
+     - [Data structure](#data-structure)
+     - [Visualisations](#visualisations)
+- [How to cite](#how-to-cite)
+
 ## Quick introduction
 
 [Pygmalion](http://woposs.unil.ch/pygmalion.php) allows users to create a semantic map of any word by simply filling two forms. The first form has two versions, the 'modal' version (Pygmalion-modal) and the 'simplified' version which drops the notion of modality (Pygmalion-simple). The second form allows the user to specify the relationships between the different meanings.
