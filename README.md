@@ -298,3 +298,5 @@ The result is a network graph showing all the definitions with their relationshi
 - Dell’Oro, Francesca - Rimaz, Loris - Bermúdez Sabel, Helena & Marongiu, Paola (2020). _Pygmalion-simple 1.0. A tool to draw interactive and diachronic semantic maps_. WoPoss. A World of Possibilities. Swiss National Science Foundation. 
 
 - Dell’Oro, Francesca - Rimaz, Loris - Bermúdez Sabel, Helena & Marongiu, Paola (2020). _Pygmalion-modal 1.0. A tool to draw interactive and diachronic semantic maps of modality_. WoPoss. A World of Possibilities. Swiss National Science Foundation
+
+– Dell’Oro, Francesca; Rimaz, Loris; Bermúdez Sabel, Helena; Marongiu, Paola (2021). Pygmalion-colour 1.0. A tool to draw interactive and diachronic maps. WoPoss. A World of Possibilities. Swiss National Science Foundation.
