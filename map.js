@@ -134,8 +134,10 @@ const svg = d3
   .attr('style', 'font: 12px sans-serif')
   .style('background-color', 'white');
 
-const w = Number(svg.style('width').split('px')[0]);
-const h = Number(svg.style('height').split('px')[0]);
+let w = Number(svg.style('width').split('px')[0]);
+let h = Number(svg.style('height').split('px')[0]);
+
+let container = {}
 
 /* --------------------------------
 definition of the D3 markers for
@@ -335,6 +337,7 @@ function basicDisplay() {
     .attr('dy', 3.5);
 
   drawEtymology();
+
   drawData();
 }
 
@@ -510,7 +513,6 @@ function drawData(
   mode = selectMode
 ) {
   meaningsGroup.style('width', (w / 100) * 80);
-  const container = getContainerData();
 
   let tip = d3
     .select('body')
@@ -533,7 +535,6 @@ function drawData(
   meaningsGroup
     .selectAll('g')
     .data(elements, (d) => d.id)
-
     .join(
       (enter) =>
         enter
@@ -575,7 +576,6 @@ function drawData(
 }
 
 function drawWatermark(wmHeight) {
-  const container = getContainerData();
   watermarkGroup.attr(
     'transform',
     `translate(${container.width}, ${wmHeight})`
@@ -1037,12 +1037,12 @@ function prepareDefinitions() {
   const definitions = [];
   if (data.normalForm) {
     meanings.forEach((meaning) => {
-      if (meaning.modalities.length > 1) {
-        meaning.modalities.forEach((modalitiy) => {
+      if (meaning.analysis.length > 1) {
+        meaning.analysis.forEach((modalitiy) => {
           definitions.push(modalityFormatting(meaning, modalitiy));
         });
       } else {
-        definitions.push(modalityFormatting(meaning, meaning.modalities[0]));
+        definitions.push(modalityFormatting(meaning, meaning.analysis[0]));
       }
     });
   } else {
@@ -1139,19 +1139,18 @@ width divided by the scale.
 ---------------------------------------- */
 
 function getContainerData() {
-  let containerWidth = svg.style('width');
   containerWidth =
     Math.floor(
-      Number(containerWidth.substring(0, containerWidth.length - 2)) -
-        margin.right
+      w - margin.right
     ) - margin.left;
 
+  console.log(earliest)
   let containerPortion =
     data.dataFormat === 'cent'
       ? containerWidth /
         (range(earliest, latest).includes(0)
           ? range(earliest, latest + 1).length - 1
-          : range(earliest, latest + (earliest > 0 && latest > 0 ? 1 : 0))
+          : range(earliest, latest + ((earliest > 0 && latest > 0) || (earliest < 0 && latest < 0) ? 1 : 0))
               .length)
       : data.dataFormat === 'dec'
       ? containerWidth /
@@ -1172,6 +1171,8 @@ function getContainerData() {
                 : findCent(earliest),
               findCent(latest) + 100
             ).length);
+
+  console.log("called for container data : ", { width: containerWidth, portion: containerPortion })
   return { width: containerWidth, portion: containerPortion };
 }
 
@@ -1308,21 +1309,14 @@ exports SVG to canvas element
 
 function exportToCanvas(event, SVG) {
   event.preventDefault();
-
-  let svgWidth = SVG.style('width');
-  svgWidth = Number(svgWidth.substring(0, svgWidth.length - 2));
-  let svgHeight = SVG.style('height');
-  svgHeight = Number(svgHeight.substring(0, svgHeight.length - 2));
-
   if (SVG.attr('id') === 'map') {
-    SVG.attr('width', svgWidth);
+    SVG.attr('width', w);
   }
-
   const svgNode = SVG.node();
 
   const canvas = document.createElement('canvas');
-  canvas.width = svgWidth;
-  canvas.height = svgHeight;
+  canvas.width = w;
+  canvas.height = Number(svg.style('height').split('px')[0]);
 
   if (SVG.attr('id') === 'network') {
     SVG.attr('transform', 'translate(0,0)');
@@ -1379,16 +1373,14 @@ function triggerDownload(imgURI, SVG) {
 }
 
 /* ----------------------------------------
-"exportToCanvas" function:
+"exportToSVG" function:
 exports SVG element to .svg file
 ---------------------------------------- */
 
 function exportToSVG(event, SVG) {
   event.preventDefault();
 
-  let svgWidth = SVG.style('width');
-  svgWidth = Number(svgWidth.substring(0, svgWidth.length - 2));
-  SVG.attr('width', svgWidth);
+  SVG.attr('width', w);
 
   const svgNode = SVG.node();
   var data = new XMLSerializer().serializeToString(svgNode);
@@ -1661,6 +1653,7 @@ if (data) {
     .querySelectorAll('.invisibleWhenNoData')
     .forEach((elem) => (elem.style.visibility = 'visible'));
 
+  container = getContainerData()
   basicDisplay();
 }
 
@@ -1674,6 +1667,11 @@ $(window).on('resize', function () {
     watermarkGroup.select('text').remove();
     scale.selectAll('path').remove();
     scale.selectAll('text').remove();
+
+    w = Number(svg.style('width').split('px')[0]);
+    h = Number(svg.style('height').split('px')[0]);
+
+    container = getContainerData()
 
     drawData();
 
