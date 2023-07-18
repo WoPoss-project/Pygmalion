@@ -1148,10 +1148,9 @@ function getContainerData() {
   let containerPortion =
     data.dataFormat === 'cent'
       ? containerWidth /
-        (range(earliest, latest).includes(0)
+        (range(earliest, latest + 1).includes(0)
           ? range(earliest, latest + 1).length - 1
-          : range(earliest, latest + ((earliest > 0 && latest > 0) || (earliest < 0 && latest < 0) ? 1 : 0))
-              .length)
+          : range(earliest, latest + 1).length)
       : data.dataFormat === 'dec'
       ? containerWidth /
         (range10(findCent(earliest), findCent(latest) + 100).includes(0)
